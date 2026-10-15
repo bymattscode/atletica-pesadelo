@@ -1878,22 +1878,22 @@
               </div>
             </div>
 
-            <!-- BOTÃO ADICIONAR MAIS PRODUTOS (CLIENTE COM MAIS DE 1 PEDIDO) -->
+            <!-- BOTÃO ADICIONAR AO CARRINHO E CARRINHO DE COMPRAS -->
             <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem;">
               <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                <button type="button" class="btn-add-item" onclick="addItemToOrder()">
-                  <i class="fa-solid fa-plus"></i> Adicionar outro produto ao pedido
+                <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
+                  <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
                 </button>
-                <span style="font-size: 0.78rem; color: var(--text-muted);">
-                  Caso o cliente queira mais de uma peça ou produtos diferentes
+                <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
+                  Adicione os produtos ao carrinho para somar o pedido
                 </span>
               </div>
 
-              <!-- CARD DE ITENS JÁ ADICIONADOS AO PEDIDO -->
+              <!-- CARD DO CARRINHO DE COMPRAS -->
               <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
                 <div class="order-summary-header">
                   <div class="order-summary-title">
-                    <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i> Itens do Pedido (<span id="cartItemsCount">0</span>)
+                    <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i> Carrinho de Compras (<span id="cartItemsCount">0</span>)
                   </div>
                   <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
                 </div>
@@ -2218,16 +2218,33 @@
         }
       }
 
-      // Calcula soma total (itens adicionados ao carrinho + item atual selecionado)
-      let totalPieces = current.quantidade;
-      let totalMoney = current.subtotal;
-      let hasTbd = current.unitPrice === 0;
+      // Atualiza texto do botão do carrinho
+      const btnAddText = document.getElementById("btnAddCartText");
+      if (btnAddText) {
+        if (orderCart.length === 0) {
+          btnAddText.innerText = "Adicionar produto ao carrinho";
+        } else {
+          btnAddText.innerText = "Adicionar outro produto ao carrinho";
+        }
+      }
 
-      orderCart.forEach(item => {
-        totalPieces += item.quantidade;
-        totalMoney += item.subtotal;
-        if (item.unitPrice === 0) hasTbd = true;
-      });
+      // Se há produtos no carrinho, a SOMA É ESTRITAMENTE O TOTAL DO CARRINHO!
+      // Se o carrinho ainda estiver vazio, reflete o item atualmente em seleção
+      let totalPieces = 0;
+      let totalMoney = 0;
+      let hasTbd = false;
+
+      if (orderCart.length > 0) {
+        orderCart.forEach(item => {
+          totalPieces += item.quantidade;
+          totalMoney += item.subtotal;
+          if (item.unitPrice === 0) hasTbd = true;
+        });
+      } else {
+        totalPieces = current.quantidade;
+        totalMoney = current.subtotal;
+        hasTbd = current.unitPrice === 0;
+      }
 
       // Atualiza banner de Pix
       const pixValEl = document.getElementById("pixTotalValueDisplay");
@@ -2240,8 +2257,12 @@
         }
       }
       if (pixCountEl) {
-        const totalDistinct = orderCart.length + 1;
-        pixCountEl.innerText = `${totalPieces} ${totalPieces === 1 ? 'peça selecionada' : 'peças selecionadas'} (${totalDistinct} ${totalDistinct === 1 ? 'item' : 'itens no pedido'})`;
+        if (orderCart.length > 0) {
+          const totalDistinct = orderCart.length;
+          pixCountEl.innerText = `${totalPieces} ${totalPieces === 1 ? 'peça no carrinho' : 'peças no carrinho'} (${totalDistinct} ${totalDistinct === 1 ? 'item' : 'itens'})`;
+        } else {
+          pixCountEl.innerText = `${totalPieces} ${totalPieces === 1 ? 'peça selecionada' : 'peças selecionadas'}`;
+        }
       }
 
       renderCartSummary();
@@ -2259,9 +2280,17 @@
 
     function addItemToOrder() {
       const current = getCurrentFormItem();
-      orderCart.push({ ...current });
       
-      showToast(`Adicionado: ${current.quantidade}x ${NOMES_PRODUTOS[current.produto] || current.produto} (${current.tamanho})`);
+      // Verifica se o mesmo produto e tamanho já está no carrinho
+      const existing = orderCart.find(i => i.produto === current.produto && i.tamanho === current.tamanho);
+      if (existing) {
+        existing.quantidade += current.quantidade;
+        existing.subtotal = existing.unitPrice * existing.quantidade;
+        showToast(`Adicionado ao carrinho! (${existing.quantidade}x ${NOMES_PRODUTOS[existing.produto] || existing.produto})`);
+      } else {
+        orderCart.push({ ...current });
+        showToast(`Adicionado ao carrinho: ${current.quantidade}x ${NOMES_PRODUTOS[current.produto] || current.produto} (${current.tamanho})`);
+      }
       
       const qInput = document.getElementById("f_quantidade");
       if (qInput) qInput.value = 1;
@@ -3141,9 +3170,10 @@
         btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Finalizando Pedido...`;
       }
 
-      // Reúne todos os itens (carrinho multi-item + item atual selecionado no form)
+      // Se houver produtos no carrinho, finaliza os produtos do carrinho!
+      // Se o carrinho estiver vazio, finaliza o produto atualmente selecionado no form.
       const currentItem = getCurrentFormItem();
-      const allItems = [...orderCart, currentItem];
+      const allItems = orderCart.length > 0 ? [...orderCart] : [currentItem];
 
       let totalQtd = 0;
       let totalValor = 0;

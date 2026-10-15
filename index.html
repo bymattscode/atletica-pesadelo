@@ -692,6 +692,62 @@
       border-color: #ef4444;
     }
 
+    .btn-receipt-badge {
+      background: rgba(152, 24, 68, 0.18);
+      color: #f69cb9;
+      border: 1px solid rgba(200, 70, 118, 0.35);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .btn-receipt-badge:hover {
+      background: var(--unb-vinho);
+      color: #fff;
+      border-color: var(--pesadelo-pink);
+    }
+
+    .receipt-modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+    .receipt-preview-body {
+      margin-top: 1rem;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #050608;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      min-height: 250px;
+      max-height: 60vh;
+    }
+    .receipt-preview-img {
+      max-width: 100%;
+      max-height: 55vh;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
     /* PÓDIO CLEAN (SEM BRILHO OU AURAS) */
     .podium-clean-grid {
       display: grid;
@@ -1234,13 +1290,13 @@
                   <strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)
                 </div>
               </div>
-              <input type="file" id="f_comprovante_file" style="display: none;" onchange="handleFile(this)">
+              <input type="file" id="f_comprovante_file" style="display: none;" accept="image/*,application/pdf" onchange="handleFile(this)">
             </div>
 
             <!-- SUBMIT -->
             <div class="form-group full" style="margin-top: 0.5rem;">
-              <button type="submit" class="btn-submit">
-                Registrar Pedido na Planilha
+              <button type="submit" class="btn-submit" id="btnSubmitOrder">
+                Finalizar Pedido
               </button>
             </div>
 
@@ -1299,6 +1355,7 @@
               <th>Tamanho</th>
               <th>Qtd</th>
               <th>Pagamento</th>
+              <th>Comprovante</th>
               <th>Entrega</th>
               <th>WhatsApp & Ações</th>
             </tr>
@@ -1401,6 +1458,32 @@
         </button>
         <button type="button" class="btn-confirm-danger" id="btnConfirmAction" onclick="executeConfirmAction()">
           Remover
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE VISUALIZAÇÃO DE COMPROVANTE -->
+  <div class="modal-overlay" id="receiptModal" onclick="handleReceiptOverlayClick(event)" style="z-index: 1200;">
+    <div class="receipt-modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <div>
+          <h3 id="receiptModalTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff;">Comprovante de Pagamento</h3>
+          <p id="receiptModalSub" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.2rem;">Detalhes do anexo</p>
+        </div>
+        <button type="button" class="login-close-btn" onclick="closeReceiptModal()" title="Fechar" style="position: static; margin-left: auto;">&times;</button>
+      </div>
+
+      <div class="receipt-preview-body" id="receiptPreviewContent">
+        <!-- Renderizado dinamicamente -->
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
+        <a id="btnReceiptExternal" href="#" target="_blank" class="btn-cadastrar-comissario" style="display: none; text-decoration: none; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir no Google Drive
+        </a>
+        <button type="button" class="btn-confirm-cancel" onclick="closeReceiptModal()">
+          Fechar
         </button>
       </div>
     </div>
@@ -1740,6 +1823,7 @@
       if (e.key === "Escape") {
         closeLoginModal();
         closeConfirmModal();
+        closeReceiptModal();
         closeSheetsConfigModal();
       }
     });
@@ -1842,7 +1926,7 @@
       }
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum pedido encontrado nesta aba.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum pedido encontrado nesta aba.</td></tr>`;
         return;
       }
 
@@ -1850,6 +1934,21 @@
         const rawPhone = o.telefone.replace(/\D/g, "");
         const zapMsg = encodeURIComponent(`Olá ${o.nome.split(" ")[0]}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${o.produto} (${o.tamanho}).`);
         const zapUrl = `https://wa.me/55${rawPhone}?text=${zapMsg}`;
+
+        let compHtml = `<span style="color: var(--text-muted); font-size: 0.75rem;">Sem anexo</span>`;
+        if (o.comprovanteUrl && o.comprovanteUrl.toString().startsWith("http")) {
+          compHtml = `
+            <a href="${o.comprovanteUrl}" target="_blank" class="btn-receipt-badge" title="Abrir comprovante no Google Drive">
+              <i class="fa-solid fa-receipt"></i> Ver Anexo
+            </a>
+          `;
+        } else if (o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:"))) {
+          compHtml = `
+            <button type="button" class="btn-receipt-badge" onclick="openReceiptModal(${o.id})" title="Visualizar comprovante">
+              <i class="fa-solid fa-receipt"></i> Ver Anexo
+            </button>
+          `;
+        }
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -1865,6 +1964,9 @@
             <span class="status-badge ${o.statusPagamento === 'Confirmado' ? 'status-pago' : 'status-pendente'}" onclick="togglePagamento(${o.id})">
               ${o.statusPagamento}
             </span>
+          </td>
+          <td>
+            ${compHtml}
           </td>
           <td>
             <select onchange="changeEntrega(${o.id}, this.value)" style="padding: 0.25rem 0.5rem; font-size: 0.78rem;">
@@ -2041,15 +2143,156 @@
       document.getElementById("f_tamanho").value = sz;
     }
 
+    // GERENCIAMENTO DE COMPROVANTE (BASE64 & MODAL)
+    let currentUploadedFile = null;
+
     function handleFile(input) {
       if (input.files && input.files[0]) {
-        document.getElementById("uploadText").innerHTML = `<span style="color: #fff; font-weight: 700;">Arquivo anexado: ${input.files[0].name}</span>`;
+        const file = input.files[0];
+        const uploadText = document.getElementById("uploadText");
+        uploadText.innerHTML = `<span style="color: var(--text-secondary);"><i class="fa-solid fa-spinner fa-spin"></i> Processando arquivo...</span>`;
+
+        const isImage = file.type.startsWith("image/");
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          if (isImage) {
+            const img = new Image();
+            img.onload = function() {
+              const canvas = document.createElement("canvas");
+              let width = img.width;
+              let height = img.height;
+              const maxDim = 1400;
+
+              if (width > maxDim || height > maxDim) {
+                if (width > height) {
+                  height = Math.round((height * maxDim) / width);
+                  width = maxDim;
+                } else {
+                  width = Math.round((width * maxDim) / height);
+                  height = maxDim;
+                }
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0, width, height);
+
+              const compressedBase64 = canvas.toDataURL("image/jpeg", 0.82);
+              currentUploadedFile = {
+                nome: file.name,
+                type: "image/jpeg",
+                base64: compressedBase64
+              };
+
+              const sizeKb = Math.round(compressedBase64.length * 3 / 4 / 1024);
+              uploadText.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                  <i class="fa-solid fa-circle-check" style="color: var(--success); font-size: 1.1rem;"></i>
+                  <span style="color: #fff; font-weight: 700;">${file.name}</span>
+                  <span style="color: var(--text-secondary); font-size: 0.8rem;">(~${sizeKb} KB anexado)</span>
+                </div>
+              `;
+              showToast("Comprovante anexado!");
+            };
+            img.src = e.target.result;
+          } else {
+            currentUploadedFile = {
+              nome: file.name,
+              type: file.type || "application/pdf",
+              base64: e.target.result
+            };
+            const sizeKb = Math.round(file.size / 1024);
+            uploadText.innerHTML = `
+              <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fa-solid fa-circle-check" style="color: var(--success); font-size: 1.1rem;"></i>
+                <span style="color: #fff; font-weight: 700;">${file.name}</span>
+                <span style="color: var(--text-secondary); font-size: 0.8rem;">(${sizeKb} KB anexado)</span>
+              </div>
+            `;
+            showToast("Comprovante anexado!");
+          }
+        };
+
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function openReceiptModal(orderId) {
+      const o = orders.find(x => x.id === orderId);
+      if (!o) return;
+
+      const modal = document.getElementById("receiptModal");
+      const title = document.getElementById("receiptModalTitle");
+      const sub = document.getElementById("receiptModalSub");
+      const preview = document.getElementById("receiptPreviewContent");
+      const btnExt = document.getElementById("btnReceiptExternal");
+
+      title.innerText = `Comprovante - ${o.nome}`;
+      sub.innerText = `${o.produto} (${o.tamanho}) • ${o.quantidade} un • ${o.data}`;
+
+      if (o.comprovanteUrl && o.comprovanteUrl.toString().startsWith("http")) {
+        btnExt.href = o.comprovanteUrl;
+        btnExt.style.display = "inline-flex";
+      } else {
+        btnExt.style.display = "none";
+      }
+
+      const fileData = o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:") ? o.comprovante : "");
+      const fileUrl = o.comprovanteUrl || "";
+
+      if (fileData.startsWith("data:image/") || (fileUrl && (fileUrl.endsWith(".jpg") || fileUrl.endsWith(".png") || fileUrl.endsWith(".jpeg")))) {
+        preview.innerHTML = `<img src="${fileData || fileUrl}" alt="Comprovante de Pagamento" class="receipt-preview-img">`;
+      } else if (fileData.startsWith("data:application/pdf")) {
+        preview.innerHTML = `
+          <div style="text-align: center; padding: 2rem;">
+            <i class="fa-solid fa-file-pdf" style="font-size: 3.5rem; color: #ef4444; margin-bottom: 1rem;"></i>
+            <p style="font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Documento PDF Anexado</p>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">${o.comprovanteNome || "comprovante.pdf"}</p>
+            <a href="${fileData}" download="${o.comprovanteNome || 'comprovante.pdf'}" class="btn-cadastrar-comissario" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-download"></i> Baixar Comprovante PDF
+            </a>
+          </div>
+        `;
+      } else if (fileUrl) {
+        preview.innerHTML = `
+          <div style="text-align: center; padding: 2rem;">
+            <i class="fa-brands fa-google-drive" style="font-size: 3.5rem; color: #34a853; margin-bottom: 1rem;"></i>
+            <p style="font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Comprovante no Google Drive</p>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Arquivo sincronizado na sua pasta de Comprovantes da Atlética Pesadelo.</p>
+            <a href="${fileUrl}" target="_blank" class="btn-cadastrar-comissario" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir no Google Drive
+            </a>
+          </div>
+        `;
+      } else {
+        preview.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Nenhum comprovante anexado a este pedido.</p>`;
+      }
+
+      modal.classList.add("active");
+    }
+
+    function closeReceiptModal() {
+      const modal = document.getElementById("receiptModal");
+      if (modal) modal.classList.remove("active");
+    }
+
+    function handleReceiptOverlayClick(e) {
+      if (e.target.id === "receiptModal") {
+        closeReceiptModal();
       }
     }
 
     // SUBMIT DO PEDIDO
     function handleOrderSubmit(e) {
       e.preventDefault();
+
+      const btnSubmit = document.getElementById("btnSubmitOrder");
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Finalizando Pedido...`;
+      }
 
       const novo = {
         id: Date.now(),
@@ -2061,7 +2304,10 @@
         produto: document.getElementById("f_produto").value,
         tamanho: document.getElementById("f_tamanho").value,
         quantidade: parseInt(document.getElementById("f_quantidade").value || 1),
-        comprovante: "comprovante_pix.pdf",
+        comprovanteNome: currentUploadedFile ? currentUploadedFile.nome : "",
+        comprovanteType: currentUploadedFile ? currentUploadedFile.type : "",
+        comprovanteBase64: currentUploadedFile ? currentUploadedFile.base64 : "",
+        comprovanteUrl: "",
         statusPagamento: "Confirmado",
         statusEntrega: "Aguardando"
       };
@@ -2070,10 +2316,15 @@
       saveAndRefresh();
       sendToGoogleSheets({ action: "addOrder", order: novo });
 
-      showToast("Pedido registrado com sucesso!");
+      showToast("Pedido finalizado com sucesso!");
 
       document.getElementById("orderForm").reset();
+      currentUploadedFile = null;
       document.getElementById("uploadText").innerHTML = `<strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)`;
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = `Finalizar Pedido`;
+      }
 
       if (isGestaoAuthed()) {
         setTimeout(() => {
@@ -2093,10 +2344,22 @@
       const wb = XLSX.utils.book_new();
 
       const wsGeralData = [
-        ["Data", "Nome", "Telefone", "CPF", "Comissário", "Produto", "Tamanho", "Quantidade", "Status Pagamento", "Status Entrega"]
+        ["Data", "Nome", "Telefone", "CPF", "Comissário", "Produto", "Tamanho", "Quantidade", "Status Pagamento", "Comprovante", "Status Entrega"]
       ];
       orders.forEach(o => {
-        wsGeralData.push([o.data, o.nome, o.telefone, o.cpf, o.comissario, o.produto, o.tamanho, o.quantidade, o.statusPagamento, o.statusEntrega]);
+        wsGeralData.push([
+          o.data, 
+          o.nome, 
+          o.telefone, 
+          o.cpf, 
+          o.comissario, 
+          o.produto, 
+          o.tamanho, 
+          o.quantidade, 
+          o.statusPagamento, 
+          o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
+          o.statusEntrega
+        ]);
       });
       const wsGeral = XLSX.utils.aoa_to_sheet(wsGeralData);
       XLSX.utils.book_append_sheet(wb, wsGeral, "Todas as Respostas");
@@ -2104,10 +2367,21 @@
       const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
       prods.forEach(p => {
         const prodData = [
-          ["Data", "Nome", "Telefone", "CPF", "Comissário", "Tamanho", "Quantidade", "Status Pagamento", "Status Entrega"]
+          ["Data", "Nome", "Telefone", "CPF", "Comissário", "Tamanho", "Quantidade", "Status Pagamento", "Comprovante", "Status Entrega"]
         ];
         orders.filter(o => o.produto === p).forEach(o => {
-          prodData.push([o.data, o.nome, o.telefone, o.cpf, o.comissario, o.tamanho, o.quantidade, o.statusPagamento, o.statusEntrega]);
+          prodData.push([
+            o.data, 
+            o.nome, 
+            o.telefone, 
+            o.cpf, 
+            o.comissario, 
+            o.tamanho, 
+            o.quantidade, 
+            o.statusPagamento, 
+            o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
+            o.statusEntrega
+          ]);
         });
         const wsProd = XLSX.utils.aoa_to_sheet(prodData);
         XLSX.utils.book_append_sheet(wb, wsProd, p);

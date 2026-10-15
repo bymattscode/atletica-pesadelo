@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAAEFGA Pesadelo | Painel de Pedidos - UnB Gama</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SheetJS para exportação real para Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      /* PALETA CLEAN PROFISSIONAL */
+      --unb-vinho: #981844;
+      --unb-vinho-hover: #b01e52;
+      --pesadelo-pink: #c84676;
+      
+      --bg-dark: #08090d;
+      --bg-surface: #0e1017;
+      --bg-card: #12141d;
+      --bg-card-hover: #171924;
+      --bg-input: #090b10;
+      
+      --border: #1e2230;
+      --border-light: #2c3245;
+      --border-active: var(--unb-vinho);
+      
+      --text-main: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --success: #10b981;
+      --warning: #f59e0b;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* HEADER MINIMALISTA & PROFISSIONAL */
+    header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .brand-logos {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .pesadelo-crest {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pesadelo-crest img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .unb-logo-badge {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .unb-logo-badge img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-badge {
+      background: var(--unb-vinho);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-sub {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* NAVEGAÇÃO SUPERIOR ESTILO CEM (PILLS) */
+    .header-nav {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--bg-input);
+      padding: 0.3rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .nav-pill {
+      padding: 0.55rem 1.15rem;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .nav-pill:hover {
+      color: #fff;
+    }
+    .nav-pill.active {
+      background: var(--unb-vinho);
+      color: #fff;
+    }
+
+    .btn-excel-nav {
+      background: #0f6f38;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 0.55rem 1.15rem;
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .btn-excel-nav:hover {
+      background: #148545;
+    }
+
+    /* CONTAINER PRINCIPAL (AMPLO NA HORIZONTAL) */
+    .container {
+      width: 95%;
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+    }
+
+    .form-narrow-wrap {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* VIEWS */
+    .view-section {
+      display: none;
+    }
+    .view-section.active {
+      display: block;
+    }
+
+    /* CABEÇALHO DA SEÇÃO (CLEAN) */
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-logo {
+      width: 105px;
+      height: 105px;
+      object-fit: contain;
+    }
+
+    .section-header h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.35rem;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    /* CARD DO FORMULÁRIO (CLEAN & MATTE) */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.25rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .form-group.full {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    label span.req {
+      color: var(--pesadelo-pink);
+    }
+
+    input, select, textarea {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-size: 0.92rem;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--unb-vinho-hover);
+      background: #0b0d14;
+    }
+
+    /* SELEÇÃO DE PRODUTOS (TILES LIMPOS COMO O CEM) */
+    .product-tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.2rem;
+    }
+
+    .product-tile {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .product-tile:hover {
+      border-color: var(--border-light);
+      color: #fff;
+      background: var(--bg-card-hover);
+    }
+
+    .product-tile.selected {
+      background: var(--unb-vinho);
+      border-color: var(--pesadelo-pink);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* TAMANHOS */
+    .sizes-container {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .size-btn {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.65rem 1.15rem;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: 0.15s;
+    }
+
+    .size-btn:hover {
+      border-color: var(--border-light);
+      color: #fff;
+    }
+
+    .size-btn.selected {
+      background: var(--unb-vinho);
+      border-color: var(--pesadelo-pink);
+      color: #fff;
+    }
+
+    /* SEÇÃO PIX CLEAN */
+    .pix-box {
+      background: #090b10;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.4rem;
+    }
+
+    .pix-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .pix-box-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+    }
+
+    .pix-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--success);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+    }
+
+    .pix-input-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .pix-key-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #fff;
+      background: #050608;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      flex-grow: 1;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .btn-copy {
+      background: var(--unb-vinho);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.75rem 1.25rem;
+      font-weight: 700;
+      font-size: 0.86rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .btn-copy:hover {
+      background: var(--unb-vinho-hover);
+    }
+    .btn-copy.copied {
+      background: var(--success);
+    }
+
+    /* UPLOAD */
+    .upload-area {
+      border: 1px dashed var(--border-light);
+      background: var(--bg-input);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .upload-area:hover {
+      border-color: var(--pesadelo-pink);
+    }
+    .upload-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .upload-text strong {
+      color: #fff;
+    }
+
+    /* BOTÃO SUBMIT */
+    .btn-submit {
+      background: var(--unb-vinho);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .btn-submit:hover {
+      background: var(--unb-vinho-hover);
+    }
+
+    /* PAINEL DE ABAS (SUB-NAV CENTRALIZADO) */
+    .sub-tabs-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--bg-card);
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .sub-tab-btn {
+      padding: 0.55rem 1rem;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      white-space: nowrap;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .sub-tab-btn:hover {
+      color: #fff;
+    }
+    .sub-tab-btn.active {
+      background: var(--unb-vinho);
+      color: #fff;
+    }
+
+    .sub-tab-count {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.1rem 0.45rem;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* CADASTRO DE COMISSÁRIOS */
+    .comissario-cad-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .comissario-cad-header h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.2rem;
+      letter-spacing: -0.3px;
+    }
+
+    .comissario-cad-header p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .comissario-cad-form {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .comissario-input-wrap {
+      flex: 1;
+    }
+
+    .comissario-input-wrap input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+
+    .comissario-input-wrap input:focus {
+      outline: none;
+      border-color: var(--unb-vinho-hover);
+      background: #0b0d14;
+    }
+
+    .btn-cadastrar-comissario {
+      background: var(--unb-vinho);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.4rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-cadastrar-comissario:hover {
+      background: var(--unb-vinho-hover);
+    }
+
+    /* TABELA */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.86rem;
+    }
+
+    thead {
+      background: var(--bg-input);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 0.85rem 1rem;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      font-weight: 700;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    tbody tr:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .status-pago {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .status-pendente {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .row-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .btn-zap-clean {
+      background: transparent;
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: 0.15s;
+    }
+    .btn-zap-clean:hover {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .btn-delete-order {
+      background: transparent;
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 0.35rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      line-height: 1;
+    }
+    .btn-delete-order:hover {
+      background: #ef4444;
+      color: #fff;
+      border-color: #ef4444;
+    }
+
+    /* PÓDIO CLEAN (SEM BRILHO OU AURAS) */
+    .podium-clean-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .podium-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .podium-card.first {
+      border-color: var(--pesadelo-pink);
+      background: linear-gradient(180deg, rgba(152, 24, 68, 0.15) 0%, var(--bg-card) 100%);
+    }
+
+    .podium-rank-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+
+    .podium-card.first .podium-rank-tag {
+      background: rgba(200, 70, 118, 0.2);
+      color: #f69cb9;
+      border: 1px solid var(--pesadelo-pink);
+    }
+    .podium-card.second .podium-rank-tag {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid var(--border-light);
+    }
+    .podium-card.third .podium-rank-tag {
+      background: rgba(152, 24, 68, 0.15);
+      color: #e2e8f0;
+      border: 1px solid var(--border);
+    }
+
+    .podium-seller-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .podium-seller-sales {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .podium-seller-sales strong {
+      color: #fff;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: #fff;
+      padding: 0.9rem 1.4rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: none;
+      z-index: 1000;
+    }
+    .toast.show {
+      display: block;
+    }
+
+    /* MODAL ÁREA RESTRITA (MESMA IDENTIDADE VISUAL DO PROJETO) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 5, 8, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .login-modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.2rem 2rem 2rem;
+      width: 90%;
+      max-width: 380px;
+      position: relative;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+    }
+
+    .login-close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .login-close-btn:hover {
+      color: #fff;
+    }
+
+    .login-modal-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.35rem;
+    }
+
+    .login-modal-sub {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .login-inputs-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .login-field input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.88rem 1rem;
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 500;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+    .login-field input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .login-field input:focus {
+      outline: none;
+      border-color: var(--unb-vinho-hover);
+      background: #0b0d14;
+    }
+
+    .login-error-msg {
+      color: #f87171;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .btn-login-submit {
+      background: var(--unb-vinho);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.9rem;
+      font-weight: 700;
+      font-size: 0.92rem;
+      width: 100%;
+      cursor: pointer;
+      display: block;
+      text-align: center;
+      transition: background 0.15s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .btn-login-submit:hover {
+      background: var(--unb-vinho-hover);
+    }
+
+    .btn-logout {
+      color: #ef4444 !important;
+    }
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.15) !important;
+    }
+
+    /* MODAL DE CONFIRMAÇÃO PERSONALIZADO */
+    .confirm-modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem 1.8rem 1.5rem;
+      width: 90%;
+      max-width: 440px;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+      animation: confirmModalFadeIn 0.16s ease-out;
+    }
+
+    @keyframes confirmModalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .confirm-modal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .confirm-modal-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .confirm-modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.2px;
+      margin: 0;
+    }
+
+    .confirm-modal-msg {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 1.6rem;
+    }
+
+    .confirm-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-confirm-cancel {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .btn-confirm-cancel:hover {
+      background: #181c28;
+      color: #fff;
+      border-color: #2e3449;
+    }
+
+    .btn-confirm-danger {
+      background: #dc2626;
+      border: 1px solid #b91c1c;
+      color: #fff;
+      padding: 0.65rem 1.35rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-confirm-danger:hover {
+      background: #b91c1c;
+      border-color: #991b1b;
+    }
+
+    /* STATUS DE NUVEM & GOOGLE SHEETS */
+    .cloud-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .cloud-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .cloud-status-pill:hover {
+      border-color: #2e3449;
+      color: #fff;
+      background: #161924;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-online {
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+    }
+    .dot-offline {
+      background: #eab308;
+    }
+    .btn-sync-cloud {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .btn-sync-cloud:hover {
+      background: #181c28;
+      border-color: #2e3449;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 1rem; flex-direction: column; gap: 1rem; align-items: stretch; }
+      .brand-container { justify-content: center; text-align: center; }
+      .header-nav { justify-content: center; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: span 1; }
+      .product-tiles-grid { grid-template-columns: repeat(2, 1fr); }
+      .podium-clean-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER PROFISSIONAL -->
+  <header>
+    <div class="brand-container">
+      <div class="brand-logos">
+        <div class="pesadelo-crest" title="AAAEFGA Pesadelo">
+          <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';">
+        </div>
+        <div class="unb-logo-badge" title="Universidade de Brasília">
+          <img src="assets/logo_unb.png" alt="UnB" onerror="this.onerror=null; this.src='../assets/logo_unb.png';">
+        </div>
+      </div>
+
+      <div class="brand-text">
+        <div class="brand-title">
+          Atlética Pesadelo
+          <span class="brand-badge">AAAEFGA</span>
+        </div>
+        <div class="brand-sub">Universidade de Brasília - Campus Gama • Engenharias</div>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO ESTILO CEM -->
+    <div class="header-nav">
+      <button class="nav-pill active" id="btnNavForm" onclick="switchMainView('formView', this)">
+        Fazer Pedido
+      </button>
+      <button class="nav-pill" id="btnNavDash" onclick="switchMainView('dashView', this)" style="display: none;">
+        Planilha & Ranking
+      </button>
+      <button class="btn-excel-nav" id="btnExcelNav" onclick="exportToExcel()" style="display: none;">
+        Baixar Excel (.xlsx)
+      </button>
+      <button class="nav-pill btn-logout" id="btnNavLogout" onclick="logoutGestao()" style="display: none;">
+        Sair
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- VIEW 1: FORMULÁRIO DE PEDIDOS (CLEAN) -->
+    <section id="formView" class="view-section active">
+      <div class="form-narrow-wrap">
+      <div class="section-header">
+        <div class="section-logo-container">
+          <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" class="section-logo" onclick="handleLogoClicks()" onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';" style="user-select: none;">
+        </div>
+        <h1>Central de Controle</h1>
+        <p>Preencha os dados do comprador para registrar o pedido diretamente na planilha oficial da diretoria.</p>
+      </div>
+
+      <div class="form-card">
+        <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+          <div class="form-grid">
+            
+            <div class="form-group">
+              <label>Nome Completo <span class="req">*</span></label>
+              <input type="text" id="f_nome" placeholder="Ex: Lucas Gabriel da Silva" required>
+            </div>
+
+            <div class="form-group">
+              <label>Telefone / WhatsApp <span class="req">*</span></label>
+              <input type="text" id="f_telefone" placeholder="(61) 99999-8888" oninput="maskPhone(this)" required>
+            </div>
+
+            <div class="form-group">
+              <label>CPF <span class="req">*</span></label>
+              <input type="text" id="f_cpf" placeholder="000.000.000-00" oninput="maskCPF(this)" required>
+            </div>
+
+            <div class="form-group">
+              <label>Comissário Responsável <span class="req">*</span></label>
+              <select id="f_comissario" required>
+                <option value="">Carregando comissários...</option>
+              </select>
+            </div>
+
+            <!-- SELEÇÃO DE PRODUTO LIMPA (SEM ÍCONES NEM EMOJIS) -->
+            <div class="form-group full">
+              <label>Produto Selecionado <span class="req">*</span></label>
+              <div class="product-tiles-grid">
+                <div class="product-tile selected" onclick="selectProduct('Oversize', this)">Oversize</div>
+                <div class="product-tile" onclick="selectProduct('Jersey', this)">Jersey</div>
+                <div class="product-tile" onclick="selectProduct('Tube Top', this)">Tube Top</div>
+                <div class="product-tile" onclick="selectProduct('Caneca', this)">Caneca + Tirante</div>
+                <div class="product-tile" onclick="selectProduct('Corta Vento', this)">Corta Vento</div>
+                <div class="product-tile" onclick="selectProduct('Eco Bag', this)">Eco Bag</div>
+              </div>
+              <input type="hidden" id="f_produto" value="Oversize">
+            </div>
+
+            <!-- TAMANHOS -->
+            <div class="form-group" id="sizeGroupContainer">
+              <label>Tamanho <span class="req">*</span></label>
+              <div class="sizes-container">
+                <div class="size-btn" onclick="selectSize('PP', this)">PP</div>
+                <div class="size-btn" onclick="selectSize('P', this)">P</div>
+                <div class="size-btn selected" onclick="selectSize('M', this)">M</div>
+                <div class="size-btn" onclick="selectSize('G', this)">G</div>
+                <div class="size-btn" onclick="selectSize('GG', this)">GG</div>
+                <div class="size-btn" onclick="selectSize('XGG', this)">XGG</div>
+              </div>
+              <input type="hidden" id="f_tamanho" value="M">
+            </div>
+
+            <!-- QUANTIDADE -->
+            <div class="form-group">
+              <label>Quantidade de Peças <span class="req">*</span></label>
+              <input type="number" id="f_quantidade" min="1" max="50" value="1" required>
+            </div>
+
+            <!-- ÁREA PIX LIMPA & FUNCIONAL -->
+            <div class="form-group full">
+              <div class="pix-box">
+                <div class="pix-box-header">
+                  <div class="pix-box-title">Chave Pix Oficial da Atlética (Copia e Cola)</div>
+                  <div class="pix-badge">Chave Ativa</div>
+                </div>
+
+                <div class="pix-input-group">
+                  <div class="pix-key-display" id="pixKeyText">a7cd5773-ecc0-4922-9d54-08908b2edc2e</div>
+                  <button type="button" class="btn-copy" id="btnCopyPix" onclick="copiarChavePix()">
+                    Copiar Chave
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- COMPROVANTE -->
+            <div class="form-group full">
+              <label>Comprovante de Pagamento <span class="req">*</span></label>
+              <div class="upload-area" onclick="document.getElementById('f_comprovante_file').click()">
+                <div class="upload-text" id="uploadText">
+                  <strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)
+                </div>
+              </div>
+              <input type="file" id="f_comprovante_file" style="display: none;" onchange="handleFile(this)">
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="form-group full" style="margin-top: 0.5rem;">
+              <button type="submit" class="btn-submit">
+                Registrar Pedido na Planilha
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: PAINEL & PLANILHA (CLEAN) -->
+    <section id="dashView" class="view-section">
+      <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1>Controle Geral de Pedidos</h1>
+          <p>Acompanhe todos os lançamentos divididos por abas ou veja o desempenho dos comissários.</p>
+        </div>
+        <div class="cloud-status-bar">
+          <div class="cloud-status-pill" id="cloudStatusPill" onclick="openSheetsConfigModal()" title="Configurar conexão online com Google Sheets">
+            <span class="status-dot dot-offline" id="cloudStatusDot"></span>
+            <span id="cloudStatusText">Modo Local (Clique p/ Conectar)</span>
+          </div>
+          <button type="button" class="btn-sync-cloud" id="btnSyncCloud" onclick="syncWithGoogleSheets(true)" title="Sincronizar com o Google Sheets">
+            <i class="fa-solid fa-arrows-rotate" id="syncCloudIcon"></i> Sincronizar
+          </button>
+        </div>
+      </div>
+
+      <!-- NAVEGAÇÃO DE ABAS SUB-NAV (SEM EMOJIS) -->
+      <div class="sub-tabs-container">
+        <button class="sub-tab-btn" id="btnTabComissarios" onclick="switchSubTab('ranking', this)">
+          Comissários <span class="sub-tab-count" id="count-comissarios">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Oversize', this)">
+          Oversizes <span class="sub-tab-count" id="count-Oversize">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Jersey', this)">
+          Jerseys <span class="sub-tab-count" id="count-Jersey">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Tube Top', this)">
+          Tube Top <span class="sub-tab-count" id="count-Tube Top">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Caneca', this)">
+          Canecas <span class="sub-tab-count" id="count-Caneca">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Corta Vento', this)">
+          Corta Vento <span class="sub-tab-count" id="count-Corta Vento">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Eco Bag', this)">
+          Eco Bag <span class="sub-tab-count" id="count-Eco Bag">0</span>
+        </button>
+        <button class="sub-tab-btn active" id="btnTabTodas" onclick="switchSubTab('todas', this)">
+          Todas as Respostas <span class="sub-tab-count" id="count-todas">0</span>
+        </button>
+      </div>
+
+      <!-- TABELA DE PEDIDOS -->
+      <div id="tableSection" class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Nome</th>
+              <th>Telefone</th>
+              <th>CPF</th>
+              <th>Comissário</th>
+              <th>Produto</th>
+              <th>Tamanho</th>
+              <th>Qtd</th>
+              <th>Pagamento</th>
+              <th>Entrega</th>
+              <th>WhatsApp & Ações</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTbody">
+            <!-- Gerado via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SEÇÃO DO RANKING & COMISSÁRIOS (CLEAN E MATTE) -->
+      <div id="rankingSection" style="display: none;">
+        
+        <!-- CARD DE CADASTRO DE COMISSÁRIOS -->
+        <div class="comissario-cad-card">
+          <div class="comissario-cad-header">
+            <h3>Cadastrar Novo Comissário</h3>
+            <p>Adicione os membros e comissários oficiais para liberar seus nomes no formulário de pedidos e no ranking.</p>
+          </div>
+          <form id="formCadComissario" onsubmit="handleCadastrarComissario(event)" class="comissario-cad-form">
+            <div class="comissario-input-wrap">
+              <input type="text" id="novoComissarioNome" placeholder="Nome do comissário ou membro (Ex: Matheus Silva)" required>
+            </div>
+            <button type="submit" class="btn-cadastrar-comissario">
+              Cadastrar Comissário
+            </button>
+          </form>
+        </div>
+
+        <!-- PÓDIO CARDS LIMPOS -->
+        <div class="podium-clean-grid" id="podiumContent">
+          <!-- Gerado via JS -->
+        </div>
+
+        <!-- TABELA DO RANKING -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Posição</th>
+                <th>Comissário</th>
+                <th>Total de Pedidos</th>
+                <th>Total de Peças Vendidas</th>
+                <th>Situação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="rankingTbody">
+              <!-- Gerado via JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- MODAL ÁREA RESTRITA (ESTILO CEM) -->
+  <div class="modal-overlay" id="loginModal" onclick="handleOverlayClick(event)">
+    <div class="login-modal-box">
+      <button type="button" class="login-close-btn" onclick="closeLoginModal()" title="Fechar">&times;</button>
+      
+      <div class="login-modal-title">Área Restrita</div>
+      <div class="login-modal-sub">Acesso exclusivo para Comissários e Diretoria</div>
+
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="login-inputs-stack">
+          <div class="login-field">
+            <input type="text" id="loginUser" placeholder="Usuário" autocomplete="username" required>
+          </div>
+          <div class="login-field">
+            <input type="password" id="loginPass" placeholder="Senha" autocomplete="current-password" required>
+          </div>
+        </div>
+
+        <div id="loginErrorMsg" class="login-error-msg" style="display: none;"></div>
+
+        <button type="submit" class="btn-login-submit">ENTRAR</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIRMAÇÃO PERSONALIZADO -->
+  <div class="modal-overlay" id="confirmModal" onclick="handleConfirmOverlayClick(event)" style="z-index: 1100;">
+    <div class="confirm-modal-box">
+      <div class="confirm-modal-header">
+        <div class="confirm-modal-icon">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <h3 class="confirm-modal-title" id="confirmTitle">Confirmar Remoção</h3>
+      </div>
+      <p class="confirm-modal-msg" id="confirmMessage">
+        Tem certeza que deseja prosseguir com esta ação?
+      </p>
+      <div class="confirm-modal-actions">
+        <button type="button" class="btn-confirm-cancel" onclick="closeConfirmModal()">
+          Cancelar
+        </button>
+        <button type="button" class="btn-confirm-danger" id="btnConfirmAction" onclick="executeConfirmAction()">
+          Remover
+        </button>
+      </div>
+    </div>
+  <!-- MODAL CONFIGURAÇÃO GOOGLE SHEETS -->
+  <div class="modal-overlay" id="sheetsConfigModal" onclick="handleSheetsConfigOverlayClick(event)" style="z-index: 1050;">
+    <div class="login-modal-box" style="max-width: 500px; text-align: left; padding: 2rem;">
+      <button type="button" class="login-close-btn" onclick="closeSheetsConfigModal()" title="Fechar">&times;</button>
+      
+      <div class="login-modal-title" style="display: flex; align-items: center; gap: 0.6rem; font-size: 1.25rem;">
+        <i class="fa-solid fa-cloud" style="color: #22c55e;"></i> Conexão Google Sheets
+      </div>
+      <div class="login-modal-sub" style="margin-bottom: 1.2rem;">
+        Sincronize pedidos e comissários com a planilha oficial no Google Drive.
+      </div>
+
+      <div style="background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; margin-bottom: 1.2rem; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55;">
+        <strong style="color: #fff; display: block; margin-bottom: 0.35rem;">Como conectar sua planilha:</strong>
+        1. Abra sua planilha Google e acesse <strong>Extensões &gt; Apps Script</strong>.<br>
+        2. Cole o código do arquivo <strong>GoogleAppsScript_Database.js</strong> (já salvo na sua Área de Trabalho).<br>
+        3. Clique em <strong>Implantar &gt; Nova implantação</strong> como <em>App da Web</em> (Acesso: <em>Qualquer pessoa</em>).<br>
+        4. Cole a URL do App da Web abaixo:
+      </div>
+
+      <form onsubmit="handleSaveSheetsUrl(event)">
+        <div class="login-inputs-stack">
+          <div class="login-field">
+            <input type="url" id="inputSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" required style="font-size: 0.84rem;">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.2rem;">
+          <button type="button" class="btn-confirm-cancel" style="flex: 1;" onclick="closeSheetsConfigModal()">Cancelar</button>
+          <button type="submit" class="btn-login-submit" style="flex: 1.2; padding: 0.75rem;">Salvar e Conectar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <span id="toastMsg">Chave Pix copiada com sucesso!</span>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "PESADELO_PEDIDOS_UNB_PROD_V1";
+    const COMISSARIOS_KEY = "PESADELO_COMISSARIOS_PROD_V1";
+    const SHEETS_CONFIG_KEY = "PESADELO_SHEETS_URL";
+    const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwmSQECPJVUW0xvwQvTq_9O-kgD--T869jWqM5YYbqTipFq3fktoxROrujAq1iCChP-/exec";
+    // Limpeza de chaves antigas de teste
+    localStorage.removeItem("PESADELO_PEDIDOS_UNB_CLEAN_V1");
+    localStorage.removeItem("PESADELO_PEDIDOS_UNB_OFICIAL_V1");
+    let orders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let comissarios = JSON.parse(localStorage.getItem(COMISSARIOS_KEY)) || [];
+    let sheetsScriptUrl = localStorage.getItem(SHEETS_CONFIG_KEY) || DEFAULT_SHEETS_URL;
+
+    let currentTab = "todas";
+
+    // INTEGRAÇÃO COM GOOGLE SHEETS
+    function openSheetsConfigModal() {
+      const modal = document.getElementById("sheetsConfigModal");
+      const input = document.getElementById("inputSheetsUrl");
+      if (input) input.value = sheetsScriptUrl;
+      if (modal) modal.classList.add("active");
+      setTimeout(() => { if (input) input.focus(); }, 80);
+    }
+
+    function closeSheetsConfigModal() {
+      const modal = document.getElementById("sheetsConfigModal");
+      if (modal) modal.classList.remove("active");
+    }
+
+    function handleSheetsConfigOverlayClick(e) {
+      if (e.target.id === "sheetsConfigModal") {
+        closeSheetsConfigModal();
+      }
+    }
+
+    function handleSaveSheetsUrl(e) {
+      e.preventDefault();
+      const input = document.getElementById("inputSheetsUrl");
+      const url = input.value.trim();
+      sheetsScriptUrl = url;
+      localStorage.setItem(SHEETS_CONFIG_KEY, url);
+      closeSheetsConfigModal();
+      updateCloudStatusUI();
+      showToast("URL da planilha salva! Sincronizando dados...");
+      syncWithGoogleSheets(true);
+    }
+
+    function updateCloudStatusUI() {
+      const dot = document.getElementById("cloudStatusDot");
+      const text = document.getElementById("cloudStatusText");
+      if (!dot || !text) return;
+      if (sheetsScriptUrl && sheetsScriptUrl.trim() !== "") {
+        dot.className = "status-dot dot-online";
+        text.innerText = "Google Sheets Conectado";
+      } else {
+        dot.className = "status-dot dot-offline";
+        text.innerText = "Modo Local (Clique p/ Conectar)";
+      }
+    }
+
+    async function syncWithGoogleSheets(showToastOnDone = true) {
+      if (!sheetsScriptUrl || sheetsScriptUrl.trim() === "") {
+        openSheetsConfigModal();
+        return;
+      }
+
+      const icon = document.getElementById("syncCloudIcon");
+      if (icon) icon.classList.add("fa-spin");
+
+      try {
+        const response = await fetch(sheetsScriptUrl, {
+          method: "GET",
+          redirect: "follow"
+        });
+        const data = await response.json();
+        if (data && data.status === "success") {
+          if (Array.isArray(data.orders)) {
+            orders = data.orders;
+          }
+          if (Array.isArray(data.comissarios) && data.comissarios.length > 0) {
+            comissarios = data.comissarios;
+          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+          localStorage.setItem(COMISSARIOS_KEY, JSON.stringify(comissarios));
+          renderComissariosDropdown();
+          updateBadges();
+          renderOrdersTable();
+          renderRanking();
+          updateCloudStatusUI();
+          if (showToastOnDone) {
+            showToast("Planilha sincronizada com sucesso!");
+          }
+        } else {
+          if (showToastOnDone) showToast("Aviso: Formato inesperado retornado pela planilha.");
+        }
+      } catch (err) {
+        console.warn("Erro ao sincronizar com Google Sheets:", err);
+        if (showToastOnDone) {
+          showToast("Não foi possível conectar ao Google Sheets. Verifique a URL e a permissão de acesso.");
+        }
+      } finally {
+        if (icon) icon.classList.remove("fa-spin");
+      }
+    }
+
+    function sendToGoogleSheets(payload) {
+      if (!sheetsScriptUrl || sheetsScriptUrl.trim() === "") return;
+      try {
+        fetch(sheetsScriptUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(payload)
+        }).catch(err => console.warn("Erro de sincronização com Google Sheets:", err));
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    // GERENCIAMENTO DE COMISSÁRIOS
+    function renderComissariosDropdown() {
+      const select = document.getElementById("f_comissario");
+      if (!select) return;
+      select.innerHTML = "";
+
+      if (comissarios.length === 0) {
+        select.innerHTML = `<option value="">Nenhum comissário cadastrado (cadastre na aba Comissários)</option>`;
+        return;
+      }
+
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.innerText = "Selecione quem realizou a venda...";
+      select.appendChild(defaultOpt);
+
+      comissarios.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.innerText = c;
+        select.appendChild(opt);
+      });
+    }
+
+    function handleCadastrarComissario(e) {
+      e.preventDefault();
+      const input = document.getElementById("novoComissarioNome");
+      const nome = input.value.trim();
+
+      if (!nome) return;
+
+      if (comissarios.some(c => c.toLowerCase() === nome.toLowerCase())) {
+        showToast("Este comissário já está cadastrado.");
+        return;
+      }
+
+      comissarios.push(nome);
+      comissarios.sort((a, b) => a.localeCompare(b));
+      input.value = "";
+      saveAndRefresh();
+      sendToGoogleSheets({ action: "addComissario", nome: nome });
+      showToast(`Comissário "${nome}" cadastrado com sucesso.`);
+    }
+
+    // MODAL DE CONFIRMAÇÃO PERSONALIZADO
+    let confirmActionCallback = null;
+
+    function showCustomConfirm(title, message, onConfirm, confirmBtnText = "Remover") {
+      const modal = document.getElementById("confirmModal");
+      const titleEl = document.getElementById("confirmTitle");
+      const msgEl = document.getElementById("confirmMessage");
+      const actBtn = document.getElementById("btnConfirmAction");
+
+      if (titleEl) titleEl.innerText = title;
+      if (msgEl) msgEl.innerText = message;
+      if (actBtn) actBtn.innerText = confirmBtnText;
+
+      confirmActionCallback = onConfirm;
+      if (modal) modal.classList.add("active");
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById("confirmModal");
+      if (modal) modal.classList.remove("active");
+      confirmActionCallback = null;
+    }
+
+    function handleConfirmOverlayClick(e) {
+      if (e.target.id === "confirmModal") {
+        closeConfirmModal();
+      }
+    }
+
+    function executeConfirmAction() {
+      if (typeof confirmActionCallback === "function") {
+        const cb = confirmActionCallback;
+        confirmActionCallback = null;
+        closeConfirmModal();
+        cb();
+      } else {
+        closeConfirmModal();
+      }
+    }
+
+    function deleteComissario(nome) {
+      showCustomConfirm(
+        "Remover Comissário",
+        `Tem certeza que deseja remover o comissário "${nome}" da lista oficial?`,
+        () => {
+          comissarios = comissarios.filter(c => c !== nome);
+          saveAndRefresh();
+          sendToGoogleSheets({ action: "deleteComissario", nome: nome });
+          showToast(`Comissário "${nome}" removido.`);
+        },
+        "Remover"
+      );
+    }
+
+    // CONTROLE DE AUTENTICAÇÃO (ÁREA RESTRITA)
+    const AUTH_KEY = "PESADELO_GESTAO_AUTH";
+
+    function isGestaoAuthed() {
+      return sessionStorage.getItem(AUTH_KEY) === "true";
+    }
+
+    function applyAuthState() {
+      const authed = isGestaoAuthed();
+      const btnDash = document.getElementById("btnNavDash");
+      const btnExcel = document.getElementById("btnExcelNav");
+      const btnLogout = document.getElementById("btnNavLogout");
+
+      if (authed) {
+        if (btnDash) btnDash.style.display = "flex";
+        if (btnExcel) btnExcel.style.display = "flex";
+        if (btnLogout) btnLogout.style.display = "flex";
+      } else {
+        if (btnDash) btnDash.style.display = "none";
+        if (btnExcel) btnExcel.style.display = "none";
+        if (btnLogout) btnLogout.style.display = "none";
+
+        // Se estiver na visão administrativa sem autenticação, volta para o formulário
+        const dashSec = document.getElementById("dashView");
+        if (dashSec && dashSec.classList.contains("active")) {
+          switchMainView("formView", document.getElementById("btnNavForm"));
+        }
+      }
+    }
+
+    // CLIQUE 5X NA LOGO CENTRAL PARA ABRIR O LOGIN
+    let logoClicks = 0;
+    let logoTimer = null;
+
+    function handleLogoClicks() {
+      logoClicks++;
+      if (logoTimer) clearTimeout(logoTimer);
+
+      if (logoClicks >= 5) {
+        logoClicks = 0;
+        openLoginModal();
+      } else {
+        logoTimer = setTimeout(() => {
+          logoClicks = 0;
+        }, 2500);
+      }
+    }
+
+    function openLoginModal() {
+      const modal = document.getElementById("loginModal");
+      const err = document.getElementById("loginErrorMsg");
+      err.style.display = "none";
+      err.innerText = "";
+      document.getElementById("loginUser").value = "";
+      document.getElementById("loginPass").value = "";
+      modal.classList.add("active");
+      setTimeout(() => {
+        document.getElementById("loginUser").focus();
+      }, 80);
+    }
+
+    function closeLoginModal() {
+      document.getElementById("loginModal").classList.remove("active");
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target.id === "loginModal") {
+        closeLoginModal();
+      }
+    }
+
+    // SUBMIT DO LOGIN (PESADELO / AAAEFGA26)
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const user = document.getElementById("loginUser").value.trim();
+      const pass = document.getElementById("loginPass").value.trim();
+      const err = document.getElementById("loginErrorMsg");
+
+      if (user.toLowerCase() === "pesadelo" && pass === "AAAEFGA26") {
+        sessionStorage.setItem(AUTH_KEY, "true");
+        applyAuthState();
+        closeLoginModal();
+        showToast("Acesso concedido. Bem-vindo à Área Restrita!");
+        const btnDash = document.getElementById("btnNavDash");
+        switchMainView("dashView", btnDash);
+      } else {
+        err.style.display = "block";
+        err.innerText = "Usuário ou senha incorretos.";
+      }
+    }
+
+    function logoutGestao() {
+      sessionStorage.removeItem(AUTH_KEY);
+      applyAuthState();
+      showToast("Você saiu da Área Restrita.");
+      const btnForm = document.getElementById("btnNavForm");
+      switchMainView("formView", btnForm);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      applyAuthState();
+      renderComissariosDropdown();
+      saveAndRefresh();
+      updateCloudStatusUI();
+      if (sheetsScriptUrl && sheetsScriptUrl.trim() !== "") {
+        syncWithGoogleSheets(false);
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeLoginModal();
+        closeConfirmModal();
+        closeSheetsConfigModal();
+      }
+    });
+
+    function saveAndRefresh() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      localStorage.setItem(COMISSARIOS_KEY, JSON.stringify(comissarios));
+      renderComissariosDropdown();
+      updateBadges();
+      renderOrdersTable();
+      renderRanking();
+    }
+
+    // COPIAR PIX
+    function copiarChavePix() {
+      const pixKey = "a7cd5773-ecc0-4922-9d54-08908b2edc2e";
+      navigator.clipboard.writeText(pixKey).then(() => {
+        const btn = document.getElementById("btnCopyPix");
+        btn.classList.add("copied");
+        btn.innerText = "Copiado!";
+        showToast("Chave Pix copiada com sucesso.");
+        setTimeout(() => {
+          btn.classList.remove("copied");
+          btn.innerText = "Copiar Chave";
+        }, 2500);
+      }).catch(() => {
+        const textarea = document.createElement("textarea");
+        textarea.value = pixKey;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showToast("Chave Pix copiada.");
+      });
+    }
+
+    // NAVEGAÇÃO PRINCIPAL (ESTILO CEM)
+    function switchMainView(viewId, btn) {
+      if (viewId === "dashView" && !isGestaoAuthed()) {
+        openLoginModal();
+        return;
+      }
+
+      document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll(".nav-pill").forEach(p => p.classList.remove("active"));
+      
+      document.getElementById(viewId).classList.add("active");
+      if (btn) btn.classList.add("active");
+      
+      if (viewId === 'dashView') {
+        saveAndRefresh();
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // NAVEGAÇÃO SUB-TABS
+    function switchSubTab(tab, btn) {
+      currentTab = tab;
+      document.querySelectorAll(".sub-tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const tableSec = document.getElementById("tableSection");
+      const rankingSec = document.getElementById("rankingSection");
+
+      if (tab === "ranking") {
+        tableSec.style.display = "none";
+        rankingSec.style.display = "block";
+        renderRanking();
+      } else {
+        tableSec.style.display = "block";
+        rankingSec.style.display = "none";
+        renderOrdersTable();
+      }
+    }
+
+    // CONTAGENS
+    function updateBadges() {
+      const countTodas = document.getElementById("count-todas");
+      if (countTodas) countTodas.innerText = orders.length;
+
+      const countCom = document.getElementById("count-comissarios");
+      if (countCom) countCom.innerText = comissarios.length;
+
+      const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
+      prods.forEach(p => {
+        const c = orders.filter(o => o.produto === p).length;
+        const el = document.getElementById("count-" + p);
+        if (el) el.innerText = c;
+      });
+    }
+
+    // TABELA DE PEDIDOS
+    function renderOrdersTable() {
+      const tbody = document.getElementById("ordersTbody");
+      tbody.innerHTML = "";
+
+      let filtered = orders;
+      if (currentTab !== "todas" && currentTab !== "ranking") {
+        filtered = orders.filter(o => o.produto === currentTab);
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum pedido encontrado nesta aba.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(o => {
+        const rawPhone = o.telefone.replace(/\D/g, "");
+        const zapMsg = encodeURIComponent(`Olá ${o.nome.split(" ")[0]}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${o.produto} (${o.tamanho}).`);
+        const zapUrl = `https://wa.me/55${rawPhone}?text=${zapMsg}`;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><small style="color: var(--text-muted)">${o.data}</small></td>
+          <td><strong>${o.nome}</strong></td>
+          <td>${o.telefone}</td>
+          <td><small style="color: var(--text-secondary);">${o.cpf}</small></td>
+          <td>${o.comissario}</td>
+          <td><strong>${o.produto}</strong></td>
+          <td>${o.tamanho}</td>
+          <td>${o.quantidade}</td>
+          <td>
+            <span class="status-badge ${o.statusPagamento === 'Confirmado' ? 'status-pago' : 'status-pendente'}" onclick="togglePagamento(${o.id})">
+              ${o.statusPagamento}
+            </span>
+          </td>
+          <td>
+            <select onchange="changeEntrega(${o.id}, this.value)" style="padding: 0.25rem 0.5rem; font-size: 0.78rem;">
+              <option value="Aguardando" ${o.statusEntrega === 'Aguardando' ? 'selected' : ''}>Aguardando</option>
+              <option value="Em Produção" ${o.statusEntrega === 'Em Produção' ? 'selected' : ''}>Em Produção</option>
+              <option value="Pronto p/ Retirada" ${o.statusEntrega === 'Pronto p/ Retirada' ? 'selected' : ''}>Pronto p/ Retirada</option>
+              <option value="Entregue" ${o.statusEntrega === 'Entregue' ? 'selected' : ''}>Entregue</option>
+            </select>
+          </td>
+          <td>
+            <div class="row-actions">
+              <a href="${zapUrl}" target="_blank" class="btn-zap-clean" title="Abrir conversa no WhatsApp">
+                WhatsApp
+              </a>
+              <button type="button" class="btn-delete-order" onclick="deleteOrder(${o.id})" title="Excluir este pedido">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function togglePagamento(id) {
+      const ord = orders.find(x => x.id === id);
+      if (ord) {
+        ord.statusPagamento = ord.statusPagamento === "Confirmado" ? "Pendente" : "Confirmado";
+        saveAndRefresh();
+        sendToGoogleSheets({ action: "updateOrder", id: id, statusPagamento: ord.statusPagamento });
+        showToast("Status de pagamento atualizado.");
+      }
+    }
+
+    function changeEntrega(id, val) {
+      const ord = orders.find(x => x.id === id);
+      if (ord) {
+        ord.statusEntrega = val;
+        saveAndRefresh();
+        sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: val });
+        showToast("Status de entrega alterado para " + val);
+      }
+    }
+
+    function deleteOrder(id) {
+      const ord = orders.find(x => x.id === id);
+      const cliente = ord ? ord.nome : "este pedido";
+      showCustomConfirm(
+        "Excluir Pedido",
+        `Tem certeza que deseja excluir o pedido de "${cliente}"?`,
+        () => {
+          orders = orders.filter(x => x.id !== id);
+          saveAndRefresh();
+          sendToGoogleSheets({ action: "deleteOrder", id: id });
+          showToast("Pedido excluído com sucesso.");
+        },
+        "Excluir"
+      );
+    }
+
+    // SEÇÃO DE COMISSÁRIOS & RANKING
+    function renderRanking() {
+      const comissariosMap = {};
+      comissarios.forEach(c => {
+        comissariosMap[c] = { pedidos: 0, itens: 0 };
+      });
+
+      orders.forEach(o => {
+        if (!comissariosMap[o.comissario]) {
+          comissariosMap[o.comissario] = { pedidos: 0, itens: 0 };
+        }
+        comissariosMap[o.comissario].pedidos += 1;
+        comissariosMap[o.comissario].itens += parseInt(o.quantidade || 1);
+      });
+
+      const rankingArray = Object.keys(comissariosMap).map(nome => ({
+        nome: nome,
+        pedidos: comissariosMap[nome].pedidos,
+        itens: comissariosMap[nome].itens
+      })).sort((a, b) => b.itens - a.itens);
+
+      const podiumEl = document.getElementById("podiumContent");
+      podiumEl.innerHTML = "";
+
+      if (rankingArray.length === 0) {
+        podiumEl.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-muted); font-size: 0.92rem;">
+            Nenhum comissário cadastrado ainda. Utilize o formulário acima para cadastrar os membros oficiais da atlética.
+          </div>
+        `;
+        const tbody = document.getElementById("rankingTbody");
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum comissário cadastrado até o momento.</td></tr>`;
+        return;
+      }
+
+      // Pódio mostra quem já tem vendas
+      const comVendas = rankingArray.filter(c => c.itens > 0);
+      if (comVendas.length === 0) {
+        podiumEl.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-muted); font-size: 0.9rem;">
+            Nenhuma venda registrada ainda pelos comissários cadastrados. Registre os primeiros pedidos para ver o pódio em tempo real.
+          </div>
+        `;
+      } else {
+        const first = comVendas[0] || { nome: "-", itens: 0, pedidos: 0 };
+        const second = comVendas[1] || { nome: "-", itens: 0, pedidos: 0 };
+        const third = comVendas[2] || { nome: "-", itens: 0, pedidos: 0 };
+
+        podiumEl.innerHTML = `
+          <div class="podium-card second">
+            <div class="podium-rank-tag">2º Lugar</div>
+            <div class="podium-seller-name">${second.nome}</div>
+            <div class="podium-seller-sales"><strong>${second.itens}</strong> peças vendidas (${second.pedidos} pedidos)</div>
+          </div>
+
+          <div class="podium-card first">
+            <div class="podium-rank-tag">1º Lugar • Líder</div>
+            <div class="podium-seller-name">${first.nome}</div>
+            <div class="podium-seller-sales"><strong>${first.itens}</strong> peças vendidas (${first.pedidos} pedidos)</div>
+          </div>
+
+          <div class="podium-card third">
+            <div class="podium-rank-tag">3º Lugar</div>
+            <div class="podium-seller-name">${third.nome}</div>
+            <div class="podium-seller-sales"><strong>${third.itens}</strong> peças vendidas (${third.pedidos} pedidos)</div>
+          </div>
+        `;
+      }
+
+      // TABELA COMPLETA DO RANKING
+      const tbody = document.getElementById("rankingTbody");
+      tbody.innerHTML = "";
+
+      rankingArray.forEach((c, idx) => {
+        const medal = c.itens > 0 ? (idx === 0 ? "1º Lugar" : idx === 1 ? "2º Lugar" : idx === 2 ? "3º Lugar" : `${idx + 1}º Lugar`) : "-";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${medal}</strong></td>
+          <td><strong>${c.nome}</strong></td>
+          <td>${c.pedidos} pedidos</td>
+          <td><strong>${c.itens} peças</strong></td>
+          <td><span class="status-badge status-pago">Ativo</span></td>
+          <td>
+            <button type="button" class="btn-delete-order" onclick="deleteComissario('${c.nome}')" title="Excluir Comissário">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // PRODUTO / TAMANHO
+    function selectProduct(prod, el) {
+      document.querySelectorAll(".product-tile").forEach(c => c.classList.remove("selected"));
+      el.classList.add("selected");
+      document.getElementById("f_produto").value = prod;
+
+      const sizeContainer = document.getElementById("sizeGroupContainer");
+      if (prod === "Caneca" || prod === "Eco Bag") {
+        sizeContainer.style.display = "none";
+        document.getElementById("f_tamanho").value = "-";
+      } else {
+        sizeContainer.style.display = "flex";
+        if (document.getElementById("f_tamanho").value === "-") {
+          document.getElementById("f_tamanho").value = "M";
+        }
+      }
+    }
+
+    function selectSize(sz, el) {
+      document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
+      el.classList.add("selected");
+      document.getElementById("f_tamanho").value = sz;
+    }
+
+    function handleFile(input) {
+      if (input.files && input.files[0]) {
+        document.getElementById("uploadText").innerHTML = `<span style="color: #fff; font-weight: 700;">Arquivo anexado: ${input.files[0].name}</span>`;
+      }
+    }
+
+    // SUBMIT DO PEDIDO
+    function handleOrderSubmit(e) {
+      e.preventDefault();
+
+      const novo = {
+        id: Date.now(),
+        data: new Date().toLocaleDateString("pt-BR") + " " + new Date().toLocaleTimeString("pt-BR", {hour: '2-digit', minute:'2-digit'}),
+        nome: document.getElementById("f_nome").value.trim(),
+        telefone: document.getElementById("f_telefone").value.trim(),
+        cpf: document.getElementById("f_cpf").value.trim(),
+        comissario: document.getElementById("f_comissario").value,
+        produto: document.getElementById("f_produto").value,
+        tamanho: document.getElementById("f_tamanho").value,
+        quantidade: parseInt(document.getElementById("f_quantidade").value || 1),
+        comprovante: "comprovante_pix.pdf",
+        statusPagamento: "Confirmado",
+        statusEntrega: "Aguardando"
+      };
+
+      orders.unshift(novo);
+      saveAndRefresh();
+      sendToGoogleSheets({ action: "addOrder", order: novo });
+
+      showToast("Pedido registrado com sucesso!");
+
+      document.getElementById("orderForm").reset();
+      document.getElementById("uploadText").innerHTML = `<strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)`;
+
+      if (isGestaoAuthed()) {
+        setTimeout(() => {
+          const btnDash = document.getElementById("btnNavDash");
+          switchMainView("dashView", btnDash);
+        }, 800);
+      } else {
+        const pixSec = document.querySelector(".pix-payment-card");
+        if (pixSec) {
+          pixSec.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
+
+    // EXPORTAR EXCEL (.XLSX)
+    function exportToExcel() {
+      const wb = XLSX.utils.book_new();
+
+      const wsGeralData = [
+        ["Data", "Nome", "Telefone", "CPF", "Comissário", "Produto", "Tamanho", "Quantidade", "Status Pagamento", "Status Entrega"]
+      ];
+      orders.forEach(o => {
+        wsGeralData.push([o.data, o.nome, o.telefone, o.cpf, o.comissario, o.produto, o.tamanho, o.quantidade, o.statusPagamento, o.statusEntrega]);
+      });
+      const wsGeral = XLSX.utils.aoa_to_sheet(wsGeralData);
+      XLSX.utils.book_append_sheet(wb, wsGeral, "Todas as Respostas");
+
+      const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
+      prods.forEach(p => {
+        const prodData = [
+          ["Data", "Nome", "Telefone", "CPF", "Comissário", "Tamanho", "Quantidade", "Status Pagamento", "Status Entrega"]
+        ];
+        orders.filter(o => o.produto === p).forEach(o => {
+          prodData.push([o.data, o.nome, o.telefone, o.cpf, o.comissario, o.tamanho, o.quantidade, o.statusPagamento, o.statusEntrega]);
+        });
+        const wsProd = XLSX.utils.aoa_to_sheet(prodData);
+        XLSX.utils.book_append_sheet(wb, wsProd, p);
+      });
+
+      const comissariosMap = {};
+      comissarios.forEach(c => {
+        comissariosMap[c] = { pedidos: 0, itens: 0 };
+      });
+      orders.forEach(o => {
+        if (!comissariosMap[o.comissario]) comissariosMap[o.comissario] = { pedidos: 0, itens: 0 };
+        comissariosMap[o.comissario].pedidos += 1;
+        comissariosMap[o.comissario].itens += parseInt(o.quantidade || 1);
+      });
+      const rankingData = [
+        ["Posição", "Comissário", "Total de Pedidos", "Total de Itens Vendidos"]
+      ];
+      Object.keys(comissariosMap).map(n => ({
+        nome: n,
+        pedidos: comissariosMap[n].pedidos,
+        itens: comissariosMap[n].itens
+      })).sort((a,b) => b.itens - a.itens).forEach((c, i) => {
+        rankingData.push([`${i+1}º Lugar`, c.nome, c.pedidos, c.itens]);
+      });
+      const wsRank = XLSX.utils.aoa_to_sheet(rankingData);
+      XLSX.utils.book_append_sheet(wb, wsRank, "Ranking Comissarios");
+
+      XLSX.writeFile(wb, "Planilha_Pedidos_AAAEFGA_Pesadelo.xlsx");
+      showToast("Planilha Excel (.xlsx) gerada com sucesso.");
+    }
+
+    // MÁSCARAS
+    function maskPhone(input) {
+      let v = input.value.replace(/\D/g, "");
+      if (v.length > 11) v = v.substring(0, 11);
+      if (v.length > 6) {
+        input.value = `(${v.substring(0, 2)}) ${v.substring(2, 7)}-${v.substring(7)}`;
+      } else if (v.length > 2) {
+        input.value = `(${v.substring(0, 2)}) ${v.substring(2)}`;
+      } else {
+        input.value = v;
+      }
+    }
+
+    function maskCPF(input) {
+      let v = input.value.replace(/\D/g, "");
+      if (v.length > 11) v = v.substring(0, 11);
+      if (v.length > 9) {
+        input.value = `${v.substring(0, 3)}.${v.substring(3, 6)}.${v.substring(6, 9)}-${v.substring(9)}`;
+      } else if (v.length > 6) {
+        input.value = `${v.substring(0, 3)}.${v.substring(3, 6)}.${v.substring(6)}`;
+      } else if (v.length > 3) {
+        input.value = `${v.substring(0, 3)}.${v.substring(3)}`;
+      } else {
+        input.value = v;
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastMsg").innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

@@ -1127,6 +1127,13 @@
       <button class="nav-pill" id="btnNavDash" onclick="switchMainView('dashView', this)" style="display: none;">
         Planilha & Ranking
       </button>
+      <div class="cloud-status-pill" id="cloudStatusPill" onclick="openSheetsConfigModal()" style="display: none;" title="Configurar conexão Google Sheets">
+        <span class="status-dot dot-offline" id="cloudStatusDot"></span>
+        <span id="cloudStatusText">Modo Local</span>
+      </div>
+      <button type="button" class="btn-sync-cloud" id="btnSyncCloud" onclick="syncWithGoogleSheets(true)" style="display: none;" title="Sincronizar com o Google Sheets">
+        <i class="fa-solid fa-arrows-rotate" id="syncCloudIcon"></i> Sincronizar
+      </button>
       <button class="btn-excel-nav" id="btnExcelNav" onclick="exportToExcel()" style="display: none;">
         Baixar Excel (.xlsx)
       </button>
@@ -1252,20 +1259,9 @@
 
     <!-- VIEW 2: PAINEL & PLANILHA (CLEAN) -->
     <section id="dashView" class="view-section">
-      <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
-        <div>
-          <h1>Controle Geral de Pedidos</h1>
-          <p>Acompanhe todos os lançamentos divididos por abas ou veja o desempenho dos comissários.</p>
-        </div>
-        <div class="cloud-status-bar">
-          <div class="cloud-status-pill" id="cloudStatusPill" onclick="openSheetsConfigModal()" title="Configurar conexão online com Google Sheets">
-            <span class="status-dot dot-offline" id="cloudStatusDot"></span>
-            <span id="cloudStatusText">Modo Local (Clique p/ Conectar)</span>
-          </div>
-          <button type="button" class="btn-sync-cloud" id="btnSyncCloud" onclick="syncWithGoogleSheets(true)" title="Sincronizar com o Google Sheets">
-            <i class="fa-solid fa-arrows-rotate" id="syncCloudIcon"></i> Sincronizar
-          </button>
-        </div>
+      <div class="section-header">
+        <h1>Controle Geral de Pedidos</h1>
+        <p>Acompanhe todos os lançamentos divididos por abas ou veja o desempenho dos comissários.</p>
       </div>
 
       <!-- NAVEGAÇÃO DE ABAS SUB-NAV (SEM EMOJIS) -->
@@ -1683,15 +1679,21 @@
       const btnDash = document.getElementById("btnNavDash");
       const btnExcel = document.getElementById("btnExcelNav");
       const btnLogout = document.getElementById("btnNavLogout");
+      const pillSync = document.getElementById("cloudStatusPill");
+      const btnSync = document.getElementById("btnSyncCloud");
 
       if (authed) {
         if (btnDash) btnDash.style.display = "flex";
         if (btnExcel) btnExcel.style.display = "flex";
         if (btnLogout) btnLogout.style.display = "flex";
+        if (pillSync) pillSync.style.display = "inline-flex";
+        if (btnSync) btnSync.style.display = "inline-flex";
       } else {
         if (btnDash) btnDash.style.display = "none";
         if (btnExcel) btnExcel.style.display = "none";
         if (btnLogout) btnLogout.style.display = "none";
+        if (pillSync) pillSync.style.display = "none";
+        if (btnSync) btnSync.style.display = "none";
 
         // Se estiver na visão administrativa sem autenticação, volta para o formulário
         const dashSec = document.getElementById("dashView");

@@ -2,9 +2,13 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#08090d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Atlética Pesadelo | Painel de Pedidos</title>
   <link rel="icon" type="image/png" href="assets/logo_pesadelo.png">
+  <link rel="apple-touch-icon" href="assets/logo_pesadelo.png">
   <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1141,14 +1145,378 @@
       height: 0 !important;
     }
 
+    /* =========================================================================
+       RESPONSIVIDADE MOBILE COMPLETA & POLIDA
+       ========================================================================= */
+    .table-scroll-hint {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .podium-clean-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.85rem;
+      }
+      .podium-card {
+        padding: 1.25rem 0.75rem;
+      }
+    }
+
     @media (max-width: 768px) {
-      header { padding: 1rem; flex-direction: column; gap: 1rem; align-items: stretch; }
-      .brand-container { justify-content: center; text-align: center; }
-      .header-nav { justify-content: center; }
-      .form-grid { grid-template-columns: 1fr; }
-      .form-group.full { grid-column: span 1; }
-      .product-tiles-grid { grid-template-columns: repeat(2, 1fr); }
-      .podium-clean-grid { grid-template-columns: 1fr; }
+      header {
+        padding: 0.85rem 1rem;
+        flex-direction: column;
+        gap: 0.85rem;
+        align-items: stretch;
+      }
+
+      .brand-container {
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0.85rem;
+      }
+
+      .pesadelo-crest {
+        width: 42px;
+        height: 42px;
+      }
+
+      .unb-logo-badge {
+        height: 34px;
+      }
+
+      .brand-title {
+        font-size: 1.2rem;
+      }
+
+      .brand-sub {
+        font-size: 0.72rem;
+        line-height: 1.3;
+      }
+
+      .header-nav {
+        display: flex;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        width: 100%;
+        padding: 0.25rem;
+        gap: 0.35rem;
+      }
+      .header-nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-pill, .btn-excel-nav {
+        flex: 1 0 auto;
+        text-align: center;
+        justify-content: center;
+        padding: 0.55rem 0.85rem;
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+
+      .container {
+        width: 100%;
+        padding: 1.25rem 0.85rem;
+      }
+
+      .form-narrow-wrap {
+        width: 100%;
+      }
+
+      .section-header {
+        margin-bottom: 1.5rem;
+      }
+
+      .section-logo-container {
+        margin-bottom: 0.75rem;
+      }
+
+      .section-logo {
+        width: 85px;
+        height: 85px;
+      }
+
+      .section-header h1 {
+        font-size: 1.55rem;
+      }
+
+      .section-header p {
+        font-size: 0.88rem;
+        padding: 0 0.5rem;
+      }
+
+      .form-card {
+        padding: 1.5rem 1.15rem;
+        border-radius: 12px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1.15rem;
+      }
+
+      .form-group.full {
+        grid-column: span 1;
+      }
+
+      input, select, textarea {
+        padding: 0.85rem 0.95rem;
+        font-size: 16px; /* Impede zoom forçado indesejado no iOS Safari */
+        border-radius: 8px;
+      }
+
+      .product-tiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+      }
+
+      .product-tile {
+        padding: 0.85rem 0.6rem;
+        font-size: 0.88rem;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sub-tabs-container {
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0.35rem 0.5rem;
+        gap: 0.35rem;
+      }
+      .sub-tabs-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      .sub-tab-btn {
+        padding: 0.5rem 0.85rem;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+      }
+
+      /* Pódio reordenado para ordem natural no mobile (1º lugar no topo) */
+      .podium-clean-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+      .podium-card.first {
+        order: 1;
+      }
+      .podium-card.second {
+        order: 2;
+      }
+      .podium-card.third {
+        order: 3;
+      }
+      .podium-card {
+        padding: 1.25rem 1rem;
+      }
+
+      .table-scroll-hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        padding: 0.55rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .table-container {
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        font-size: 0.82rem;
+      }
+
+      th {
+        padding: 0.75rem 0.7rem;
+        font-size: 0.72rem;
+      }
+
+      td {
+        padding: 0.75rem 0.7rem;
+      }
+
+      .status-badge {
+        font-size: 0.72rem;
+        padding: 0.25rem 0.55rem;
+      }
+
+      .btn-zap-clean, .btn-receipt-badge {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.76rem;
+      }
+
+      .btn-delete-order {
+        padding: 0.4rem 0.55rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      header {
+        padding: 0.75rem 0.75rem;
+      }
+
+      .brand-container {
+        gap: 0.65rem;
+      }
+
+      .brand-title {
+        font-size: 1.1rem;
+      }
+
+      .brand-badge {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.4rem;
+      }
+
+      .brand-sub {
+        font-size: 0.68rem;
+      }
+
+      .container {
+        padding: 1rem 0.65rem;
+      }
+
+      .form-card {
+        padding: 1.25rem 0.85rem;
+      }
+
+      .sizes-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.45rem;
+        width: 100%;
+      }
+
+      .size-btn {
+        padding: 0.75rem 0.4rem;
+        font-size: 0.88rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .pix-box {
+        padding: 1rem 0.85rem;
+      }
+
+      .pix-box-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+      }
+
+      .pix-input-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.55rem;
+      }
+
+      .pix-key-display {
+        font-size: 0.75rem;
+        padding: 0.7rem 0.75rem;
+        text-align: center;
+      }
+
+      .btn-copy {
+        width: 100%;
+        padding: 0.85rem;
+        text-align: center;
+        justify-content: center;
+        font-size: 0.88rem;
+      }
+
+      .upload-area {
+        padding: 1.25rem 0.75rem;
+      }
+
+      .upload-text {
+        font-size: 0.82rem;
+        line-height: 1.45;
+      }
+
+      .btn-submit {
+        padding: 1.1rem;
+        font-size: 1.02rem;
+      }
+
+      .comissario-cad-card {
+        padding: 1.25rem 0.9rem;
+      }
+
+      .comissario-cad-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+      }
+
+      .btn-cadastrar-comissario {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 0.85rem;
+      }
+
+      .login-modal-box {
+        width: 94%;
+        padding: 1.8rem 1.2rem 1.5rem;
+      }
+
+      .confirm-modal-box {
+        width: 94%;
+        padding: 1.4rem 1.15rem;
+      }
+
+      .confirm-modal-actions {
+        flex-direction: column-reverse;
+        gap: 0.55rem;
+      }
+
+      .btn-confirm-cancel, .btn-confirm-danger {
+        width: 100%;
+        text-align: center;
+        padding: 0.85rem;
+      }
+
+      .receipt-modal-box {
+        width: 95%;
+        max-height: 94vh;
+        padding: 1.15rem 0.85rem;
+      }
+
+      .receipt-preview-body {
+        max-height: 52vh;
+        min-height: 180px;
+        padding: 0.5rem;
+      }
+
+      .receipt-preview-img {
+        max-height: 50vh;
+      }
+
+      .toast {
+        bottom: 1rem;
+        right: 0.85rem;
+        left: 0.85rem;
+        text-align: center;
+        padding: 0.85rem 1rem;
+        font-size: 0.85rem;
+      }
     }
   </style>
 </head>
@@ -1342,6 +1710,9 @@
       </div>
 
       <!-- TABELA DE PEDIDOS -->
+      <div class="table-scroll-hint">
+        <i class="fa-solid fa-arrows-left-right"></i> Arraste para o lado para ver todas as colunas
+      </div>
       <div id="tableSection" class="table-container">
         <table>
           <thead>
@@ -1391,6 +1762,9 @@
         </div>
 
         <!-- TABELA DO RANKING -->
+        <div class="table-scroll-hint">
+          <i class="fa-solid fa-arrows-left-right"></i> Arraste para o lado para ver o ranking completo
+        </div>
         <div class="table-container">
           <table>
             <thead>

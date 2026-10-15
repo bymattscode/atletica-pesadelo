@@ -310,13 +310,18 @@
       background: var(--bg-input);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1rem 0.75rem;
+      padding: 0.9rem 0.65rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.15s ease;
       color: var(--text-secondary);
       font-weight: 600;
       font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
     }
 
     .product-tile:hover {
@@ -330,6 +335,195 @@
       border-color: var(--pesadelo-pink);
       color: #fff;
       font-weight: 700;
+    }
+
+    .product-tile .product-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .product-tile .product-price {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #f69cb9;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .product-tile.selected .product-price {
+      color: #fff;
+    }
+
+    .product-tile .price-tbd {
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      font-style: italic;
+    }
+
+    .product-tile.selected .price-tbd {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    /* BOTÃO ADICIONAR MAIS PRODUTOS & RESUMO */
+    .btn-add-item {
+      background: rgba(152, 24, 68, 0.12);
+      color: #f69cb9;
+      border: 1px dashed rgba(200, 70, 118, 0.45);
+      border-radius: 8px;
+      padding: 0.65rem 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.86rem;
+      font-family: inherit;
+    }
+    .btn-add-item:hover {
+      background: var(--unb-vinho);
+      color: #fff;
+      border-color: var(--pesadelo-pink);
+      border-style: solid;
+    }
+
+    .item-subtotal-badge {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      background: var(--bg-input);
+      padding: 0.5rem 0.85rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .item-subtotal-badge strong {
+      color: #fff;
+    }
+
+    .order-items-summary-card {
+      background: #090b10;
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1.15rem 1.25rem;
+      margin-top: 0.5rem;
+    }
+    .order-summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.65rem;
+      margin-bottom: 0.75rem;
+    }
+    .order-summary-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .order-summary-total {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #f69cb9;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .order-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .order-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0.65rem;
+      background: var(--bg-card);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.86rem;
+    }
+    .order-item-info {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #fff;
+    }
+    .order-item-badge {
+      background: rgba(152, 24, 68, 0.25);
+      color: #f69cb9;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid rgba(200, 70, 118, 0.3);
+    }
+    .order-item-price {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-right: 0.5rem;
+    }
+    .btn-remove-item {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      padding: 0.25rem 0.45rem;
+      font-size: 0.85rem;
+      transition: color 0.15s;
+    }
+    .btn-remove-item:hover {
+      color: #f87171;
+    }
+
+    /* PIX TOTAL BANNER */
+    .pix-total-banner {
+      background: linear-gradient(135deg, rgba(152, 24, 68, 0.22) 0%, rgba(200, 70, 118, 0.1) 100%);
+      border: 1px solid rgba(200, 70, 118, 0.35);
+      border-radius: 8px;
+      padding: 0.85rem 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+    .pix-total-label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+    }
+    .pix-items-counter {
+      font-size: 0.74rem;
+      color: #cbd5e1;
+      text-transform: none;
+      font-weight: 500;
+    }
+    .pix-total-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.5px;
+    }
+
+    .val-total-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #f69cb9;
+      background: rgba(152, 24, 68, 0.15);
+      border: 1px solid rgba(200, 70, 118, 0.25);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      display: inline-block;
     }
 
     /* TAMANHOS */
@@ -1627,16 +1821,34 @@
               </select>
             </div>
 
-            <!-- SELEÇÃO DE PRODUTO LIMPA (SEM ÍCONES NEM EMOJIS) -->
+            <!-- SELEÇÃO DE PRODUTO LIMPA COM PREÇOS OFICIAIS -->
             <div class="form-group full">
               <label>Produto Selecionado <span class="req">*</span></label>
               <div class="product-tiles-grid">
-                <div class="product-tile selected" onclick="selectProduct('Oversize', this)">Oversize</div>
-                <div class="product-tile" onclick="selectProduct('Jersey', this)">Jersey</div>
-                <div class="product-tile" onclick="selectProduct('Tube Top', this)">Tube Top</div>
-                <div class="product-tile" onclick="selectProduct('Caneca', this)">Caneca + Tirante</div>
-                <div class="product-tile" onclick="selectProduct('Corta Vento', this)">Corta Vento</div>
-                <div class="product-tile" onclick="selectProduct('Eco Bag', this)">Eco Bag</div>
+                <div class="product-tile selected" onclick="selectProduct('Oversize', this)">
+                  <span class="product-name">Oversize</span>
+                  <span class="product-price">R$ 65,00</span>
+                </div>
+                <div class="product-tile" onclick="selectProduct('Jersey', this)">
+                  <span class="product-name">Jersey</span>
+                  <span class="product-price">R$ 100,00</span>
+                </div>
+                <div class="product-tile" onclick="selectProduct('Tube Top', this)">
+                  <span class="product-name">Tube Top</span>
+                  <span class="product-price">R$ 50,00</span>
+                </div>
+                <div class="product-tile" onclick="selectProduct('Caneca', this)">
+                  <span class="product-name">Caneca + Tirante</span>
+                  <span class="product-price price-tbd">A definir</span>
+                </div>
+                <div class="product-tile" onclick="selectProduct('Corta Vento', this)">
+                  <span class="product-name">Corta Vento</span>
+                  <span class="product-price">R$ 165,00</span>
+                </div>
+                <div class="product-tile" onclick="selectProduct('Eco Bag', this)">
+                  <span class="product-name">Eco Bag</span>
+                  <span class="product-price price-tbd">A definir</span>
+                </div>
               </div>
               <input type="hidden" id="f_produto" value="Oversize">
             </div>
@@ -1655,15 +1867,53 @@
               <input type="hidden" id="f_tamanho" value="M">
             </div>
 
-            <!-- QUANTIDADE -->
+            <!-- QUANTIDADE E SUBTOTAL -->
             <div class="form-group">
               <label>Quantidade de Peças <span class="req">*</span></label>
-              <input type="number" id="f_quantidade" min="1" max="50" value="1" required>
+              <div style="display: flex; gap: 0.65rem; align-items: center;">
+                <input type="number" id="f_quantidade" min="1" max="50" value="1" oninput="handleQuantityChange()" style="flex: 1;" required>
+                <div class="item-subtotal-badge" id="currentItemSubtotalBadge">
+                  Subtotal: <strong>R$ 65,00</strong>
+                </div>
+              </div>
             </div>
 
-            <!-- ÁREA PIX LIMPA & FUNCIONAL -->
+            <!-- BOTÃO ADICIONAR MAIS PRODUTOS (CLIENTE COM MAIS DE 1 PEDIDO) -->
+            <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                <button type="button" class="btn-add-item" onclick="addItemToOrder()">
+                  <i class="fa-solid fa-plus"></i> Adicionar outro produto ao pedido
+                </button>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">
+                  Caso o cliente queira mais de uma peça ou produtos diferentes
+                </span>
+              </div>
+
+              <!-- CARD DE ITENS JÁ ADICIONADOS AO PEDIDO -->
+              <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
+                <div class="order-summary-header">
+                  <div class="order-summary-title">
+                    <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i> Itens do Pedido (<span id="cartItemsCount">0</span>)
+                  </div>
+                  <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
+                </div>
+                <div class="order-items-list" id="orderItemsList">
+                  <!-- Gerado dinamicamente -->
+                </div>
+              </div>
+            </div>
+
+            <!-- ÁREA PIX LIMPA COM BANNER DE VALOR TOTAL -->
             <div class="form-group full">
               <div class="pix-box">
+                <div class="pix-total-banner" id="pixTotalBanner">
+                  <div class="pix-total-label">
+                    <span>Valor Total a Pagar no Pix</span>
+                    <span class="pix-items-counter" id="pixTotalItemsText">1 peça selecionada</span>
+                  </div>
+                  <div class="pix-total-val" id="pixTotalValueDisplay">R$ 65,00</div>
+                </div>
+
                 <div class="pix-box-header">
                   <div class="pix-box-title">Chave Pix Oficial da Atlética (Copia e Cola)</div>
                   <div class="pix-badge">Chave Ativa</div>
@@ -1753,6 +2003,7 @@
               <th>Produto</th>
               <th>Tamanho</th>
               <th>Qtd</th>
+              <th>Valor Total</th>
               <th>Pagamento</th>
               <th>Comprovante</th>
               <th>Entrega</th>
@@ -1912,6 +2163,166 @@
     let sheetsScriptUrl = localStorage.getItem(SHEETS_CONFIG_KEY) || DEFAULT_SHEETS_URL;
 
     let currentTab = "todas";
+
+    // TABELA OFICIAL DE VALORES
+    const PRECOS_PRODUTOS = {
+      "Jersey": 100,
+      "Tube Top": 50,
+      "Oversize": 65,
+      "Caneca": 0,
+      "Corta Vento": 165,
+      "Eco Bag": 0
+    };
+
+    const NOMES_PRODUTOS = {
+      "Jersey": "Jersey",
+      "Tube Top": "Tube Top",
+      "Oversize": "Oversize",
+      "Caneca": "Caneca + Tirante",
+      "Corta Vento": "Corta Vento",
+      "Eco Bag": "Eco Bag"
+    };
+
+    // CARRINHO MULTI-PRODUTOS
+    let orderCart = [];
+
+    function formatCurrency(val) {
+      if (typeof val === "string" && (val.trim().startsWith("R$") || val.trim().toLowerCase().includes("definir"))) {
+        return val.trim();
+      }
+      const num = Number(val || 0);
+      return isNaN(num) ? "A definir" : "R$ " + num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function getCurrentFormItem() {
+      const prod = document.getElementById("f_produto") ? document.getElementById("f_produto").value : "Oversize";
+      const tam = document.getElementById("f_tamanho") ? document.getElementById("f_tamanho").value : "M";
+      const qtdInput = document.getElementById("f_quantidade");
+      let qtd = parseInt(qtdInput ? qtdInput.value : 1, 10);
+      if (isNaN(qtd) || qtd < 1) qtd = 1;
+      const unitPrice = PRECOS_PRODUTOS[prod] !== undefined ? PRECOS_PRODUTOS[prod] : 0;
+      const subtotal = unitPrice * qtd;
+      return { produto: prod, tamanho: tam, quantidade: qtd, unitPrice: unitPrice, subtotal: subtotal };
+    }
+
+    function updateOrderTotals() {
+      const current = getCurrentFormItem();
+      
+      // Atualiza badge de subtotal do item atualmente sendo configurado
+      const subBadge = document.getElementById("currentItemSubtotalBadge");
+      if (subBadge) {
+        if (current.unitPrice > 0) {
+          subBadge.innerHTML = `Subtotal: <strong>${formatCurrency(current.subtotal)}</strong>`;
+        } else {
+          subBadge.innerHTML = `Subtotal: <strong style="color: var(--text-muted); font-style: italic;">A definir</strong>`;
+        }
+      }
+
+      // Calcula soma total (itens adicionados ao carrinho + item atual selecionado)
+      let totalPieces = current.quantidade;
+      let totalMoney = current.subtotal;
+      let hasTbd = current.unitPrice === 0;
+
+      orderCart.forEach(item => {
+        totalPieces += item.quantidade;
+        totalMoney += item.subtotal;
+        if (item.unitPrice === 0) hasTbd = true;
+      });
+
+      // Atualiza banner de Pix
+      const pixValEl = document.getElementById("pixTotalValueDisplay");
+      const pixCountEl = document.getElementById("pixTotalItemsText");
+      if (pixValEl) {
+        if (totalMoney > 0) {
+          pixValEl.innerText = formatCurrency(totalMoney) + (hasTbd ? " + a def." : "");
+        } else {
+          pixValEl.innerText = "A definir";
+        }
+      }
+      if (pixCountEl) {
+        const totalDistinct = orderCart.length + 1;
+        pixCountEl.innerText = `${totalPieces} ${totalPieces === 1 ? 'peça selecionada' : 'peças selecionadas'} (${totalDistinct} ${totalDistinct === 1 ? 'item' : 'itens no pedido'})`;
+      }
+
+      renderCartSummary();
+    }
+
+    function handleQuantityChange() {
+      const qInput = document.getElementById("f_quantidade");
+      if (!qInput) return;
+      let val = parseInt(qInput.value, 10);
+      if (isNaN(val) || val < 1) val = 1;
+      if (val > 50) val = 50;
+      qInput.value = val;
+      updateOrderTotals();
+    }
+
+    function addItemToOrder() {
+      const current = getCurrentFormItem();
+      orderCart.push({ ...current });
+      
+      showToast(`Adicionado: ${current.quantidade}x ${NOMES_PRODUTOS[current.produto] || current.produto} (${current.tamanho})`);
+      
+      const qInput = document.getElementById("f_quantidade");
+      if (qInput) qInput.value = 1;
+
+      updateOrderTotals();
+    }
+
+    function removeItemFromCart(index) {
+      if (index >= 0 && index < orderCart.length) {
+        const removed = orderCart.splice(index, 1)[0];
+        showToast(`Removido: ${removed.quantidade}x ${NOMES_PRODUTOS[removed.produto] || removed.produto}`);
+        updateOrderTotals();
+      }
+    }
+
+    function renderCartSummary() {
+      const box = document.getElementById("orderItemsSummaryBox");
+      const list = document.getElementById("orderItemsList");
+      const countEl = document.getElementById("cartItemsCount");
+      const totalHeader = document.getElementById("cartTotalHeader");
+
+      if (!box || !list) return;
+
+      if (orderCart.length === 0) {
+        box.style.display = "none";
+        return;
+      }
+
+      box.style.display = "block";
+      if (countEl) countEl.innerText = orderCart.length;
+
+      let cartSum = 0;
+      let hasTbd = false;
+      orderCart.forEach(i => {
+        cartSum += i.subtotal;
+        if (i.unitPrice === 0) hasTbd = true;
+      });
+      if (totalHeader) {
+        totalHeader.innerText = cartSum > 0 ? (formatCurrency(cartSum) + (hasTbd ? " + a def." : "")) : "A definir";
+      }
+
+      list.innerHTML = "";
+      orderCart.forEach((item, idx) => {
+        const row = document.createElement("div");
+        row.className = "order-item-row";
+        const priceStr = item.unitPrice > 0 ? formatCurrency(item.subtotal) : '<span style="color: var(--text-muted); font-size: 0.78rem;">A definir</span>';
+        row.innerHTML = `
+          <div class="order-item-info">
+            <span class="order-item-badge">${item.quantidade}x</span>
+            <span><strong>${NOMES_PRODUTOS[item.produto] || item.produto}</strong> ${item.tamanho !== '-' ? '(' + item.tamanho + ')' : ''}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="order-item-price">${priceStr}</span>
+            <button type="button" class="btn-remove-item" onclick="removeItemFromCart(${idx})" title="Remover item">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
 
     // INTEGRAÇÃO COM GOOGLE SHEETS
     function openSheetsConfigModal() {
@@ -2239,6 +2650,7 @@
       applyAuthState();
       renderComissariosDropdown();
       saveAndRefresh();
+      updateOrderTotals();
       updateCloudStatusUI();
       if (sheetsScriptUrl && sheetsScriptUrl.trim() !== "") {
         syncWithGoogleSheets(false);
@@ -2335,7 +2747,7 @@
 
       const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
       prods.forEach(p => {
-        const c = orders.filter(o => o.produto === p).length;
+        const c = orders.filter(o => o.produto && (o.produto === p || o.produto.includes(p))).length;
         const el = document.getElementById("count-" + p);
         if (el) el.innerText = c;
       });
@@ -2348,11 +2760,11 @@
 
       let filtered = orders;
       if (currentTab !== "todas" && currentTab !== "ranking") {
-        filtered = orders.filter(o => o.produto === currentTab);
+        filtered = orders.filter(o => o.produto && (o.produto === currentTab || o.produto.includes(currentTab)));
       }
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum pedido encontrado nesta aba.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="13" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum pedido encontrado nesta aba.</td></tr>`;
         return;
       }
 
@@ -2376,6 +2788,8 @@
           `;
         }
 
+        const valExibido = o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[o.produto] ? formatCurrency(PRECOS_PRODUTOS[o.produto] * (o.quantidade || 1)) : 'A definir'));
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><small style="color: var(--text-muted)">${o.data}</small></td>
@@ -2386,6 +2800,7 @@
           <td><strong>${o.produto}</strong></td>
           <td>${o.tamanho}</td>
           <td>${o.quantidade}</td>
+          <td><span class="val-total-badge">${valExibido}</span></td>
           <td>
             <span class="status-badge ${o.statusPagamento === 'Confirmado' ? 'status-pago' : 'status-pendente'}" onclick="togglePagamento(${o.id})">
               ${o.statusPagamento}
@@ -2561,12 +2976,18 @@
           document.getElementById("f_tamanho").value = "M";
         }
       }
+      if (typeof updateOrderTotals === "function") {
+        updateOrderTotals();
+      }
     }
 
     function selectSize(sz, el) {
       document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
       el.classList.add("selected");
       document.getElementById("f_tamanho").value = sz;
+      if (typeof updateOrderTotals === "function") {
+        updateOrderTotals();
+      }
     }
 
     // GERENCIAMENTO DE COMPROVANTE (BASE64 & MODAL)
@@ -2720,6 +3141,37 @@
         btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Finalizando Pedido...`;
       }
 
+      // Reúne todos os itens (carrinho multi-item + item atual selecionado no form)
+      const currentItem = getCurrentFormItem();
+      const allItems = [...orderCart, currentItem];
+
+      let totalQtd = 0;
+      let totalValor = 0;
+      let hasTbd = false;
+
+      allItems.forEach(i => {
+        totalQtd += i.quantidade;
+        totalValor += i.subtotal;
+        if (i.unitPrice === 0) hasTbd = true;
+      });
+
+      let produtoDescricao = "";
+      let tamanhoDescricao = "";
+      if (allItems.length === 1) {
+        produtoDescricao = allItems[0].produto;
+        tamanhoDescricao = allItems[0].tamanho;
+      } else {
+        produtoDescricao = allItems.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}) x${i.quantidade}`).join(" + ");
+        tamanhoDescricao = "Múltiplos";
+      }
+
+      let valorFormatado = "";
+      if (totalValor > 0) {
+        valorFormatado = formatCurrency(totalValor) + (hasTbd ? " + a def." : "");
+      } else {
+        valorFormatado = "A definir";
+      }
+
       const novo = {
         id: Date.now(),
         data: new Date().toLocaleDateString("pt-BR") + " " + new Date().toLocaleTimeString("pt-BR", {hour: '2-digit', minute:'2-digit'}),
@@ -2727,9 +3179,12 @@
         telefone: document.getElementById("f_telefone").value.trim(),
         cpf: document.getElementById("f_cpf").value.trim(),
         comissario: document.getElementById("f_comissario").value,
-        produto: document.getElementById("f_produto").value,
-        tamanho: document.getElementById("f_tamanho").value,
-        quantidade: parseInt(document.getElementById("f_quantidade").value || 1),
+        produto: produtoDescricao,
+        tamanho: tamanhoDescricao,
+        quantidade: totalQtd,
+        valorTotal: totalValor,
+        valorFormatado: valorFormatado,
+        itens: allItems,
         comprovanteNome: currentUploadedFile ? currentUploadedFile.nome : "",
         comprovanteType: currentUploadedFile ? currentUploadedFile.type : "",
         comprovanteBase64: currentUploadedFile ? currentUploadedFile.base64 : "",
@@ -2746,6 +3201,21 @@
 
       document.getElementById("orderForm").reset();
       currentUploadedFile = null;
+      orderCart = [];
+      // Restaura produto e tamanho padrão
+      document.getElementById("f_produto").value = "Oversize";
+      document.getElementById("f_tamanho").value = "M";
+      document.querySelectorAll(".product-tile").forEach(c => c.classList.remove("selected"));
+      const firstTile = document.querySelector(".product-tile");
+      if (firstTile) firstTile.classList.add("selected");
+      document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
+      const sizeBtns = document.querySelectorAll(".size-btn");
+      if (sizeBtns.length >= 3) sizeBtns[2].classList.add("selected"); // "M"
+      const sizeContainer = document.getElementById("sizeGroupContainer");
+      if (sizeContainer) sizeContainer.style.display = "flex";
+
+      updateOrderTotals();
+
       document.getElementById("uploadText").innerHTML = `<strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)`;
       if (btnSubmit) {
         btnSubmit.disabled = false;
@@ -2758,7 +3228,7 @@
           switchMainView("dashView", btnDash);
         }, 800);
       } else {
-        const pixSec = document.querySelector(".pix-payment-card");
+        const pixSec = document.querySelector(".pix-box");
         if (pixSec) {
           pixSec.scrollIntoView({ behavior: "smooth" });
         }
@@ -2770,7 +3240,7 @@
       const wb = XLSX.utils.book_new();
 
       const wsGeralData = [
-        ["Data", "Nome", "Telefone", "CPF", "Comissário", "Produto", "Tamanho", "Quantidade", "Status Pagamento", "Comprovante", "Status Entrega"]
+        ["Data", "Nome", "Telefone", "CPF", "Comissário", "Produto", "Tamanho", "Quantidade", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
       ];
       orders.forEach(o => {
         wsGeralData.push([
@@ -2782,6 +3252,7 @@
           o.produto, 
           o.tamanho, 
           o.quantidade, 
+          o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[o.produto] ? formatCurrency(PRECOS_PRODUTOS[o.produto] * (o.quantidade || 1)) : "A definir")),
           o.statusPagamento, 
           o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
           o.statusEntrega
@@ -2793,9 +3264,9 @@
       const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
       prods.forEach(p => {
         const prodData = [
-          ["Data", "Nome", "Telefone", "CPF", "Comissário", "Tamanho", "Quantidade", "Status Pagamento", "Comprovante", "Status Entrega"]
+          ["Data", "Nome", "Telefone", "CPF", "Comissário", "Tamanho", "Quantidade", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
         ];
-        orders.filter(o => o.produto === p).forEach(o => {
+        orders.filter(o => o.produto && (o.produto === p || o.produto.includes(p))).forEach(o => {
           prodData.push([
             o.data, 
             o.nome, 
@@ -2804,6 +3275,7 @@
             o.comissario, 
             o.tamanho, 
             o.quantidade, 
+            o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[p] ? formatCurrency(PRECOS_PRODUTOS[p] * (o.quantidade || 1)) : "A definir")),
             o.statusPagamento, 
             o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
             o.statusEntrega

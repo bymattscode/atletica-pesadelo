@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -12,32 +13,34 @@
   <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- SheetJS para exportação real para Excel (.xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <style>
     :root {
-      /* PALETA CLEAN PROFISSIONAL */
+      /* PALETA DE CORES */
       --unb-vinho: #981844;
       --unb-vinho-hover: #b01e52;
       --pesadelo-pink: #c84676;
-      
+
       --bg-dark: #08090d;
       --bg-surface: #0e1017;
       --bg-card: #12141d;
       --bg-card-hover: #171924;
       --bg-input: #090b10;
-      
+
       --border: #1e2230;
       --border-light: #2c3245;
       --border-active: var(--unb-vinho);
-      
+
       --text-main: #f1f5f9;
       --text-secondary: #94a3b8;
       --text-muted: #64748b;
-      
+
       --success: #10b981;
       --warning: #f59e0b;
       --radius: 10px;
@@ -58,7 +61,7 @@
       line-height: 1.5;
     }
 
-    /* HEADER MINIMALISTA & PROFISSIONAL */
+    /* HEADER */
     header {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border);
@@ -90,6 +93,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .pesadelo-crest img {
       width: 100%;
       height: 100%;
@@ -102,6 +106,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .unb-logo-badge img {
       height: 100%;
       width: auto;
@@ -139,7 +144,7 @@
       font-weight: 600;
     }
 
-    /* NAVEGAÇÃO SUPERIOR ESTILO CEM (PILLS) */
+    /* NAVEGAÇÃO SUPERIOR */
     .header-nav {
       display: flex;
       gap: 0.5rem;
@@ -164,9 +169,11 @@
       transition: all 0.15s ease;
       font-family: inherit;
     }
+
     .nav-pill:hover {
       color: #fff;
     }
+
     .nav-pill.active {
       background: var(--unb-vinho);
       color: #fff;
@@ -187,11 +194,12 @@
       transition: 0.15s;
       font-family: inherit;
     }
+
     .btn-excel-nav:hover {
       background: #148545;
     }
 
-    /* CONTAINER PRINCIPAL (AMPLO NA HORIZONTAL) */
+    /* CONTAINER PRINCIPAL */
     .container {
       width: 95%;
       max-width: 1560px;
@@ -208,11 +216,12 @@
     .view-section {
       display: none;
     }
+
     .view-section.active {
       display: block;
     }
 
-    /* CABEÇALHO DA SEÇÃO (CLEAN) */
+    /* CABEÇALHO DA SEÇÃO */
     .section-header {
       text-align: center;
       margin-bottom: 2rem;
@@ -245,7 +254,7 @@
       margin: 0 auto;
     }
 
-    /* CARD DO FORMULÁRIO (CLEAN & MATTE) */
+    /* CARD DO FORMULÁRIO */
     .form-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -281,7 +290,9 @@
       color: var(--pesadelo-pink);
     }
 
-    input, select, textarea {
+    input,
+    select,
+    textarea {
       background: var(--bg-input);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -292,13 +303,15 @@
       transition: border-color 0.15s ease;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input:focus,
+    select:focus,
+    textarea:focus {
       outline: none;
       border-color: var(--unb-vinho-hover);
       background: #0b0d14;
     }
 
-    /* SELEÇÃO DE PRODUTOS (TILES LIMPOS COMO O CEM) */
+    /* SELEÇÃO DE PRODUTOS */
     .product-tiles-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -364,7 +377,7 @@
       color: rgba(255, 255, 255, 0.75);
     }
 
-    /* BOTÃO ADICIONAR MAIS PRODUTOS & RESUMO */
+    /* BOTÃO ADICIONAR MAIS PRODUTOS */
     .btn-add-item {
       background: rgba(152, 24, 68, 0.12);
       color: #f69cb9;
@@ -380,6 +393,7 @@
       font-size: 0.86rem;
       font-family: inherit;
     }
+
     .btn-add-item:hover {
       background: var(--unb-vinho);
       color: #fff;
@@ -396,6 +410,7 @@
       border: 1px solid var(--border);
       font-family: 'JetBrains Mono', monospace;
     }
+
     .item-subtotal-badge strong {
       color: #fff;
     }
@@ -407,6 +422,7 @@
       padding: 1.15rem 1.25rem;
       margin-top: 0.5rem;
     }
+
     .order-summary-header {
       display: flex;
       justify-content: space-between;
@@ -415,6 +431,7 @@
       padding-bottom: 0.65rem;
       margin-bottom: 0.75rem;
     }
+
     .order-summary-title {
       font-size: 0.85rem;
       font-weight: 800;
@@ -425,17 +442,20 @@
       align-items: center;
       gap: 0.5rem;
     }
+
     .order-summary-total {
       font-size: 1.05rem;
       font-weight: 800;
       color: #f69cb9;
       font-family: 'JetBrains Mono', monospace;
     }
+
     .order-items-list {
       display: flex;
       flex-direction: column;
       gap: 0.45rem;
     }
+
     .order-item-row {
       display: flex;
       justify-content: space-between;
@@ -446,12 +466,14 @@
       border: 1px solid var(--border);
       font-size: 0.86rem;
     }
+
     .order-item-info {
       display: flex;
       align-items: center;
       gap: 0.6rem;
       color: #fff;
     }
+
     .order-item-badge {
       background: rgba(152, 24, 68, 0.25);
       color: #f69cb9;
@@ -461,12 +483,14 @@
       border-radius: 4px;
       border: 1px solid rgba(200, 70, 118, 0.3);
     }
+
     .order-item-price {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
       color: #cbd5e1;
       margin-right: 0.5rem;
     }
+
     .btn-remove-item {
       background: transparent;
       border: none;
@@ -476,11 +500,12 @@
       font-size: 0.85rem;
       transition: color 0.15s;
     }
+
     .btn-remove-item:hover {
       color: #f87171;
     }
 
-    /* PIX TOTAL BANNER */
+    /* PIX TOTAL */
     .pix-total-banner {
       background: linear-gradient(135deg, rgba(152, 24, 68, 0.22) 0%, rgba(200, 70, 118, 0.1) 100%);
       border: 1px solid rgba(200, 70, 118, 0.35);
@@ -491,6 +516,7 @@
       align-items: center;
       margin-bottom: 0.85rem;
     }
+
     .pix-total-label {
       display: flex;
       flex-direction: column;
@@ -500,12 +526,14 @@
       letter-spacing: 0.5px;
       color: var(--text-secondary);
     }
+
     .pix-items-counter {
       font-size: 0.74rem;
       color: #cbd5e1;
       text-transform: none;
       font-weight: 500;
     }
+
     .pix-total-val {
       font-size: 1.4rem;
       font-weight: 800;
@@ -556,7 +584,7 @@
       color: #fff;
     }
 
-    /* SEÇÃO PIX CLEAN */
+    /* SEÇÃO PIX */
     .pix-box {
       background: #090b10;
       border: 1px solid var(--border);
@@ -621,9 +649,11 @@
       transition: 0.15s;
       font-family: inherit;
     }
+
     .btn-copy:hover {
       background: var(--unb-vinho-hover);
     }
+
     .btn-copy.copied {
       background: var(--success);
     }
@@ -638,13 +668,16 @@
       cursor: pointer;
       transition: border-color 0.15s;
     }
+
     .upload-area:hover {
       border-color: var(--pesadelo-pink);
     }
+
     .upload-text {
       font-size: 0.9rem;
       color: var(--text-secondary);
     }
+
     .upload-text strong {
       color: #fff;
     }
@@ -663,11 +696,12 @@
       transition: background 0.15s;
       font-family: inherit;
     }
+
     .btn-submit:hover {
       background: var(--unb-vinho-hover);
     }
 
-    /* PAINEL DE ABAS (SUB-NAV CENTRALIZADO) */
+    /* PAINEL DE ABAS */
     .sub-tabs-container {
       display: flex;
       justify-content: center;
@@ -698,9 +732,11 @@
       transition: 0.15s;
       font-family: inherit;
     }
+
     .sub-tab-btn:hover {
       color: #fff;
     }
+
     .sub-tab-btn.active {
       background: var(--unb-vinho);
       color: #fff;
@@ -834,11 +870,13 @@
       display: inline-block;
       cursor: pointer;
     }
+
     .status-pago {
       background: rgba(16, 185, 129, 0.12);
       color: var(--success);
       border: 1px solid rgba(16, 185, 129, 0.25);
     }
+
     .status-pendente {
       background: rgba(245, 158, 11, 0.12);
       color: var(--warning);
@@ -865,6 +903,7 @@
       gap: 0.35rem;
       transition: 0.15s;
     }
+
     .btn-zap-clean:hover {
       background: var(--success);
       color: #fff;
@@ -884,6 +923,7 @@
       transition: all 0.15s ease;
       line-height: 1;
     }
+
     .btn-delete-order:hover {
       background: #ef4444;
       color: #fff;
@@ -906,6 +946,7 @@
       transition: 0.15s;
       font-family: inherit;
     }
+
     .btn-receipt-badge:hover {
       background: var(--unb-vinho);
       color: #fff;
@@ -916,15 +957,16 @@
       background: var(--bg-card);
       border: 1px solid var(--border-light);
       border-radius: 12px;
-      width: 90%;
-      max-width: 650px;
-      max-height: 90vh;
+      width: 92%;
+      max-width: 780px;
+      max-height: 92vh;
       display: flex;
       flex-direction: column;
       padding: 1.5rem;
       position: relative;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85);
     }
+
     .receipt-preview-body {
       margin-top: 1rem;
       flex: 1;
@@ -936,17 +978,180 @@
       border-radius: 8px;
       border: 1px solid var(--border);
       padding: 0.75rem;
-      min-height: 250px;
-      max-height: 60vh;
+      min-height: 380px;
+      max-height: 68vh;
     }
+
     .receipt-preview-img {
       max-width: 100%;
-      max-height: 55vh;
+      max-height: 65vh;
       object-fit: contain;
       border-radius: 6px;
     }
 
-    /* PÓDIO CLEAN (SEM BRILHO OU AURAS) */
+    /* BADGE DE TAMANHO */
+    .size-badge-display {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-light);
+      border-radius: 5px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: #f1f5f9;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* SISTEMA VISUAL DE DIFERENCIAÇÃO DE ENTREGA */
+    tr.row-entregue {
+      background: rgba(16, 185, 129, 0.05) !important;
+      border-left: 4px solid var(--success) !important;
+    }
+
+    tr.row-pendente {
+      border-left: 4px solid #f59e0b !important;
+    }
+
+    .entrega-control-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .btn-toggle-entrega {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .btn-toggle-entrega.is-entregue {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .btn-toggle-entrega.is-entregue:hover {
+      background: rgba(16, 185, 129, 0.28);
+      border-color: #34d399;
+    }
+
+    .btn-toggle-entrega.is-pendente {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-toggle-entrega.is-pendente:hover {
+      background: rgba(245, 158, 11, 0.22);
+      border-color: #fbbf24;
+    }
+
+    .select-entrega-mini {
+      background: #090b10;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      padding: 0.32rem 0.45rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .select-entrega-mini:focus {
+      border-color: var(--unb-vinho-hover);
+      color: #fff;
+      outline: none;
+    }
+
+    /* BARRA DE FILTROS DE ENTREGA */
+    .delivery-filters-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.15rem;
+      padding: 0.75rem 1.15rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .delivery-filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .delivery-filter-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-right: 0.35rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .delivery-pill {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .delivery-pill:hover {
+      color: #fff;
+      border-color: var(--border-light);
+    }
+
+    .delivery-pill.active {
+      background: var(--unb-vinho);
+      color: #fff;
+      border-color: var(--unb-vinho);
+    }
+
+    .delivery-pill.pill-pendente.active {
+      background: #d97706;
+      border-color: #d97706;
+      color: #fff;
+    }
+
+    .delivery-pill.pill-entregue.active {
+      background: #059669;
+      border-color: #059669;
+      color: #fff;
+    }
+
+    .delivery-stats-badge {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* PÓDIO */
     .podium-clean-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -984,11 +1189,13 @@
       color: #f69cb9;
       border: 1px solid var(--pesadelo-pink);
     }
+
     .podium-card.second .podium-rank-tag {
       background: rgba(148, 163, 184, 0.15);
       color: #cbd5e1;
       border: 1px solid var(--border-light);
     }
+
     .podium-card.third .podium-rank-tag {
       background: rgba(152, 24, 68, 0.15);
       color: #e2e8f0;
@@ -1028,11 +1235,12 @@
       display: none;
       z-index: 1000;
     }
+
     .toast.show {
       display: block;
     }
 
-    /* MODAL ÁREA RESTRITA (MESMA IDENTIDADE VISUAL DO PROJETO) */
+    /* MODAL ÁREA RESTRITA */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -1046,6 +1254,7 @@
       justify-content: center;
       z-index: 1000;
     }
+
     .modal-overlay.active {
       display: flex;
     }
@@ -1074,6 +1283,7 @@
       line-height: 1;
       transition: color 0.15s;
     }
+
     .login-close-btn:hover {
       color: #fff;
     }
@@ -1119,10 +1329,12 @@
       font-family: inherit;
       transition: border-color 0.15s ease;
     }
+
     .login-field input::placeholder {
       color: var(--text-muted);
       font-weight: 400;
     }
+
     .login-field input:focus {
       outline: none;
       border-color: var(--unb-vinho-hover);
@@ -1146,6 +1358,7 @@
       transition: color 0.15s ease;
       z-index: 2;
     }
+
     .btn-toggle-pass:hover {
       color: #fff;
     }
@@ -1174,6 +1387,7 @@
       text-transform: uppercase;
       letter-spacing: 0.6px;
     }
+
     .btn-login-submit:hover {
       background: var(--unb-vinho-hover);
     }
@@ -1181,11 +1395,12 @@
     .btn-logout {
       color: #ef4444 !important;
     }
+
     .btn-logout:hover {
       background: rgba(239, 68, 68, 0.15) !important;
     }
 
-    /* MODAL DE CONFIRMAÇÃO PERSONALIZADO */
+    /* MODAL DE CONFIRMAÇÃO */
     .confirm-modal-box {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -1203,6 +1418,7 @@
         opacity: 0;
         transform: scale(0.96) translateY(-6px);
       }
+
       to {
         opacity: 1;
         transform: scale(1) translateY(0);
@@ -1295,6 +1511,7 @@
       align-items: center;
       gap: 0.65rem;
     }
+
     .cloud-status-pill {
       display: inline-flex;
       align-items: center;
@@ -1309,24 +1526,29 @@
       cursor: pointer;
       transition: all 0.15s ease;
     }
+
     .cloud-status-pill:hover {
       border-color: #2e3449;
       color: #fff;
       background: #161924;
     }
+
     .status-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       display: inline-block;
     }
+
     .dot-online {
       background: #22c55e;
       box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
     }
+
     .dot-offline {
       background: #eab308;
     }
+
     .btn-sync-cloud {
       background: var(--bg-input);
       border: 1px solid var(--border);
@@ -1342,6 +1564,7 @@
       font-family: inherit;
       transition: all 0.15s ease;
     }
+
     .btn-sync-cloud:hover {
       background: #181c28;
       border-color: #2e3449;
@@ -1367,9 +1590,7 @@
       height: 0 !important;
     }
 
-    /* =========================================================================
-       RESPONSIVIDADE MOBILE COMPLETA & POLIDA
-       ========================================================================= */
+    /* RESPONSIVIDADE MOBILE */
     .table-scroll-hint {
       display: none;
     }
@@ -1379,6 +1600,7 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 0.85rem;
       }
+
       .podium-card {
         padding: 1.25rem 0.75rem;
       }
@@ -1425,11 +1647,13 @@
         padding: 0.25rem;
         gap: 0.35rem;
       }
+
       .header-nav::-webkit-scrollbar {
         display: none;
       }
 
-      .nav-pill, .btn-excel-nav {
+      .nav-pill,
+      .btn-excel-nav {
         flex: 1 0 auto;
         text-align: center;
         justify-content: center;
@@ -1483,9 +1707,12 @@
         grid-column: span 1;
       }
 
-      input, select, textarea {
+      input,
+      select,
+      textarea {
         padding: 0.85rem 0.95rem;
-        font-size: 16px; /* Impede zoom forçado indesejado no iOS Safari */
+        font-size: 16px;
+        /* Impede zoom forçado indesejado no iOS Safari */
         border-radius: 8px;
       }
 
@@ -1511,6 +1738,7 @@
         padding: 0.35rem 0.5rem;
         gap: 0.35rem;
       }
+
       .sub-tabs-container::-webkit-scrollbar {
         display: none;
       }
@@ -1521,21 +1749,25 @@
         flex-shrink: 0;
       }
 
-      /* Pódio reordenado para ordem natural no mobile (1º lugar no topo) */
+      /* PÓDIO MOBILE*/
       .podium-clean-grid {
         display: flex;
         flex-direction: column;
         gap: 0.85rem;
       }
+
       .podium-card.first {
         order: 1;
       }
+
       .podium-card.second {
         order: 2;
       }
+
       .podium-card.third {
         order: 3;
       }
+
       .podium-card {
         padding: 1.25rem 1rem;
       }
@@ -1577,7 +1809,8 @@
         padding: 0.25rem 0.55rem;
       }
 
-      .btn-zap-clean, .btn-receipt-badge {
+      .btn-zap-clean,
+      .btn-receipt-badge {
         padding: 0.4rem 0.6rem;
         font-size: 0.76rem;
       }
@@ -1709,7 +1942,8 @@
         gap: 0.55rem;
       }
 
-      .btn-confirm-cancel, .btn-confirm-danger {
+      .btn-confirm-cancel,
+      .btn-confirm-danger {
         width: 100%;
         text-align: center;
         padding: 0.85rem;
@@ -1742,14 +1976,17 @@
     }
   </style>
 </head>
+
 <body>
 
-  <!-- HEADER PROFISSIONAL -->
+  <!-- HEADER MOBILE -->
   <header>
     <div class="brand-container">
       <div class="brand-logos">
-        <div class="pesadelo-crest" title="AAAEFGA Pesadelo" onclick="handleLogoClicks()" style="cursor: pointer; user-select: none;">
-          <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';">
+        <div class="pesadelo-crest" title="AAAEFGA Pesadelo" onclick="handleLogoClicks()"
+          style="cursor: pointer; user-select: none;">
+          <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo"
+            onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';">
         </div>
         <div class="unb-logo-badge" title="Universidade de Brasília">
           <img src="assets/logo_unb.png" alt="UnB" onerror="this.onerror=null; this.src='../assets/logo_unb.png';">
@@ -1765,7 +2002,7 @@
       </div>
     </div>
 
-    <!-- NAVEGAÇÃO ESTILO CEM -->
+    <!-- NAVEGAÇÃO -->
     <div class="header-nav">
       <button class="nav-pill active" id="btnNavForm" onclick="switchMainView('formView', this)">
         Fazer Pedido
@@ -1784,179 +2021,182 @@
 
   <div class="container">
 
-    <!-- VIEW 1: FORMULÁRIO DE PEDIDOS (CLEAN) -->
+    <!-- VIEW 1: FORMULÁRIO DE PEDIDOS -->
     <section id="formView" class="view-section active">
       <div class="form-narrow-wrap">
-      <div class="section-header">
-        <h1>Central de Controle</h1>
-        <p>Preencha os dados do comprador para registrar o pedido diretamente na planilha oficial da diretoria.</p>
-      </div>
+        <div class="section-header">
+          <h1>Central de Controle</h1>
+          <p>Preencha os dados do comprador para registrar o pedido diretamente na planilha oficial da diretoria.</p>
+        </div>
 
-      <div class="form-card">
-        <form id="orderForm" onsubmit="handleOrderSubmit(event)">
-          <div class="form-grid">
-            
-            <div class="form-group">
-              <label>Nome Completo <span class="req">*</span></label>
-              <input type="text" id="f_nome" placeholder="Ex: Lucas Gabriel da Silva" required>
-            </div>
+        <div class="form-card">
+          <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+            <div class="form-grid">
 
-            <div class="form-group">
-              <label>Telefone / WhatsApp <span class="req">*</span></label>
-              <input type="text" id="f_telefone" placeholder="(61) 99999-8888" oninput="maskPhone(this)" required>
-            </div>
-
-            <div class="form-group">
-              <label>CPF <span class="req">*</span></label>
-              <input type="text" id="f_cpf" placeholder="000.000.000-00" oninput="maskCPF(this)" required>
-            </div>
-
-            <div class="form-group">
-              <label>Comissário Responsável <span class="req">*</span></label>
-              <select id="f_comissario" required>
-                <option value="">Carregando comissários...</option>
-              </select>
-            </div>
-
-            <!-- SELEÇÃO DE PRODUTO LIMPA COM PREÇOS OFICIAIS -->
-            <div class="form-group full">
-              <label>Produto Selecionado <span class="req">*</span></label>
-              <div class="product-tiles-grid">
-                <div class="product-tile selected" onclick="selectProduct('Oversize', this)">
-                  <span class="product-name">Oversize</span>
-                  <span class="product-price">R$ 65,00</span>
-                </div>
-                <div class="product-tile" onclick="selectProduct('Jersey', this)">
-                  <span class="product-name">Jersey</span>
-                  <span class="product-price">R$ 100,00</span>
-                </div>
-                <div class="product-tile" onclick="selectProduct('Tube Top', this)">
-                  <span class="product-name">Tube Top</span>
-                  <span class="product-price">R$ 50,00</span>
-                </div>
-                <div class="product-tile" onclick="selectProduct('Caneca', this)">
-                  <span class="product-name">Caneca + Tirante</span>
-                  <span class="product-price price-tbd">A definir</span>
-                </div>
-                <div class="product-tile" onclick="selectProduct('Corta Vento', this)">
-                  <span class="product-name">Corta Vento</span>
-                  <span class="product-price">R$ 165,00</span>
-                </div>
-                <div class="product-tile" onclick="selectProduct('Eco Bag', this)">
-                  <span class="product-name">Eco Bag</span>
-                  <span class="product-price price-tbd">A definir</span>
-                </div>
-              </div>
-              <input type="hidden" id="f_produto" value="Oversize">
-            </div>
-
-            <!-- TAMANHOS -->
-            <div class="form-group" id="sizeGroupContainer">
-              <label>Tamanho <span class="req">*</span></label>
-              <div class="sizes-container">
-                <div class="size-btn" onclick="selectSize('PP', this)">PP</div>
-                <div class="size-btn" onclick="selectSize('P', this)">P</div>
-                <div class="size-btn selected" onclick="selectSize('M', this)">M</div>
-                <div class="size-btn" onclick="selectSize('G', this)">G</div>
-                <div class="size-btn" onclick="selectSize('GG', this)">GG</div>
-                <div class="size-btn" onclick="selectSize('XGG', this)">XGG</div>
-              </div>
-              <input type="hidden" id="f_tamanho" value="M">
-            </div>
-
-            <!-- QUANTIDADE E SUBTOTAL -->
-            <div class="form-group">
-              <label>Quantidade de Peças <span class="req">*</span></label>
-              <div style="display: flex; gap: 0.65rem; align-items: center;">
-                <input type="number" id="f_quantidade" min="1" max="50" value="1" oninput="handleQuantityChange()" style="flex: 1;" required>
-                <div class="item-subtotal-badge" id="currentItemSubtotalBadge">
-                  Subtotal: <strong>R$ 65,00</strong>
-                </div>
-              </div>
-            </div>
-
-            <!-- BOTÃO ADICIONAR AO CARRINHO E CARRINHO DE COMPRAS -->
-            <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
-                  <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
-                </button>
-                <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
-                  Adicione os produtos ao carrinho para somar o pedido
-                </span>
+              <div class="form-group">
+                <label>Nome Completo <span class="req">*</span></label>
+                <input type="text" id="f_nome" placeholder="Ex: Lucas Gabriel da Silva" required>
               </div>
 
-              <!-- CARD DO CARRINHO DE COMPRAS -->
-              <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
-                <div class="order-summary-header">
-                  <div class="order-summary-title">
-                    <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i> Carrinho de Compras (<span id="cartItemsCount">0</span>)
+              <div class="form-group">
+                <label>Telefone / WhatsApp <span class="req">*</span></label>
+                <input type="text" id="f_telefone" placeholder="(61) 99999-8888" oninput="maskPhone(this)" required>
+              </div>
+
+              <div class="form-group">
+                <label>CPF <span class="req">*</span></label>
+                <input type="text" id="f_cpf" placeholder="000.000.000-00" oninput="maskCPF(this)" required>
+              </div>
+
+              <div class="form-group">
+                <label>Comissário Responsável <span class="req">*</span></label>
+                <select id="f_comissario" required>
+                  <option value="">Carregando comissários...</option>
+                </select>
+              </div>
+
+              <!-- SELEÇÃO DE PRODUTO -->
+              <div class="form-group full">
+                <label>Produto Selecionado <span class="req">*</span></label>
+                <div class="product-tiles-grid">
+                  <div class="product-tile selected" onclick="selectProduct('Oversize', this)">
+                    <span class="product-name">Oversize</span>
+                    <span class="product-price">R$ 65,00</span>
                   </div>
-                  <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
+                  <div class="product-tile" onclick="selectProduct('Jersey', this)">
+                    <span class="product-name">Jersey</span>
+                    <span class="product-price">R$ 100,00</span>
+                  </div>
+                  <div class="product-tile" onclick="selectProduct('Tube Top', this)">
+                    <span class="product-name">Tube Top</span>
+                    <span class="product-price">R$ 50,00</span>
+                  </div>
+                  <div class="product-tile" onclick="selectProduct('Caneca', this)">
+                    <span class="product-name">Caneca + Tirante</span>
+                    <span class="product-price price-tbd">A definir</span>
+                  </div>
+                  <div class="product-tile" onclick="selectProduct('Corta Vento', this)">
+                    <span class="product-name">Corta Vento</span>
+                    <span class="product-price">R$ 165,00</span>
+                  </div>
+                  <div class="product-tile" onclick="selectProduct('Eco Bag', this)">
+                    <span class="product-name">Eco Bag</span>
+                    <span class="product-price price-tbd">A definir</span>
+                  </div>
                 </div>
-                <div class="order-items-list" id="orderItemsList">
-                  <!-- Gerado dinamicamente -->
+                <input type="hidden" id="f_produto" value="Oversize">
+              </div>
+
+              <!-- TAMANHOS -->
+              <div class="form-group" id="sizeGroupContainer">
+                <label>Tamanho <span class="req">*</span></label>
+                <div class="sizes-container">
+                  <div class="size-btn" onclick="selectSize('PP', this)">PP</div>
+                  <div class="size-btn" onclick="selectSize('P', this)">P</div>
+                  <div class="size-btn selected" onclick="selectSize('M', this)">M</div>
+                  <div class="size-btn" onclick="selectSize('G', this)">G</div>
+                  <div class="size-btn" onclick="selectSize('GG', this)">GG</div>
+                  <div class="size-btn" onclick="selectSize('XGG', this)">XGG</div>
+                </div>
+                <input type="hidden" id="f_tamanho" value="M">
+              </div>
+
+              <!-- QUANTIDADE E SUBTOTAL -->
+              <div class="form-group">
+                <label>Quantidade de Peças <span class="req">*</span></label>
+                <div style="display: flex; gap: 0.65rem; align-items: center;">
+                  <input type="number" id="f_quantidade" min="1" max="50" value="1" oninput="handleQuantityChange()"
+                    style="flex: 1;" required>
+                  <div class="item-subtotal-badge" id="currentItemSubtotalBadge">
+                    Subtotal: <strong>R$ 65,00</strong>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- ÁREA PIX LIMPA COM BANNER DE VALOR TOTAL -->
-            <div class="form-group full">
-              <div class="pix-box">
-                <div class="pix-total-banner" id="pixTotalBanner">
-                  <div class="pix-total-label">
-                    <span>Valor Total a Pagar no Pix</span>
-                    <span class="pix-items-counter" id="pixTotalItemsText">1 peça selecionada</span>
-                  </div>
-                  <div class="pix-total-val" id="pixTotalValueDisplay">R$ 65,00</div>
-                </div>
-
-                <div class="pix-box-header">
-                  <div class="pix-box-title">Chave Pix Oficial da Atlética (Copia e Cola)</div>
-                  <div class="pix-badge">Chave Ativa</div>
-                </div>
-
-                <div class="pix-input-group">
-                  <div class="pix-key-display" id="pixKeyText">a7cd5773-ecc0-4922-9d54-08908b2edc2e</div>
-                  <button type="button" class="btn-copy" id="btnCopyPix" onclick="copiarChavePix()">
-                    Copiar Chave
+              <!-- BOTÃO ADICIONAR AO CARRINHO E CARRINHO DE COMPRAS -->
+              <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem;">
+                <div
+                  style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                  <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
+                    <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
                   </button>
+                  <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
+                    Adicione os produtos ao carrinho para somar o pedido
+                  </span>
+                </div>
+
+                <!-- CARD DO CARRINHO DE COMPRAS -->
+                <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
+                  <div class="order-summary-header">
+                    <div class="order-summary-title">
+                      <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i> Carrinho de Compras
+                      (<span id="cartItemsCount">0</span>)
+                    </div>
+                    <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
+                  </div>
+                  <div class="order-items-list" id="orderItemsList">
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- COMPROVANTE -->
-            <div class="form-group full">
-              <label>Comprovante de Pagamento <span class="req">*</span></label>
-              <div class="upload-area" onclick="document.getElementById('f_comprovante_file').click()">
-                <div class="upload-text" id="uploadText">
-                  <strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)
+              <!-- ÁREA PIX -->
+              <div class="form-group full">
+                <div class="pix-box">
+                  <div class="pix-total-banner" id="pixTotalBanner">
+                    <div class="pix-total-label">
+                      <span>Valor Total a Pagar no Pix</span>
+                      <span class="pix-items-counter" id="pixTotalItemsText">1 peça selecionada</span>
+                    </div>
+                    <div class="pix-total-val" id="pixTotalValueDisplay">R$ 65,00</div>
+                  </div>
+
+                  <div class="pix-box-header">
+                    <div class="pix-box-title">Chave Pix Oficial da Atlética (Copia e Cola)</div>
+                    <div class="pix-badge">Chave Ativa</div>
+                  </div>
+
+                  <div class="pix-input-group">
+                    <div class="pix-key-display" id="pixKeyText">a7cd5773-ecc0-4922-9d54-08908b2edc2e</div>
+                    <button type="button" class="btn-copy" id="btnCopyPix" onclick="copiarChavePix()">
+                      Copiar Chave
+                    </button>
+                  </div>
                 </div>
               </div>
-              <input type="file" id="f_comprovante_file" style="display: none;" accept="image/*,application/pdf" onchange="handleFile(this)">
-            </div>
 
-            <!-- SUBMIT -->
-            <div class="form-group full" style="margin-top: 0.5rem;">
-              <button type="submit" class="btn-submit" id="btnSubmitOrder">
-                Finalizar Pedido
-              </button>
-            </div>
+              <!-- COMPROVANTE -->
+              <div class="form-group full">
+                <label>Comprovante de Pagamento <span class="req">*</span></label>
+                <div class="upload-area" onclick="document.getElementById('f_comprovante_file').click()">
+                  <div class="upload-text" id="uploadText">
+                    <strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)
+                  </div>
+                </div>
+                <input type="file" id="f_comprovante_file" style="display: none;" accept="image/*,application/pdf"
+                  onchange="handleFile(this)">
+              </div>
 
-          </div>
-        </form>
-      </div>
+              <!-- SUBMIT -->
+              <div class="form-group full" style="margin-top: 0.5rem;">
+                <button type="submit" class="btn-submit" id="btnSubmitOrder">
+                  Finalizar Pedido
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
-    <!-- VIEW 2: PAINEL & PLANILHA (CLEAN) -->
+    <!-- VIEW 2: PAINEL & PLANILHA -->
     <section id="dashView" class="view-section">
       <div class="section-header">
         <h1>Controle Geral de Pedidos</h1>
         <p>Acompanhe todos os lançamentos divididos por abas ou veja o desempenho dos comissários.</p>
       </div>
 
-      <!-- NAVEGAÇÃO DE ABAS SUB-NAV (SEM EMOJIS) -->
+      <!-- NAVEGAÇÃO DE ABAS -->
       <div class="sub-tabs-container">
         <button class="sub-tab-btn" id="btnTabComissarios" onclick="switchSubTab('ranking', this)">
           Comissários <span class="sub-tab-count" id="count-comissarios">0</span>
@@ -1984,6 +2224,25 @@
         </button>
       </div>
 
+      <!-- FILTROS DE STATUS DE ENTREGA -->
+      <div class="delivery-filters-bar" id="deliveryFiltersBar">
+        <div class="delivery-filter-pills">
+          <span class="delivery-filter-label"><i class="fa-solid fa-truck-fast"></i> Entrega:</span>
+          <button type="button" class="delivery-pill active" id="btnFilterDeliveryAll" onclick="setDeliveryFilter('all', this)">
+            Todos (<span id="countDeliveryAll">0</span>)
+          </button>
+          <button type="button" class="delivery-pill pill-pendente" id="btnFilterDeliveryPending" onclick="setDeliveryFilter('pending', this)">
+            <i class="fa-solid fa-clock"></i> Pendentes (<span id="countDeliveryPending">0</span>)
+          </button>
+          <button type="button" class="delivery-pill pill-entregue" id="btnFilterDeliveryDone" onclick="setDeliveryFilter('delivered', this)">
+            <i class="fa-solid fa-circle-check"></i> Entregues (<span id="countDeliveryDone">0</span>)
+          </button>
+        </div>
+        <div class="delivery-stats-badge" id="deliveryStatsText">
+          Entregas: 0 de 0 concluídas
+        </div>
+      </div>
+
       <!-- TABELA DE PEDIDOS -->
       <div class="table-scroll-hint">
         <i class="fa-solid fa-arrows-left-right"></i> Arraste para o lado para ver todas as colunas
@@ -1994,16 +2253,14 @@
             <tr>
               <th>Data</th>
               <th>Nome</th>
-              <th>Telefone</th>
               <th>CPF</th>
               <th>Comissário</th>
               <th>Produto</th>
               <th>Tamanho</th>
-              <th>Qtd</th>
               <th>Valor Total</th>
               <th>Pagamento</th>
               <th>Comprovante</th>
-              <th>Entrega</th>
+              <th>Status de Entrega</th>
               <th>WhatsApp & Ações</th>
             </tr>
           </thead>
@@ -2013,18 +2270,20 @@
         </table>
       </div>
 
-      <!-- SEÇÃO DO RANKING & COMISSÁRIOS (CLEAN E MATTE) -->
+      <!-- SEÇÃO DO RANKING & COMISSÁRIOS -->
       <div id="rankingSection" style="display: none;">
-        
+
         <!-- CARD DE CADASTRO DE COMISSÁRIOS -->
         <div class="comissario-cad-card">
           <div class="comissario-cad-header">
             <h3>Cadastrar Novo Comissário</h3>
-            <p>Adicione os membros e comissários oficiais para liberar seus nomes no formulário de pedidos e no ranking.</p>
+            <p>Adicione os membros e comissários oficiais para liberar seus nomes no formulário de pedidos e no ranking.
+            </p>
           </div>
           <form id="formCadComissario" onsubmit="handleCadastrarComissario(event)" class="comissario-cad-form">
             <div class="comissario-input-wrap">
-              <input type="text" id="novoComissarioNome" placeholder="Nome do comissário ou membro (Ex: Matheus Silva)" required>
+              <input type="text" id="novoComissarioNome" placeholder="Nome do comissário ou membro (Ex: Matheus Silva)"
+                required>
             </div>
             <button type="submit" class="btn-cadastrar-comissario">
               Cadastrar Comissário
@@ -2065,11 +2324,11 @@
 
   </div>
 
-  <!-- MODAL ÁREA RESTRITA (ESTILO CEM) -->
+  <!-- MODAL ÁREA RESTRITA -->
   <div class="modal-overlay" id="loginModal" onclick="handleOverlayClick(event)">
     <div class="login-modal-box">
       <button type="button" class="login-close-btn" onclick="closeLoginModal()" title="Fechar">&times;</button>
-      
+
       <div class="login-modal-title">Área Restrita</div>
       <div class="login-modal-sub">Acesso exclusivo para Comissários e Diretoria</div>
 
@@ -2079,8 +2338,10 @@
             <input type="text" id="loginUser" placeholder="Usuário" autocomplete="username" required>
           </div>
           <div class="login-field">
-            <input type="password" id="loginPass" placeholder="Senha" autocomplete="current-password" required style="padding-right: 2.75rem;">
-            <button type="button" class="btn-toggle-pass" id="btnTogglePass" onclick="togglePasswordVisibility()" title="Mostrar ou ocultar senha">
+            <input type="password" id="loginPass" placeholder="Senha" autocomplete="current-password" required
+              style="padding-right: 2.75rem;">
+            <button type="button" class="btn-toggle-pass" id="btnTogglePass" onclick="togglePasswordVisibility()"
+              title="Mostrar ou ocultar senha">
               <i class="fa-regular fa-eye" id="eyeIcon"></i>
             </button>
           </div>
@@ -2093,7 +2354,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE CONFIRMAÇÃO PERSONALIZADO -->
+  <!-- MODAL DE CONFIRMAÇÃO -->
   <div class="modal-overlay" id="confirmModal" onclick="handleConfirmOverlayClick(event)" style="z-index: 1100;">
     <div class="confirm-modal-box">
       <div class="confirm-modal-header">
@@ -2121,10 +2382,13 @@
     <div class="receipt-modal-box">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
         <div>
-          <h3 id="receiptModalTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff;">Comprovante de Pagamento</h3>
-          <p id="receiptModalSub" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.2rem;">Detalhes do anexo</p>
+          <h3 id="receiptModalTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff;">Comprovante de Pagamento
+          </h3>
+          <p id="receiptModalSub" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.2rem;">Detalhes
+            do anexo</p>
         </div>
-        <button type="button" class="login-close-btn" onclick="closeReceiptModal()" title="Fechar" style="position: static; margin-left: auto;">&times;</button>
+        <button type="button" class="login-close-btn" onclick="closeReceiptModal()" title="Fechar"
+          style="position: static; margin-left: auto;">&times;</button>
       </div>
 
       <div class="receipt-preview-body" id="receiptPreviewContent">
@@ -2132,7 +2396,8 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
-        <a id="btnReceiptExternal" href="#" target="_blank" class="btn-cadastrar-comissario" style="display: none; text-decoration: none; align-items: center; gap: 0.5rem;">
+        <a id="btnReceiptExternal" href="#" target="_blank" class="btn-cadastrar-comissario"
+          style="display: none; text-decoration: none; align-items: center; gap: 0.5rem;">
           <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir no Google Drive
         </a>
         <button type="button" class="btn-confirm-cancel" onclick="closeReceiptModal()">
@@ -2152,7 +2417,6 @@
     const COMISSARIOS_KEY = "PESADELO_COMISSARIOS_PROD_V1";
     const SHEETS_CONFIG_KEY = "PESADELO_SHEETS_URL";
     const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwmSQECPJVUW0xvwQvTq_9O-kgD--T869jWqM5YYbqTipFq3fktoxROrujAq1iCChP-/exec";
-    // Limpeza de chaves antigas de teste
     localStorage.removeItem("PESADELO_PEDIDOS_UNB_CLEAN_V1");
     localStorage.removeItem("PESADELO_PEDIDOS_UNB_OFICIAL_V1");
     let orders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -2204,7 +2468,7 @@
 
     function updateOrderTotals() {
       const current = getCurrentFormItem();
-      
+
       // Atualiza badge de subtotal do item atualmente sendo configurado
       const subBadge = document.getElementById("currentItemSubtotalBadge");
       if (subBadge) {
@@ -2277,7 +2541,7 @@
 
     function addItemToOrder() {
       const current = getCurrentFormItem();
-      
+
       // Verifica se o mesmo produto e tamanho já está no carrinho
       const existing = orderCart.find(i => i.produto === current.produto && i.tamanho === current.tamanho);
       if (existing) {
@@ -2288,7 +2552,7 @@
         orderCart.push({ ...current });
         showToast(`Adicionado ao carrinho: ${current.quantidade}x ${NOMES_PRODUTOS[current.produto] || current.produto} (${current.tamanho})`);
       }
-      
+
       const qInput = document.getElementById("f_quantidade");
       if (qInput) qInput.value = 1;
 
@@ -2498,7 +2762,7 @@
       showToast(`Comissário "${nome}" cadastrado com sucesso.`);
     }
 
-    // MODAL DE CONFIRMAÇÃO PERSONALIZADO
+    // MODAL DE CONFIRMAÇÃO
     let confirmActionCallback = null;
 
     function showCustomConfirm(title, message, onConfirm, confirmBtnText = "Remover") {
@@ -2724,7 +2988,7 @@
       });
     }
 
-    // NAVEGAÇÃO PRINCIPAL (ESTILO CEM)
+    // NAVEGAÇÃO PRINCIPAL
     function switchMainView(viewId, btn) {
       if (viewId === "dashView" && !isGestaoAuthed()) {
         openLoginModal();
@@ -2733,14 +2997,113 @@
 
       document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
       document.querySelectorAll(".nav-pill").forEach(p => p.classList.remove("active"));
-      
+
       document.getElementById(viewId).classList.add("active");
       if (btn) btn.classList.add("active");
-      
+
       if (viewId === 'dashView') {
         saveAndRefresh();
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // FILTROS DE STATUS DE ENTREGA
+    let deliveryFilter = "all";
+
+    function setDeliveryFilter(filterType, btn) {
+      deliveryFilter = filterType;
+      document.querySelectorAll(".delivery-pill").forEach(p => p.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+      renderOrdersTable();
+    }
+
+    function updateDeliveryCounters() {
+      let baseOrders = orders;
+      if (currentTab !== "todas" && currentTab !== "ranking") {
+        baseOrders = orders.filter(o => o.produto && (o.produto === currentTab || o.produto.includes(currentTab)));
+      }
+      const total = baseOrders.length;
+      const delivered = baseOrders.filter(o => o.statusEntrega === "Entregue").length;
+      const pending = total - delivered;
+
+      const elAll = document.getElementById("countDeliveryAll");
+      const elPen = document.getElementById("countDeliveryPending");
+      const elDon = document.getElementById("countDeliveryDone");
+      const elStats = document.getElementById("deliveryStatsText");
+
+      if (elAll) elAll.innerText = total;
+      if (elPen) elPen.innerText = pending;
+      if (elDon) elDon.innerText = delivered;
+      if (elStats) {
+        elStats.innerHTML = `Entregas: <strong style="color: ${delivered === total && total > 0 ? 'var(--success)' : '#fff'};">${delivered}</strong> de <strong>${total}</strong> concluídas (${total > 0 ? Math.round((delivered / total) * 100) : 0}%)`;
+      }
+    }
+
+    // RESOLVE O TAMANHO CORRETO PARA A ABA ESPECÍFICA OU GERAL
+    function getOrderSizeForTab(order, tab) {
+      if (!order) return "-";
+
+      function extractSizeForProduct(text, prodName) {
+        if (!text) return null;
+        const escaped = prodName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const reg = new RegExp(escaped + "\\s*\\(([^)]+)\\)", "i");
+        const m = text.match(reg);
+        return m ? m[1].trim() : null;
+      }
+
+      // 1. ABA DE PRODUTO ESPECÍFICO (ex: Corta Vento, Oversize, Jersey...)
+      if (tab && tab !== "todas" && tab !== "ranking") {
+        if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
+          const matching = order.itens.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
+          if (matching.length > 0) {
+            const sizes = matching.map(i => i.tamanho).filter(t => t && t !== "-");
+            const unique = [...new Set(sizes)];
+            return unique.length > 0 ? unique.join(", ") : "-";
+          }
+        }
+        const extracted = extractSizeForProduct(order.produto, tab);
+        if (extracted) return extracted;
+        if (order.tamanho && order.tamanho !== "Múltiplos") return order.tamanho;
+        return "-";
+      }
+
+      // 2. ABA GERAL ("todas")
+      if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
+        const sizes = order.itens.map(i => i.tamanho).filter(t => t && t !== "-");
+        const unique = [...new Set(sizes)];
+        if (unique.length === 1) return unique[0];
+        if (unique.length > 1) return unique.join(", ");
+        return "-";
+      }
+
+      if (order.tamanho === "Múltiplos" || !order.tamanho) {
+        const matches = [...(order.produto || "").matchAll(/\(([^)]+)\)/g)];
+        if (matches.length > 0) {
+          const extracted = [...new Set(matches.map(m => m[1].trim()))];
+          if (extracted.length === 1) return extracted[0];
+          return extracted.join(", ");
+        }
+      }
+
+      return order.tamanho || "-";
+    }
+
+    // RESOLVE O PRODUTO CORRETO PARA A ABA ESPECÍFICA
+    function getOrderProductForTab(order, tab) {
+      if (!order) return "";
+      if (tab && tab !== "todas" && tab !== "ranking") {
+        if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
+          const matching = order.itens.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
+          if (matching.length > 0) {
+            return matching.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}) x${i.quantidade}`).join(" + ");
+          }
+        }
+        const escaped = tab.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const reg = new RegExp(escaped + "[^\\+]*", "i");
+        const m = (order.produto || "").match(reg);
+        if (m) return m[0].trim();
+      }
+      return order.produto || "";
     }
 
     // NAVEGAÇÃO SUB-TABS
@@ -2751,13 +3114,16 @@
 
       const tableSec = document.getElementById("tableSection");
       const rankingSec = document.getElementById("rankingSection");
+      const deliveryBar = document.getElementById("deliveryFiltersBar");
 
       if (tab === "ranking") {
         tableSec.style.display = "none";
+        if (deliveryBar) deliveryBar.style.display = "none";
         rankingSec.style.display = "block";
         renderRanking();
       } else {
         tableSec.style.display = "block";
+        if (deliveryBar) deliveryBar.style.display = "flex";
         rankingSec.style.display = "none";
         renderOrdersTable();
       }
@@ -2789,26 +3155,33 @@
         filtered = orders.filter(o => o.produto && (o.produto === currentTab || o.produto.includes(currentTab)));
       }
 
+      updateDeliveryCounters();
+
+      // Filtro de status de entrega (Todos / Pendentes / Entregues)
+      if (deliveryFilter === "pending") {
+        filtered = filtered.filter(o => o.statusEntrega !== "Entregue");
+      } else if (deliveryFilter === "delivered") {
+        filtered = filtered.filter(o => o.statusEntrega === "Entregue");
+      }
+
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="13" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum pedido encontrado nesta aba.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">Nenhum pedido encontrado nesta visualização.</td></tr>`;
         return;
       }
 
       filtered.forEach(o => {
-        const rawPhone = o.telefone.replace(/\D/g, "");
-        const zapMsg = encodeURIComponent(`Olá ${o.nome.split(" ")[0]}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${o.produto} (${o.tamanho}).`);
+        const rawPhone = (o.telefone || "").replace(/\D/g, "");
+        const prodExibido = getOrderProductForTab(o, currentTab);
+        const tamExibido = getOrderSizeForTab(o, currentTab);
+        const isEntregue = o.statusEntrega === "Entregue";
+
+        const zapMsg = encodeURIComponent(`Olá ${o.nome.split(" ")[0]}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${prodExibido} (${tamExibido}).`);
         const zapUrl = `https://wa.me/55${rawPhone}?text=${zapMsg}`;
 
         let compHtml = `<span style="color: var(--text-muted); font-size: 0.75rem;">Sem anexo</span>`;
-        if (o.comprovanteUrl && o.comprovanteUrl.toString().startsWith("http")) {
+        if (o.comprovanteUrl || o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:"))) {
           compHtml = `
-            <a href="${o.comprovanteUrl}" target="_blank" class="btn-receipt-badge" title="Abrir comprovante no Google Drive">
-              <i class="fa-solid fa-receipt"></i> Ver Anexo
-            </a>
-          `;
-        } else if (o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:"))) {
-          compHtml = `
-            <button type="button" class="btn-receipt-badge" onclick="openReceiptModal(${o.id})" title="Visualizar comprovante">
+            <button type="button" class="btn-receipt-badge" onclick="openReceiptModal(${o.id})" title="Visualizar comprovante no aplicativo">
               <i class="fa-solid fa-receipt"></i> Ver Anexo
             </button>
           `;
@@ -2817,15 +3190,14 @@
         const valExibido = o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[o.produto] ? formatCurrency(PRECOS_PRODUTOS[o.produto] * (o.quantidade || 1)) : 'A definir'));
 
         const tr = document.createElement("tr");
+        tr.className = isEntregue ? "row-entregue" : "row-pendente";
         tr.innerHTML = `
           <td><small style="color: var(--text-muted)">${o.data}</small></td>
           <td><strong>${o.nome}</strong></td>
-          <td>${o.telefone}</td>
           <td><small style="color: var(--text-secondary);">${o.cpf}</small></td>
           <td>${o.comissario}</td>
-          <td><strong>${o.produto}</strong></td>
-          <td>${o.tamanho}</td>
-          <td>${o.quantidade}</td>
+          <td><strong>${prodExibido}</strong></td>
+          <td><span class="size-badge-display">${tamExibido}</span></td>
           <td><span class="val-total-badge">${valExibido}</span></td>
           <td>
             <span class="status-badge ${o.statusPagamento === 'Confirmado' ? 'status-pago' : 'status-pendente'}" onclick="togglePagamento(${o.id})">
@@ -2836,17 +3208,23 @@
             ${compHtml}
           </td>
           <td>
-            <select onchange="changeEntrega(${o.id}, this.value)" style="padding: 0.25rem 0.5rem; font-size: 0.78rem;">
-              <option value="Aguardando" ${o.statusEntrega === 'Aguardando' ? 'selected' : ''}>Aguardando</option>
-              <option value="Em Produção" ${o.statusEntrega === 'Em Produção' ? 'selected' : ''}>Em Produção</option>
-              <option value="Pronto p/ Retirada" ${o.statusEntrega === 'Pronto p/ Retirada' ? 'selected' : ''}>Pronto p/ Retirada</option>
-              <option value="Entregue" ${o.statusEntrega === 'Entregue' ? 'selected' : ''}>Entregue</option>
-            </select>
+            <div class="entrega-control-group">
+              <button type="button" class="btn-toggle-entrega ${isEntregue ? 'is-entregue' : 'is-pendente'}" onclick="toggleEntregaStatus(${o.id})" title="${isEntregue ? 'Clique para desmarcar entrega' : 'Clique para marcar como Entregue'}">
+                <i class="fa-solid ${isEntregue ? 'fa-circle-check' : 'fa-clock'}"></i>
+                <span>${isEntregue ? 'Entregue' : 'Pendente'}</span>
+              </button>
+              <select class="select-entrega-mini" onchange="changeEntrega(${o.id}, this.value)" title="Alterar status detalhado de entrega">
+                <option value="Aguardando" ${o.statusEntrega === 'Aguardando' ? 'selected' : ''}>Aguardando</option>
+                <option value="Em Produção" ${o.statusEntrega === 'Em Produção' ? 'selected' : ''}>Em Produção</option>
+                <option value="Pronto p/ Retirada" ${o.statusEntrega === 'Pronto p/ Retirada' ? 'selected' : ''}>Pronto p/ Retirada</option>
+                <option value="Entregue" ${o.statusEntrega === 'Entregue' ? 'selected' : ''}>Entregue</option>
+              </select>
+            </div>
           </td>
           <td>
             <div class="row-actions">
               <a href="${zapUrl}" target="_blank" class="btn-zap-clean" title="Abrir conversa no WhatsApp">
-                WhatsApp
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
               </a>
               <button type="button" class="btn-delete-order" onclick="deleteOrder(${o.id})" title="Excluir este pedido">
                 <i class="fa-solid fa-trash-can"></i>
@@ -2856,6 +3234,24 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function toggleEntregaStatus(id) {
+      const ord = orders.find(x => x.id === id);
+      if (!ord) return;
+      const novoStatus = ord.statusEntrega === "Entregue" ? "Aguardando" : "Entregue";
+      ord.statusEntrega = novoStatus;
+      saveAndRefresh();
+      sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: novoStatus });
+
+      if (novoStatus === "Entregue") {
+        if (typeof confetti === "function") {
+          confetti({ particleCount: 40, spread: 65, origin: { y: 0.7 } });
+        }
+        showToast(`🎉 Pedido de ${ord.nome.split(" ")[0]} confirmado como ENTREGUE!`);
+      } else {
+        showToast(`Entrega de ${ord.nome.split(" ")[0]} marcada como Pendente.`);
+      }
     }
 
     function togglePagamento(id) {
@@ -2874,7 +3270,14 @@
         ord.statusEntrega = val;
         saveAndRefresh();
         sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: val });
-        showToast("Status de entrega alterado para " + val);
+        if (val === "Entregue") {
+          if (typeof confetti === "function") {
+            confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
+          }
+          showToast(`🎉 Pedido de ${ord.nome.split(" ")[0]} confirmado como ENTREGUE!`);
+        } else {
+          showToast("Status de entrega alterado para " + val);
+        }
       }
     }
 
@@ -3028,10 +3431,10 @@
         const isImage = file.type.startsWith("image/");
         const reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           if (isImage) {
             const img = new Image();
-            img.onload = function() {
+            img.onload = function () {
               const canvas = document.createElement("canvas");
               let width = img.width;
               let height = img.height;
@@ -3092,6 +3495,12 @@
       }
     }
 
+    function getGoogleDriveFileId(url) {
+      if (!url) return null;
+      const match = url.toString().match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.toString().match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      return match ? match[1] : null;
+    }
+
     function openReceiptModal(orderId) {
       const o = orders.find(x => x.id === orderId);
       if (!o) return;
@@ -3102,45 +3511,70 @@
       const preview = document.getElementById("receiptPreviewContent");
       const btnExt = document.getElementById("btnReceiptExternal");
 
-      title.innerText = `Comprovante - ${o.nome}`;
-      sub.innerText = `${o.produto} (${o.tamanho}) • ${o.quantidade} un • ${o.data}`;
+      title.innerText = `Comprovante • ${o.nome}`;
+      const prodDesc = o.produto || "Pedido";
+      const tamDesc = o.tamanho ? `(${o.tamanho})` : "";
+      const valDesc = o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : "");
+      sub.innerText = `${prodDesc} ${tamDesc} • ${valDesc} • ${o.data}`;
 
-      if (o.comprovanteUrl && o.comprovanteUrl.toString().startsWith("http")) {
-        btnExt.href = o.comprovanteUrl;
+      const fileData = o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:") ? o.comprovante : "");
+      const fileUrl = (o.comprovanteUrl || "").toString();
+      const driveId = getGoogleDriveFileId(fileUrl);
+
+      if (fileUrl && fileUrl.startsWith("http")) {
+        btnExt.href = fileUrl;
         btnExt.style.display = "inline-flex";
+        btnExt.innerHTML = `<i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir em Nova Guia`;
       } else {
         btnExt.style.display = "none";
       }
 
-      const fileData = o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:") ? o.comprovante : "");
-      const fileUrl = o.comprovanteUrl || "";
-
-      if (fileData.startsWith("data:image/") || (fileUrl && (fileUrl.endsWith(".jpg") || fileUrl.endsWith(".png") || fileUrl.endsWith(".jpeg")))) {
-        preview.innerHTML = `<img src="${fileData || fileUrl}" alt="Comprovante de Pagamento" class="receipt-preview-img">`;
-      } else if (fileData.startsWith("data:application/pdf")) {
+      // 1. Google Drive URL -> Iframe oficial embutido para ver direto no app
+      if (driveId) {
         preview.innerHTML = `
-          <div style="text-align: center; padding: 2rem;">
-            <i class="fa-solid fa-file-pdf" style="font-size: 3.5rem; color: #ef4444; margin-bottom: 1rem;"></i>
-            <p style="font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Documento PDF Anexado</p>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">${o.comprovanteNome || "comprovante.pdf"}</p>
-            <a href="${fileData}" download="${o.comprovanteNome || 'comprovante.pdf'}" class="btn-cadastrar-comissario" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-download"></i> Baixar Comprovante PDF
-            </a>
+          <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
+            <iframe src="https://drive.google.com/file/d/${driveId}/preview" 
+              style="width: 100%; height: 62vh; border: none; border-radius: 8px; background: #07080c;" 
+              allow="autoplay" loading="lazy">
+            </iframe>
+            <div style="display: flex; gap: 0.5rem; align-items: center; justify-content: center; width: 100%;">
+              <span style="font-size: 0.78rem; color: var(--text-muted);"><i class="fa-brands fa-google-drive" style="color: #34a853;"></i> Comprovante carregado do Google Drive</span>
+            </div>
           </div>
         `;
-      } else if (fileUrl) {
+      }
+      // 2. Base64 Imagem ou URL direta de imagem
+      else if (fileData.startsWith("data:image/") || (fileUrl && /\.(jpg|jpeg|png|webp|gif|bmp)(\?.*)?$/i.test(fileUrl))) {
         preview.innerHTML = `
-          <div style="text-align: center; padding: 2rem;">
-            <i class="fa-brands fa-google-drive" style="font-size: 3.5rem; color: #34a853; margin-bottom: 1rem;"></i>
-            <p style="font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Comprovante no Google Drive</p>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Arquivo sincronizado na sua pasta de Comprovantes da Atlética Pesadelo.</p>
-            <a href="${fileUrl}" target="_blank" class="btn-cadastrar-comissario" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir no Google Drive
-            </a>
+          <div style="width: 100%; display: flex; justify-content: center; align-items: center; padding: 0.5rem;">
+            <img src="${fileData || fileUrl}" alt="Comprovante de Pagamento" class="receipt-preview-img" style="max-height: 65vh; max-width: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
           </div>
         `;
-      } else {
-        preview.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Nenhum comprovante anexado a este pedido.</p>`;
+      }
+      // 3. Base64 PDF
+      else if (fileData.startsWith("data:application/pdf")) {
+        preview.innerHTML = `
+          <div style="width: 100%; height: 62vh; display: flex; flex-direction: column;">
+            <iframe src="${fileData}#toolbar=0" style="width: 100%; height: 100%; border: none; border-radius: 8px;"></iframe>
+          </div>
+        `;
+      }
+      // 4. Outra URL
+      else if (fileUrl && fileUrl.startsWith("http")) {
+        preview.innerHTML = `
+          <div style="width: 100%; height: 62vh;">
+            <iframe src="${fileUrl}" style="width: 100%; height: 100%; border: none; border-radius: 8px;"></iframe>
+          </div>
+        `;
+      }
+      // 5. Sem anexo
+      else {
+        preview.innerHTML = `
+          <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+            <i class="fa-regular fa-image" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.4;"></i>
+            <p style="font-size: 0.95rem; font-weight: 600;">Nenhum comprovante anexado a este pedido.</p>
+          </div>
+        `;
       }
 
       modal.classList.add("active");
@@ -3189,7 +3623,15 @@
         tamanhoDescricao = allItems[0].tamanho;
       } else {
         produtoDescricao = allItems.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}) x${i.quantidade}`).join(" + ");
-        tamanhoDescricao = "Múltiplos";
+        const sizes = allItems.map(i => i.tamanho).filter(t => t && t !== "-");
+        const uniqueSizes = [...new Set(sizes)];
+        if (uniqueSizes.length === 1) {
+          tamanhoDescricao = uniqueSizes[0];
+        } else if (uniqueSizes.length > 1) {
+          tamanhoDescricao = uniqueSizes.join(", ");
+        } else {
+          tamanhoDescricao = "-";
+        }
       }
 
       let valorFormatado = "";
@@ -3201,7 +3643,7 @@
 
       const novo = {
         id: Date.now(),
-        data: new Date().toLocaleDateString("pt-BR") + " " + new Date().toLocaleTimeString("pt-BR", {hour: '2-digit', minute:'2-digit'}),
+        data: new Date().toLocaleDateString("pt-BR") + " " + new Date().toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }),
         nome: document.getElementById("f_nome").value.trim(),
         telefone: document.getElementById("f_telefone").value.trim(),
         cpf: document.getElementById("f_cpf").value.trim(),
@@ -3267,20 +3709,19 @@
       const wb = XLSX.utils.book_new();
 
       const wsGeralData = [
-        ["Data", "Nome", "Telefone", "CPF", "Comissário", "Produto", "Tamanho", "Quantidade", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
+        ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
       ];
       orders.forEach(o => {
+        const tam = getOrderSizeForTab(o, "todas");
         wsGeralData.push([
-          o.data, 
-          o.nome, 
-          o.telefone, 
-          o.cpf, 
-          o.comissario, 
-          o.produto, 
-          o.tamanho, 
-          o.quantidade, 
+          o.data,
+          o.nome,
+          o.cpf,
+          o.comissario,
+          o.produto,
+          tam,
           o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[o.produto] ? formatCurrency(PRECOS_PRODUTOS[o.produto] * (o.quantidade || 1)) : "A definir")),
-          o.statusPagamento, 
+          o.statusPagamento,
           o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
           o.statusEntrega
         ]);
@@ -3291,19 +3732,20 @@
       const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
       prods.forEach(p => {
         const prodData = [
-          ["Data", "Nome", "Telefone", "CPF", "Comissário", "Tamanho", "Quantidade", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
+          ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
         ];
         orders.filter(o => o.produto && (o.produto === p || o.produto.includes(p))).forEach(o => {
+          const tam = getOrderSizeForTab(o, p);
+          const prodDesc = getOrderProductForTab(o, p);
           prodData.push([
-            o.data, 
-            o.nome, 
-            o.telefone, 
-            o.cpf, 
-            o.comissario, 
-            o.tamanho, 
-            o.quantidade, 
+            o.data,
+            o.nome,
+            o.cpf,
+            o.comissario,
+            prodDesc,
+            tam,
             o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[p] ? formatCurrency(PRECOS_PRODUTOS[p] * (o.quantidade || 1)) : "A definir")),
-            o.statusPagamento, 
+            o.statusPagamento,
             o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
             o.statusEntrega
           ]);
@@ -3328,8 +3770,8 @@
         nome: n,
         pedidos: comissariosMap[n].pedidos,
         itens: comissariosMap[n].itens
-      })).sort((a,b) => b.itens - a.itens).forEach((c, i) => {
-        rankingData.push([`${i+1}º Lugar`, c.nome, c.pedidos, c.itens]);
+      })).sort((a, b) => b.itens - a.itens).forEach((c, i) => {
+        rankingData.push([`${i + 1}º Lugar`, c.nome, c.pedidos, c.itens]);
       });
       const wsRank = XLSX.utils.aoa_to_sheet(rankingData);
       XLSX.utils.book_append_sheet(wb, wsRank, "Ranking Comissarios");
@@ -3375,4 +3817,5 @@
     }
   </script>
 </body>
+
 </html>

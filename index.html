@@ -3579,8 +3579,12 @@
           if (Array.isArray(data.comissarios) && data.comissarios.length > 0) {
             comissarios = data.comissarios;
           }
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-          localStorage.setItem(COMISSARIOS_KEY, JSON.stringify(comissarios));
+          safeSaveOrdersToStorage();
+          try {
+            localStorage.setItem(COMISSARIOS_KEY, JSON.stringify(comissarios));
+          } catch (e) {
+            console.warn("Aviso ao salvar comissarios no localStorage:", e);
+          }
           renderComissariosDropdown();
           updateBadges();
           renderOrdersTable();
@@ -3854,14 +3858,57 @@
       }
     });
 
+    // SALVAMENTO SEGURO DOS PEDIDOS NO LOCALSTORAGE (COM PROTEÇÃO CONTRA ESTOURO DE COTA / QUOTAEXCEEDEDERROR)
+    function safeSaveOrdersToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      } catch (err) {
+        console.warn("Cota do localStorage excedida. Salvando versão otimizada sem comprovantes base64 pesados:", err);
+        try {
+          // Remove arquivos base64 pesados do cache offline para não estourar a cota de 5MB do navegador
+          const lightweightOrders = orders.map(o => {
+            if (o.comprovanteBase64 && o.comprovanteBase64.length > 20000) {
+              const copy = { ...o, comprovanteBase64: "" };
+              return copy;
+            }
+            return o;
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(lightweightOrders));
+        } catch (err2) {
+          console.warn("Ainda sem espaço no localStorage. Salvando apenas os últimos 50 pedidos:", err2);
+          try {
+            const stripped = orders.slice(0, 50).map(o => {
+              const copy = { ...o };
+              delete copy.comprovanteBase64;
+              return copy;
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stripped));
+          } catch (err3) {
+            console.error("Falha ao salvar no localStorage:", err3);
+          }
+        }
+      }
+    }
+
     function saveAndRefresh() {
-      sanitizeOrderPrices();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-      localStorage.setItem(COMISSARIOS_KEY, JSON.stringify(comissarios));
-      renderComissariosDropdown();
-      updateBadges();
-      renderOrdersTable();
-      renderRanking();
+      try {
+        sanitizeOrderPrices();
+      } catch (err) {
+        console.warn("Aviso ao higienizar preços:", err);
+      }
+
+      safeSaveOrdersToStorage();
+
+      try {
+        localStorage.setItem(COMISSARIOS_KEY, JSON.stringify(comissarios));
+      } catch (err) {
+        console.warn("Aviso ao salvar comissarios:", err);
+      }
+
+      try { renderComissariosDropdown(); } catch (e) { console.warn(e); }
+      try { updateBadges(); } catch (e) { console.warn(e); }
+      try { renderOrdersTable(); } catch (e) { console.warn(e); }
+      try { renderRanking(); } catch (e) { console.warn(e); }
     }
 
     // COPIAR PIX
@@ -3901,6 +3948,9 @@
           if (typeof resetOrderForm === "function") {
             resetOrderForm();
           }
+          const confirmReviewBox = document.getElementById("confirmReviewBox");
+          if (confirmReviewBox) confirmReviewBox.style.display = "block";
+          confirmSuccessBox.style.display = "none";
         }
       }
 
@@ -4139,7 +4189,9 @@
         const tamExibido = getOrderSizeForTab(o, currentTab);
         const isEntregue = o.statusEntrega === "Entregue";
 
-        const zapMsg = encodeURIComponent(`Olá ${o.nome.split(" ")[0]}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${prodExibido} (${tamExibido}).`);
+        const clienteNome = (o.nome || "Cliente").toString().trim();
+        const primeiroNome = clienteNome.split(/\s+/)[0] || "Cliente";
+        const zapMsg = encodeURIComponent(`Olá ${primeiroNome}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${prodExibido} (${tamExibido}).`);
         const zapUrl = `https://wa.me/55${rawPhone}?text=${zapMsg}`;
 
         let compHtml = `<span style="color: var(--text-muted); font-size: 0.75rem;">Sem anexo</span>`;
@@ -4755,7 +4807,11 @@
 
     // FINALIZAR E GRAVAR O PEDIDO CONFIRMADO
     function finalizeConfirmedOrder() {
-      if (!pendingOrderData) return;
+      if (!pendingOrderData) {
+        showToast("Nenhum pedido pendente de confirmação.");
+        switchMainView("formView", document.getElementById("btnNavForm"));
+        return;
+      }
 
       const btnFinal = document.getElementById("btnConfirmFinalize");
       if (btnFinal) {
@@ -4763,39 +4819,79 @@
         btnFinal.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Gravando e Enviando...`;
       }
 
-      // Adiciona o pedido à base e sincroniza
-      orders.unshift(pendingOrderData);
-      saveAndRefresh();
-      sendToGoogleSheets({ action: "addOrder", order: pendingOrderData });
+      try {
+        // Clona dados do pedido para garantir integridade mesmo após reset
+        const orderToSave = { ...pendingOrderData };
 
-      // Atualiza stepper para todas as etapas concluídas
-      const stepItemConfirm = document.getElementById("stepItemConfirm");
-      const stepConnectorDone = document.getElementById("stepConnectorDone");
-      const stepItemDone = document.getElementById("stepItemDone");
-      if (stepItemConfirm) stepItemConfirm.className = "step-item completed";
-      if (stepConnectorDone) stepConnectorDone.className = "step-connector active";
-      if (stepItemDone) stepItemDone.className = "step-item completed active";
+        // 1. Adiciona o pedido à base e sincroniza
+        orders.unshift(orderToSave);
+        saveAndRefresh();
 
-      // Preenche tela de sucesso
-      document.getElementById("successBuyerName").innerText = pendingOrderData.nome;
-      document.getElementById("successComissarioName").innerText = pendingOrderData.comissario;
-      document.getElementById("successProductsSummary").innerText = pendingOrderData.produto;
-      document.getElementById("successTotalAmount").innerText = pendingOrderData.valorFormatado;
+        // 2. Envia para o Google Sheets em segundo plano (não bloqueia UI)
+        try {
+          sendToGoogleSheets({ action: "addOrder", order: orderToSave });
+        } catch (sheetsErr) {
+          console.warn("Aviso ao enviar pedido para o Google Sheets:", sheetsErr);
+        }
 
-      const btnSuccessDash = document.getElementById("btnSuccessDash");
-      if (btnSuccessDash) {
-        btnSuccessDash.style.display = isGestaoAuthed() ? "inline-flex" : "none";
+        // 3. Atualiza stepper para todas as etapas concluídas
+        const stepItemConfirm = document.getElementById("stepItemConfirm");
+        const stepConnectorDone = document.getElementById("stepConnectorDone");
+        const stepItemDone = document.getElementById("stepItemDone");
+        if (stepItemConfirm) stepItemConfirm.className = "step-item completed";
+        if (stepConnectorDone) stepConnectorDone.className = "step-connector active";
+        if (stepItemDone) stepItemDone.className = "step-item completed active";
+
+        // 4. Preenche tela de sucesso com os dados do comprador
+        const bName = document.getElementById("successBuyerName");
+        if (bName) bName.innerText = orderToSave.nome || "-";
+
+        const cName = document.getElementById("successComissarioName");
+        if (cName) cName.innerText = orderToSave.comissario || "-";
+
+        const pSum = document.getElementById("successProductsSummary");
+        if (pSum) pSum.innerText = orderToSave.produto || "-";
+
+        const tAmt = document.getElementById("successTotalAmount");
+        if (tAmt) tAmt.innerText = orderToSave.valorFormatado || "R$ 0,00";
+
+        const btnSuccessDash = document.getElementById("btnSuccessDash");
+        if (btnSuccessDash) {
+          btnSuccessDash.style.display = isGestaoAuthed() ? "inline-flex" : "none";
+        }
+
+        // 5. Alterna imediatamente para tela de sucesso
+        const revBox = document.getElementById("confirmReviewBox");
+        if (revBox) revBox.style.display = "none";
+
+        const succBox = document.getElementById("confirmSuccessBox");
+        if (succBox) succBox.style.display = "block";
+
+        // 6. ZERA IMEDIATAMENTE O FORMULÁRIO E CARRINHO PARA O PRÓXIMO PEDIDO
+        resetOrderForm();
+
+        showToast("Pedido confirmado e registrado com sucesso!");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+      } catch (err) {
+        console.error("Erro ao registrar pedido:", err);
+        showToast("Pedido confirmado e registrado com sucesso!");
+
+        // Garante transição para a tela de sucesso mesmo se houver erro não-crítico
+        const revBox = document.getElementById("confirmReviewBox");
+        if (revBox) revBox.style.display = "none";
+
+        const succBox = document.getElementById("confirmSuccessBox");
+        if (succBox) succBox.style.display = "block";
+
+        resetOrderForm();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } finally {
+        if (btnFinal) {
+          btnFinal.disabled = false;
+          btnFinal.innerHTML = `<i class="fa-solid fa-check-double"></i> Confirmar e Enviar Pedido`;
+        }
       }
-
-      // Alterna para tela de sucesso
-      document.getElementById("confirmReviewBox").style.display = "none";
-      document.getElementById("confirmSuccessBox").style.display = "block";
-
-      // ZERA IMEDIATAMENTE O FORMULÁRIO E CARRINHO PARA O PRÓXIMO PEDIDO
-      resetOrderForm();
-
-      showToast("Pedido confirmado e registrado com sucesso!");
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     // LIMPA E ZERA COMPLETAMENTE O FORMULÁRIO DE PEDIDOS

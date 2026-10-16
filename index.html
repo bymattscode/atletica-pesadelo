@@ -1021,16 +1021,17 @@
     .btn-toggle-entrega {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.65rem;
+      justify-content: center;
+      padding: 0.38rem 0.85rem;
       border-radius: 6px;
-      font-size: 0.78rem;
+      font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.15s ease;
       font-family: inherit;
       border: 1px solid transparent;
       user-select: none;
+      min-width: 90px;
     }
 
     .btn-toggle-entrega.is-entregue {
@@ -1055,31 +1056,13 @@
       border-color: #fbbf24;
     }
 
-    .select-entrega-mini {
-      background: #090b10;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      border-radius: 6px;
-      padding: 0.32rem 0.45rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s ease;
-    }
-
-    .select-entrega-mini:focus {
-      border-color: var(--unb-vinho-hover);
-      color: #fff;
-      outline: none;
-    }
-
-    /* BARRA DE FILTROS DE ENTREGA */
+    /* BARRA DE FILTROS E BUSCA */
     .delivery-filters-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.85rem;
       margin-bottom: 1.15rem;
       padding: 0.75rem 1.15rem;
       background: var(--bg-card);
@@ -1090,7 +1073,7 @@
     .delivery-filter-pills {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
     }
 
@@ -1100,10 +1083,7 @@
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      margin-right: 0.35rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
+      margin-right: 0.25rem;
     }
 
     .delivery-pill {
@@ -1117,9 +1097,6 @@
       cursor: pointer;
       transition: all 0.15s ease;
       font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
     }
 
     .delivery-pill:hover {
@@ -1145,10 +1122,55 @@
       color: #fff;
     }
 
-    .delivery-stats-badge {
-      font-size: 0.82rem;
+    /* BARRA DE BUSCA */
+    .search-orders-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-width: 250px;
+      flex: 1;
+      max-width: 380px;
+    }
+
+    .search-orders-container .search-icon {
+      position: absolute;
+      left: 0.85rem;
       color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .search-orders-container input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.48rem 2.2rem 0.48rem 2.25rem;
+      color: #fff;
+      font-size: 0.84rem;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .search-orders-container input:focus {
+      border-color: var(--unb-vinho-hover);
+      background: #0b0d14;
+      outline: none;
+    }
+
+    .btn-clear-search {
+      position: absolute;
+      right: 0.65rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.82rem;
+      padding: 0.2rem;
+    }
+
+    .btn-clear-search:hover {
+      color: #fff;
     }
 
     /* PÓDIO */
@@ -1749,6 +1771,18 @@
         flex-shrink: 0;
       }
 
+      .delivery-filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 0.75rem 0.85rem;
+      }
+
+      .search-orders-container {
+        max-width: 100%;
+        min-width: 100%;
+      }
+
       /* PÓDIO MOBILE*/
       .podium-clean-grid {
         display: flex;
@@ -2224,22 +2258,26 @@
         </button>
       </div>
 
-      <!-- FILTROS DE STATUS DE ENTREGA -->
+      <!-- FILTROS DE STATUS DE ENTREGA E BUSCA -->
       <div class="delivery-filters-bar" id="deliveryFiltersBar">
         <div class="delivery-filter-pills">
-          <span class="delivery-filter-label"><i class="fa-solid fa-truck-fast"></i> Entrega:</span>
+          <span class="delivery-filter-label">Entrega:</span>
           <button type="button" class="delivery-pill active" id="btnFilterDeliveryAll" onclick="setDeliveryFilter('all', this)">
             Todos (<span id="countDeliveryAll">0</span>)
           </button>
           <button type="button" class="delivery-pill pill-pendente" id="btnFilterDeliveryPending" onclick="setDeliveryFilter('pending', this)">
-            <i class="fa-solid fa-clock"></i> Pendentes (<span id="countDeliveryPending">0</span>)
+            Pendentes (<span id="countDeliveryPending">0</span>)
           </button>
           <button type="button" class="delivery-pill pill-entregue" id="btnFilterDeliveryDone" onclick="setDeliveryFilter('delivered', this)">
-            <i class="fa-solid fa-circle-check"></i> Entregues (<span id="countDeliveryDone">0</span>)
+            Entregues (<span id="countDeliveryDone">0</span>)
           </button>
         </div>
-        <div class="delivery-stats-badge" id="deliveryStatsText">
-          Entregas: 0 de 0 concluídas
+        <div class="search-orders-container">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="searchOrdersInput" placeholder="Pesquisar por nome ou CPF..." oninput="handleSearchOrders(this.value)" autocomplete="off">
+          <button type="button" class="btn-clear-search" id="btnClearSearch" onclick="clearSearchOrders()" title="Limpar pesquisa" style="display: none;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
       </div>
 
@@ -3007,14 +3045,51 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // FILTROS DE STATUS DE ENTREGA
+    // FILTROS DE STATUS DE ENTREGA E BUSCA
     let deliveryFilter = "all";
+    let searchFilterTerm = "";
 
     function setDeliveryFilter(filterType, btn) {
       deliveryFilter = filterType;
       document.querySelectorAll(".delivery-pill").forEach(p => p.classList.remove("active"));
       if (btn) btn.classList.add("active");
       renderOrdersTable();
+    }
+
+    function handleSearchOrders(val) {
+      searchFilterTerm = (val || "").trim().toLowerCase();
+      const btnClear = document.getElementById("btnClearSearch");
+      if (btnClear) {
+        btnClear.style.display = searchFilterTerm ? "block" : "none";
+      }
+      renderOrdersTable();
+    }
+
+    function clearSearchOrders() {
+      searchFilterTerm = "";
+      const input = document.getElementById("searchOrdersInput");
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
+      const btnClear = document.getElementById("btnClearSearch");
+      if (btnClear) btnClear.style.display = "none";
+      renderOrdersTable();
+    }
+
+    // FORMATAÇÃO LIMPA DE DATAS
+    function formatOrderDate(dateVal) {
+      if (!dateVal) return "-";
+      const str = String(dateVal).trim();
+      if (/^\d{2}\/\d{2}\/\d{4}/.test(str)) {
+        return str;
+      }
+      const d = new Date(str);
+      if (!isNaN(d.getTime())) {
+        const pad = n => String(n).padStart(2, "0");
+        return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+      return str;
     }
 
     function updateDeliveryCounters() {
@@ -3029,14 +3104,10 @@
       const elAll = document.getElementById("countDeliveryAll");
       const elPen = document.getElementById("countDeliveryPending");
       const elDon = document.getElementById("countDeliveryDone");
-      const elStats = document.getElementById("deliveryStatsText");
 
       if (elAll) elAll.innerText = total;
       if (elPen) elPen.innerText = pending;
       if (elDon) elDon.innerText = delivered;
-      if (elStats) {
-        elStats.innerHTML = `Entregas: <strong style="color: ${delivered === total && total > 0 ? 'var(--success)' : '#fff'};">${delivered}</strong> de <strong>${total}</strong> concluídas (${total > 0 ? Math.round((delivered / total) * 100) : 0}%)`;
-      }
     }
 
     // RESOLVE O TAMANHO CORRETO PARA A ABA ESPECÍFICA OU GERAL
@@ -3164,8 +3235,24 @@
         filtered = filtered.filter(o => o.statusEntrega === "Entregue");
       }
 
+      // Filtro por Nome ou CPF (busca em tempo real)
+      if (searchFilterTerm) {
+        const cleanTerm = searchFilterTerm.replace(/\D/g, "");
+        filtered = filtered.filter(o => {
+          const nomeMatch = (o.nome || "").toLowerCase().includes(searchFilterTerm);
+          const cpfRaw = o.cpf || "";
+          const cpfMatch = cpfRaw.toLowerCase().includes(searchFilterTerm) || 
+                           (cleanTerm.length > 0 && cpfRaw.replace(/\D/g, "").includes(cleanTerm));
+          return nomeMatch || cpfMatch;
+        });
+      }
+
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">Nenhum pedido encontrado nesta visualização.</td></tr>`;
+        if (searchFilterTerm) {
+          tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);"><i class="fa-solid fa-magnifying-glass" style="margin-right: 0.5rem; opacity: 0.5;"></i>Nenhum pedido encontrado para "<strong>${searchFilterTerm}</strong>".</td></tr>`;
+        } else {
+          tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">Nenhum pedido encontrado nesta visualização.</td></tr>`;
+        }
         return;
       }
 
@@ -3192,7 +3279,7 @@
         const tr = document.createElement("tr");
         tr.className = isEntregue ? "row-entregue" : "row-pendente";
         tr.innerHTML = `
-          <td><small style="color: var(--text-muted)">${o.data}</small></td>
+          <td><small style="color: var(--text-muted)">${formatOrderDate(o.data)}</small></td>
           <td><strong>${o.nome}</strong></td>
           <td><small style="color: var(--text-secondary);">${o.cpf}</small></td>
           <td>${o.comissario}</td>
@@ -3208,18 +3295,9 @@
             ${compHtml}
           </td>
           <td>
-            <div class="entrega-control-group">
-              <button type="button" class="btn-toggle-entrega ${isEntregue ? 'is-entregue' : 'is-pendente'}" onclick="toggleEntregaStatus(${o.id})" title="${isEntregue ? 'Clique para desmarcar entrega' : 'Clique para marcar como Entregue'}">
-                <i class="fa-solid ${isEntregue ? 'fa-circle-check' : 'fa-clock'}"></i>
-                <span>${isEntregue ? 'Entregue' : 'Pendente'}</span>
-              </button>
-              <select class="select-entrega-mini" onchange="changeEntrega(${o.id}, this.value)" title="Alterar status detalhado de entrega">
-                <option value="Aguardando" ${o.statusEntrega === 'Aguardando' ? 'selected' : ''}>Aguardando</option>
-                <option value="Em Produção" ${o.statusEntrega === 'Em Produção' ? 'selected' : ''}>Em Produção</option>
-                <option value="Pronto p/ Retirada" ${o.statusEntrega === 'Pronto p/ Retirada' ? 'selected' : ''}>Pronto p/ Retirada</option>
-                <option value="Entregue" ${o.statusEntrega === 'Entregue' ? 'selected' : ''}>Entregue</option>
-              </select>
-            </div>
+            <button type="button" class="btn-toggle-entrega ${isEntregue ? 'is-entregue' : 'is-pendente'}" onclick="toggleEntregaStatus(${o.id})" title="${isEntregue ? 'Clique para desmarcar (voltar para Pendente)' : 'Clique para marcar como Entregue'}">
+              <span>${isEntregue ? 'Entregue' : 'Pendente'}</span>
+            </button>
           </td>
           <td>
             <div class="row-actions">
@@ -3239,7 +3317,7 @@
     function toggleEntregaStatus(id) {
       const ord = orders.find(x => x.id === id);
       if (!ord) return;
-      const novoStatus = ord.statusEntrega === "Entregue" ? "Aguardando" : "Entregue";
+      const novoStatus = ord.statusEntrega === "Entregue" ? "Pendente" : "Entregue";
       ord.statusEntrega = novoStatus;
       saveAndRefresh();
       sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: novoStatus });
@@ -3515,7 +3593,7 @@
       const prodDesc = o.produto || "Pedido";
       const tamDesc = o.tamanho ? `(${o.tamanho})` : "";
       const valDesc = o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : "");
-      sub.innerText = `${prodDesc} ${tamDesc} • ${valDesc} • ${o.data}`;
+      sub.innerText = `${prodDesc} ${tamDesc} • ${valDesc} • ${formatOrderDate(o.data)}`;
 
       const fileData = o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:") ? o.comprovante : "");
       const fileUrl = (o.comprovanteUrl || "").toString();
@@ -3659,7 +3737,7 @@
         comprovanteBase64: currentUploadedFile ? currentUploadedFile.base64 : "",
         comprovanteUrl: "",
         statusPagamento: "Confirmado",
-        statusEntrega: "Aguardando"
+        statusEntrega: "Pendente"
       };
 
       orders.unshift(novo);
@@ -3714,7 +3792,7 @@
       orders.forEach(o => {
         const tam = getOrderSizeForTab(o, "todas");
         wsGeralData.push([
-          o.data,
+          formatOrderDate(o.data),
           o.nome,
           o.cpf,
           o.comissario,
@@ -3738,7 +3816,7 @@
           const tam = getOrderSizeForTab(o, p);
           const prodDesc = getOrderProductForTab(o, p);
           prodData.push([
-            o.data,
+            formatOrderDate(o.data),
             o.nome,
             o.cpf,
             o.comissario,

@@ -126,9 +126,13 @@ function doGet(e) {
   for (let i = 1; i < pedidosData.length; i++) {
     const row = pedidosData[i];
     if (row[0]) {
+      let dataFormatada = row[1];
+      if (row[1] instanceof Date) {
+        dataFormatada = Utilities.formatDate(row[1], "GMT-3", "dd/MM/yyyy HH:mm");
+      }
       orders.push({
         id: row[0],
-        data: row[1],
+        data: dataFormatada,
         nome: row[2],
         telefone: row[3],
         cpf: row[4],
@@ -137,7 +141,7 @@ function doGet(e) {
         tamanho: row[7],
         quantidade: parseInt(row[8] || 1),
         statusPagamento: row[9] || "Confirmado",
-        statusEntrega: row[10] || "Aguardando",
+        statusEntrega: row[10] || "Pendente",
         comprovanteUrl: row[11] || "",
         valorTotal: row[12] || ""
       });
@@ -217,7 +221,7 @@ function doPost(e) {
         o.tamanho,
         o.quantidade,
         o.statusPagamento || "Confirmado",
-        o.statusEntrega || "Aguardando",
+        o.statusEntrega || "Pendente",
         comprovanteLink,
         valorGravado
       ]);

@@ -3322,14 +3322,11 @@
       saveAndRefresh();
       sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: novoStatus });
 
-      if (novoStatus === "Entregue") {
-        if (typeof confetti === "function") {
-          confetti({ particleCount: 40, spread: 65, origin: { y: 0.7 } });
-        }
-        showToast(`🎉 Pedido de ${ord.nome.split(" ")[0]} confirmado como ENTREGUE!`);
-      } else {
-        showToast(`Entrega de ${ord.nome.split(" ")[0]} marcada como Pendente.`);
+      if (novoStatus === "Entregue" && typeof confetti === "function") {
+        confetti({ particleCount: 40, spread: 65, origin: { y: 0.7 } });
       }
+      const primeiroNome = (ord.nome || "Cliente").trim().split(" ")[0];
+      showToast(`Pedido de ${primeiroNome} marcado como ${novoStatus}.`);
     }
 
     function togglePagamento(id) {
@@ -3338,7 +3335,8 @@
         ord.statusPagamento = ord.statusPagamento === "Confirmado" ? "Pendente" : "Confirmado";
         saveAndRefresh();
         sendToGoogleSheets({ action: "updateOrder", id: id, statusPagamento: ord.statusPagamento });
-        showToast("Status de pagamento atualizado.");
+        const primeiroNome = (ord.nome || "Cliente").trim().split(" ")[0];
+        showToast(`Pagamento de ${primeiroNome} marcado como ${ord.statusPagamento}.`);
       }
     }
 
@@ -3348,14 +3346,11 @@
         ord.statusEntrega = val;
         saveAndRefresh();
         sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: val });
-        if (val === "Entregue") {
-          if (typeof confetti === "function") {
-            confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
-          }
-          showToast(`🎉 Pedido de ${ord.nome.split(" ")[0]} confirmado como ENTREGUE!`);
-        } else {
-          showToast("Status de entrega alterado para " + val);
+        if (val === "Entregue" && typeof confetti === "function") {
+          confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
         }
+        const primeiroNome = (ord.nome || "Cliente").trim().split(" ")[0];
+        showToast(`Pedido de ${primeiroNome} marcado como ${val}.`);
       }
     }
 

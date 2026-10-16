@@ -2536,6 +2536,147 @@
       return isNaN(num) ? "A definir" : "R$ " + num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // EXTRAÇÃO SEGURA DO VALOR NUMÉRICO EM REAIS DE UM PEDIDO
+    function getOrderNumericValue(order) {
+      if (!order) return 0;
+      
+      // 1. Número positivo direto
+      if (typeof order.valorTotal === "number" && !isNaN(order.valorTotal) && order.valorTotal > 0) {
+        return order.valorTotal;
+      }
+      
+      // 2. String numérica válida em valorTotal (ex: "R$ 165,00", "165.00")
+      if (typeof order.valorTotal === "string" && order.valorTotal.trim() !== "" && !order.valorTotal.toLowerCase().includes("definir")) {
+        const clean = order.valorTotal.replace("R$", "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
+        const parsed = parseFloat(clean);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+
+      // 3. String numérica válida em valorFormatado
+      if (typeof order.valorFormatado === "string" && order.valorFormatado.trim() !== "" && !order.valorFormatado.toLowerCase().includes("definir")) {
+        const clean = order.valorFormatado.replace("R$", "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
+        const parsed = parseFloat(clean);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+
+      // 4. Se tiver array de itens no carrinho
+      let itemsList = order.itens;
+      if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
+        try { itemsList = JSON.parse(itemsList); } catch(e) {}
+      }
+      if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
+        let sum = 0;
+        itemsList.forEach(item => {
+          const unitP = (item.unitPrice !== undefined && item.unitPrice > 0) ? item.unitPrice : (PRECOS_PRODUTOS[item.produto] || 0);
+          const q = parseInt(item.quantidade || 1, 10);
+          sum += unitP * (isNaN(q) || q < 1 ? 1 : q);
+        });
+        if (sum > 0) return sum;
+      }
+
+      // 5. Se o produto bate direto com a tabela oficial de preços
+      if (order.produto && typeof order.produto === "string") {
+        const pTrim = order.produto.trim();
+        if (PRECOS_PRODUTOS[pTrim] !== undefined && PRECOS_PRODUTOS[pTrim] > 0) {
+          const q = parseInt(order.quantidade || 1, 10);
+          return PRECOS_PRODUTOS[pTrim] * (isNaN(q) || q < 1 ? 1 : q);
+        }
+
+        // 6. Varre todos os produtos conhecidos dentro da string do produto (ex: "Corta Vento (M) x1 + Oversize (M) x1" ou "Camisa Oversize (G)")
+        let sum = 0;
+        let matchedAny = false;
+        Object.keys(PRECOS_PRODUTOS).forEach(prodName => {
+          const price = PRECOS_PRODUTOS[prodName];
+          if (price > 0 && order.produto.toLowerCase().includes(prodName.toLowerCase())) {
+            matchedAny = true;
+            const reg = new RegExp(prodName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "[^\\+]*x(\\d+)", "i");
+            const match = order.produto.match(reg);
+            let q = 1;
+            if (match) {
+              q = parseInt(match[1], 10);
+            } else if (!order.produto.includes("+")) {
+              q = parseInt(order.quantidade || 1, 10);
+            }
+            sum += price * (isNaN(q) || q < 1 ? 1 : q);
+          }
+        });
+        if (matchedAny && sum > 0) return sum;
+      }
+
+      return 0;
+    }
+
+    // RESOLVE O VALOR A EXIBIR PARA O PEDIDO EM QUALQUER ABA
+    function getOrderRowPrice(order, tab) {
+      if (!order) return "A definir";
+
+      // 1. Se estiver numa aba de produto específico (ex: "Oversize", "Jersey", "Corta Vento", etc.)
+      if (tab && tab !== "todas" && tab !== "ranking") {
+        const prodPrice = PRECOS_PRODUTOS[tab] !== undefined ? PRECOS_PRODUTOS[tab] : 0;
+        
+        // Verifica itens do carrinho
+        let itemsList = order.itens;
+        if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
+          try { itemsList = JSON.parse(itemsList); } catch(e) {}
+        }
+        if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
+          const matching = itemsList.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
+          if (matching.length > 0) {
+            let sumTab = 0;
+            matching.forEach(m => {
+              const q = parseInt(m.quantidade || 1, 10);
+              sumTab += (m.unitPrice !== undefined && m.unitPrice > 0 ? m.unitPrice : prodPrice) * (isNaN(q) || q < 1 ? 1 : q);
+            });
+            if (sumTab > 0) return formatCurrency(sumTab);
+          }
+        }
+
+        // Se o produto geral contém o nome da aba
+        if (order.produto && order.produto.includes(tab)) {
+          if (prodPrice > 0) {
+            const reg = new RegExp(tab.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "[^\\+]*x(\\d+)", "i");
+            const match = order.produto.match(reg);
+            const q = match ? parseInt(match[1], 10) : (order.produto.includes("+") ? 1 : parseInt(order.quantidade || 1, 10));
+            return formatCurrency(prodPrice * (isNaN(q) || q < 1 ? 1 : q));
+          }
+        }
+      }
+
+      // 2. Aba "Todas as Respostas" (Geral)
+      const numVal = getOrderNumericValue(order);
+      if (numVal > 0) {
+        return formatCurrency(numVal);
+      }
+
+      // Se valorFormatado for válido e não for "A definir"
+      if (order.valorFormatado && typeof order.valorFormatado === "string" && !order.valorFormatado.toLowerCase().includes("definir")) {
+        return order.valorFormatado;
+      }
+
+      // Se valorTotal for string válida e não for "A definir"
+      if (order.valorTotal && typeof order.valorTotal === "string" && !order.valorTotal.toLowerCase().includes("definir")) {
+        return formatCurrency(order.valorTotal);
+      }
+
+      return "A definir";
+    }
+
+    // SANITIZAÇÃO AUTOMÁTICA DOS VALORES DE PEDIDOS
+    function sanitizeOrderPrices() {
+      if (!Array.isArray(orders)) return;
+      orders.forEach(o => {
+        const val = getOrderNumericValue(o);
+        if (val > 0) {
+          if (!o.valorTotal || o.valorTotal === "A definir" || o.valorTotal.toString().toLowerCase().includes("definir") || o.valorTotal === 0 || o.valorTotal === "0") {
+            o.valorTotal = val;
+          }
+          if (!o.valorFormatado || o.valorFormatado === "A definir" || o.valorFormatado.toLowerCase().includes("definir")) {
+            o.valorFormatado = formatCurrency(val);
+          }
+        }
+      });
+    }
+
     function getCurrentFormItem() {
       const prod = document.getElementById("f_produto") ? document.getElementById("f_produto").value : "Oversize";
       const tam = document.getElementById("f_tamanho") ? document.getElementById("f_tamanho").value : "M";
@@ -2758,6 +2899,7 @@
         if (data && data.status === "success") {
           if (Array.isArray(data.orders)) {
             orders = data.orders;
+            sanitizeOrderPrices();
           }
           if (Array.isArray(data.comissarios) && data.comissarios.length > 0) {
             comissarios = data.comissarios;
@@ -3038,6 +3180,7 @@
     });
 
     function saveAndRefresh() {
+      sanitizeOrderPrices();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
       localStorage.setItem(COMISSARIOS_KEY, JSON.stringify(comissarios));
       renderComissariosDropdown();
@@ -3317,7 +3460,7 @@
           `;
         }
 
-        const valExibido = o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[o.produto] ? formatCurrency(PRECOS_PRODUTOS[o.produto] * (o.quantidade || 1)) : 'A definir'));
+        const valExibido = getOrderRowPrice(o, currentTab);
 
         const tr = document.createElement("tr");
         tr.className = isEntregue ? "row-entregue" : "row-pendente";
@@ -3411,50 +3554,6 @@
         },
         "Excluir"
       );
-    }
-
-    // EXTRAÇÃO SEGURA DO VALOR NUMÉRICO EM REAIS DE UM PEDIDO
-    function getOrderNumericValue(order) {
-      if (!order) return 0;
-      if (typeof order.valorTotal === "number" && !isNaN(order.valorTotal) && order.valorTotal > 0) {
-        return order.valorTotal;
-      }
-      if (typeof order.valorTotal === "string" && order.valorTotal.trim() !== "") {
-        const clean = order.valorTotal.replace("R$", "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
-        const parsed = parseFloat(clean);
-        if (!isNaN(parsed) && parsed > 0) return parsed;
-      }
-      if (typeof order.valorFormatado === "string" && order.valorFormatado.trim() !== "") {
-        const clean = order.valorFormatado.replace("R$", "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
-        const parsed = parseFloat(clean);
-        if (!isNaN(parsed) && parsed > 0) return parsed;
-      }
-      if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
-        let sum = 0;
-        order.itens.forEach(item => {
-          const p = item.subtotal || ((PRECOS_PRODUTOS[item.produto] || 0) * (item.quantidade || 1));
-          sum += (p || 0);
-        });
-        if (sum > 0) return sum;
-      }
-      if (order.produto && PRECOS_PRODUTOS[order.produto]) {
-        const qtd = parseInt(order.quantidade || 1, 10);
-        return PRECOS_PRODUTOS[order.produto] * (isNaN(qtd) || qtd < 1 ? 1 : qtd);
-      }
-      if (order.produto && typeof order.produto === "string") {
-        let sum = 0;
-        Object.keys(PRECOS_PRODUTOS).forEach(prodName => {
-          const price = PRECOS_PRODUTOS[prodName];
-          if (price > 0 && order.produto.includes(prodName)) {
-            const reg = new RegExp(prodName + "[^\\+]*x(\\d+)", "i");
-            const match = order.produto.match(reg);
-            const qtd = match ? parseInt(match[1], 10) : 1;
-            sum += price * qtd;
-          }
-        });
-        if (sum > 0) return sum;
-      }
-      return 0;
     }
 
     // SEÇÃO DE COMISSÁRIOS & RANKING (POR VALOR VENDIDO EM REAIS)
@@ -3726,7 +3825,7 @@
       title.innerText = `Comprovante • ${o.nome}`;
       const prodDesc = o.produto || "Pedido";
       const tamDesc = o.tamanho ? `(${o.tamanho})` : "";
-      const valDesc = o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : "");
+      const valDesc = getOrderRowPrice(o, "todas");
       sub.innerText = `${prodDesc} ${tamDesc} • ${valDesc} • ${formatOrderDate(o.data)}`;
 
       const fileData = o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:") ? o.comprovante : "");
@@ -3932,7 +4031,7 @@
           o.comissario,
           o.produto,
           tam,
-          o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[o.produto] ? formatCurrency(PRECOS_PRODUTOS[o.produto] * (o.quantidade || 1)) : "A definir")),
+          getOrderRowPrice(o, "todas"),
           o.statusPagamento,
           o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
           o.statusEntrega
@@ -3956,7 +4055,7 @@
             o.comissario,
             prodDesc,
             tam,
-            o.valorFormatado || (o.valorTotal ? formatCurrency(o.valorTotal) : (PRECOS_PRODUTOS[p] ? formatCurrency(PRECOS_PRODUTOS[p] * (o.quantidade || 1)) : "A definir")),
+            getOrderRowPrice(o, p),
             o.statusPagamento,
             o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
             o.statusEntrega

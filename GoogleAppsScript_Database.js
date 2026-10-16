@@ -130,6 +130,27 @@ function doGet(e) {
       if (row[1] instanceof Date) {
         dataFormatada = Utilities.formatDate(row[1], "GMT-3", "dd/MM/yyyy HH:mm");
       }
+      let valorFinal = (row[12] !== undefined && row[12] !== null) ? row[12].toString().trim() : "";
+      if (!valorFinal || valorFinal === "" || valorFinal.toLowerCase().indexOf("definir") > -1) {
+        const prod = (row[6] || "").toString();
+        const qtd = parseInt(row[8] || 1);
+        let sum = 0;
+        const PRECOS = { "Jersey": 100, "Tube Top": 50, "Oversize": 65, "Corta Vento": 165 };
+        Object.keys(PRECOS).forEach(function(pKey) {
+          if (prod.toLowerCase().indexOf(pKey.toLowerCase()) > -1) {
+            const reg = new RegExp(pKey + "[^\\+]*x(\\d+)", "i");
+            const match = prod.match(reg);
+            const q = match ? parseInt(match[1]) : (prod.indexOf("+") > -1 ? 1 : qtd);
+            sum += PRECOS[pKey] * (isNaN(q) || q < 1 ? 1 : q);
+          }
+        });
+        if (sum > 0) {
+          valorFinal = "R$ " + sum.toFixed(2).replace(".", ",");
+        } else {
+          valorFinal = "A definir";
+        }
+      }
+
       orders.push({
         id: row[0],
         data: dataFormatada,
@@ -143,7 +164,7 @@ function doGet(e) {
         statusPagamento: row[9] || "Confirmado",
         statusEntrega: row[10] || "Pendente",
         comprovanteUrl: row[11] || "",
-        valorTotal: row[12] || ""
+        valorTotal: valorFinal
       });
     }
   }
@@ -208,7 +229,26 @@ function doPost(e) {
         comprovanteLink = o.comprovanteUrl;
       }
 
-      const valorGravado = o.valorFormatado || (o.valorTotal ? "R$ " + Number(o.valorTotal).toFixed(2).replace(".", ",") : "R$ 0,00");
+      let valorGravado = o.valorFormatado || (o.valorTotal ? "R$ " + Number(o.valorTotal).toFixed(2).replace(".", ",") : "");
+      if (!valorGravado || valorGravado === "" || valorGravado.toLowerCase().indexOf("definir") > -1) {
+        const prod = (o.produto || "").toString();
+        const qtd = parseInt(o.quantidade || 1);
+        let sum = 0;
+        const PRECOS = { "Jersey": 100, "Tube Top": 50, "Oversize": 65, "Corta Vento": 165 };
+        Object.keys(PRECOS).forEach(function(pKey) {
+          if (prod.toLowerCase().indexOf(pKey.toLowerCase()) > -1) {
+            const reg = new RegExp(pKey + "[^\\+]*x(\\d+)", "i");
+            const match = prod.match(reg);
+            const q = match ? parseInt(match[1]) : (prod.indexOf("+") > -1 ? 1 : qtd);
+            sum += PRECOS[pKey] * (isNaN(q) || q < 1 ? 1 : q);
+          }
+        });
+        if (sum > 0) {
+          valorGravado = "R$ " + sum.toFixed(2).replace(".", ",");
+        } else {
+          valorGravado = "A definir";
+        }
+      }
 
       sheet.appendRow([
         o.id,

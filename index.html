@@ -1748,7 +1748,7 @@
   <header>
     <div class="brand-container">
       <div class="brand-logos">
-        <div class="pesadelo-crest" title="AAAEFGA Pesadelo">
+        <div class="pesadelo-crest" title="AAAEFGA Pesadelo" onclick="handleLogoClicks()" style="cursor: pointer; user-select: none;">
           <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';">
         </div>
         <div class="unb-logo-badge" title="Universidade de Brasília">
@@ -1788,9 +1788,6 @@
     <section id="formView" class="view-section active">
       <div class="form-narrow-wrap">
       <div class="section-header">
-        <div class="section-logo-container">
-          <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" class="section-logo" onclick="handleLogoClicks()" onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';" style="user-select: none;">
-        </div>
         <h1>Central de Controle</h1>
         <p>Preencha os dados do comprador para registrar o pedido diretamente na planilha oficial da diretoria.</p>
       </div>
@@ -2585,7 +2582,7 @@
       }
     }
 
-    // CLIQUE 5X NA LOGO CENTRAL PARA ABRIR O LOGIN
+    // CLIQUE 5X NA LOGO SUPERIOR DA PESADELO PARA ABRIR O LOGIN
     let logoClicks = 0;
     let logoTimer = null;
 

@@ -3894,6 +3894,16 @@
         return;
       }
 
+      // Se estiver voltando para fazer pedido após a confirmação do pedido anterior, zera os campos
+      if (viewId === "formView") {
+        const confirmSuccessBox = document.getElementById("confirmSuccessBox");
+        if (confirmSuccessBox && confirmSuccessBox.style.display !== "none") {
+          if (typeof resetOrderForm === "function") {
+            resetOrderForm();
+          }
+        }
+      }
+
       document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
       document.querySelectorAll(".nav-pill").forEach(p => p.classList.remove("active"));
 
@@ -4781,39 +4791,83 @@
       document.getElementById("confirmReviewBox").style.display = "none";
       document.getElementById("confirmSuccessBox").style.display = "block";
 
+      // ZERA IMEDIATAMENTE O FORMULÁRIO E CARRINHO PARA O PRÓXIMO PEDIDO
+      resetOrderForm();
+
       showToast("Pedido confirmado e registrado com sucesso!");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // REINICIAR FORMULÁRIO PARA UM NOVO PEDIDO
-    function startNewOrder() {
-      document.getElementById("orderForm").reset();
+    // LIMPA E ZERA COMPLETAMENTE O FORMULÁRIO DE PEDIDOS
+    function resetOrderForm() {
+      const form = document.getElementById("orderForm");
+      if (form) form.reset();
+
+      // Limpeza forçada de todos os campos de comprador
+      const fNome = document.getElementById("f_nome");
+      if (fNome) fNome.value = "";
+      const fTel = document.getElementById("f_telefone");
+      if (fTel) fTel.value = "";
+      const fCpf = document.getElementById("f_cpf");
+      if (fCpf) fCpf.value = "";
+      const fCom = document.getElementById("f_comissario");
+      if (fCom) fCom.value = "";
+      const fQtd = document.getElementById("f_quantidade");
+      if (fQtd) fQtd.value = "1";
+      const fFile = document.getElementById("f_comprovante_file");
+      if (fFile) fFile.value = "";
+
+      // Limpa dados de upload, carrinho e pedido pendente
       currentUploadedFile = null;
       orderCart = [];
       pendingOrderData = null;
 
-      // Restaura produto e tamanho padrão
-      document.getElementById("f_produto").value = "Oversize";
-      document.getElementById("f_tamanho").value = "M";
+      // Restaura seleção para o primeiro produto (Oversize)
+      const fProd = document.getElementById("f_produto");
+      if (fProd) fProd.value = "Oversize";
       document.querySelectorAll(".product-tile").forEach(c => c.classList.remove("selected"));
       const firstTile = document.querySelector(".product-tile");
       if (firstTile) firstTile.classList.add("selected");
-      document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("selected"));
-      const sizeBtns = document.querySelectorAll(".size-btn");
-      if (sizeBtns.length >= 3) sizeBtns[2].classList.add("selected"); // "M"
+
+      // Restaura tamanho padrão (M)
+      const fTam = document.getElementById("f_tamanho");
+      if (fTam) fTam.value = "M";
+      document.querySelectorAll(".size-btn").forEach(b => {
+        b.classList.remove("selected");
+        if (b.innerText.trim() === "M") b.classList.add("selected");
+      });
       const sizeContainer = document.getElementById("sizeGroupContainer");
       if (sizeContainer) sizeContainer.style.display = "flex";
 
-      updateOrderTotals();
-      renderCartSummary();
+      // Restaura texto da área de upload
+      const uploadTxt = document.getElementById("uploadText");
+      if (uploadTxt) {
+        uploadTxt.innerHTML = `<strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)`;
+      }
 
-      document.getElementById("uploadText").innerHTML = `<strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)`;
+      // Restaura o botão de submit
       const btnSubmit = document.getElementById("btnSubmitOrder");
       if (btnSubmit) {
         btnSubmit.disabled = false;
         btnSubmit.innerHTML = `Finalizar Pedido`;
       }
 
+      // Recalcula badges de subtotal e esconde carrinho vazio
+      if (typeof updateOrderTotals === "function") {
+        updateOrderTotals();
+      }
+      if (typeof renderCartSummary === "function") {
+        renderCartSummary();
+      }
+    }
+
+    // REINICIAR FORMULÁRIO PARA UM NOVO PEDIDO
+    function startNewOrder() {
+      resetOrderForm();
+      const confirmReviewBox = document.getElementById("confirmReviewBox");
+      const confirmSuccessBox = document.getElementById("confirmSuccessBox");
+      if (confirmReviewBox) confirmReviewBox.style.display = "block";
+      if (confirmSuccessBox) confirmSuccessBox.style.display = "none";
       switchMainView("formView", document.getElementById("btnNavForm"));
     }
 

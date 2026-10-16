@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- SheetJS para exportação real para Excel (.xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Confetti para celebrações visuais -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
@@ -2047,6 +2049,513 @@
         font-size: 0.85rem;
       }
     }
+
+    /* STEPPER / INDICADOR DE PROGRESSO */
+    .checkout-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      padding: 0 1rem;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.25s ease;
+    }
+
+    .step-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: color 0.25s;
+    }
+
+    .step-item.completed .step-circle {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .step-item.completed .step-label {
+      color: #cbd5e1;
+    }
+
+    .step-item.active .step-circle {
+      background: var(--unb-vinho);
+      border-color: var(--pesadelo-pink);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(200, 70, 118, 0.4);
+    }
+
+    .step-item.active .step-label {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .step-connector {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin: 0 0.5rem 1.4rem;
+      transition: background 0.25s;
+    }
+
+    .step-connector.active {
+      background: linear-gradient(90deg, var(--success), var(--pesadelo-pink));
+    }
+
+    /* CARD DE CONFIRMAÇÃO DO PEDIDO */
+    .confirm-order-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .confirm-badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--pesadelo-pink);
+      background: rgba(200, 70, 118, 0.12);
+      border: 1px solid rgba(200, 70, 118, 0.3);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+
+    .confirm-review-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .confirm-card-header {
+      background: linear-gradient(135deg, rgba(152, 24, 68, 0.25) 0%, rgba(14, 16, 23, 0.8) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .confirm-card-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .confirm-card-brand img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .confirm-card-brand-text h4 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .confirm-card-brand-text span {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .confirm-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+    }
+
+    .confirm-card-body {
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .confirm-section-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .confirm-block-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .confirm-block-title i {
+      color: var(--pesadelo-pink);
+    }
+
+    .confirm-buyer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .confirm-field-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .confirm-field-label {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .confirm-field-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    .confirm-items-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .confirm-items-table th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .confirm-items-table th:last-child {
+      text-align: right;
+    }
+
+    .confirm-items-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.88rem;
+    }
+
+    .confirm-items-table td:last-child {
+      text-align: right;
+    }
+
+    .confirm-items-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .confirm-total-box {
+      background: linear-gradient(135deg, rgba(152, 24, 68, 0.2) 0%, rgba(200, 70, 118, 0.08) 100%);
+      border: 1px solid rgba(200, 70, 118, 0.35);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+
+    .confirm-total-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .confirm-total-amount {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.5px;
+    }
+
+    .confirm-receipt-preview {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      background: #07080c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .confirm-receipt-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #111;
+      border: 1px solid var(--border-light);
+    }
+
+    .confirm-receipt-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .confirm-receipt-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .confirm-receipt-status {
+      font-size: 0.76rem;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .confirm-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.6rem;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-confirm-back {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-light);
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-confirm-back:hover {
+      color: #fff;
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-confirm-finalize {
+      background: var(--unb-vinho);
+      color: #fff;
+      border: none;
+      padding: 0.95rem 2rem;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.2s;
+      font-family: inherit;
+      box-shadow: 0 4px 18px rgba(152, 24, 68, 0.4);
+    }
+
+    .btn-confirm-finalize:hover {
+      background: var(--unb-vinho-hover);
+      box-shadow: 0 6px 22px rgba(200, 70, 118, 0.5);
+      transform: translateY(-1px);
+    }
+
+    /* TELA DE SUCESSO APÓS CONFIRMAÇÃO */
+    .confirm-success-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .success-celebration-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid var(--success);
+      color: var(--success);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+      animation: pulseSuccess 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseSuccess {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(16, 185, 129, 0.55); }
+    }
+
+    .confirm-success-card h2 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .confirm-success-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 550px;
+      margin: 0 auto 1.75rem;
+    }
+
+    .success-receipt-summary {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+      text-align: left;
+    }
+
+    .success-receipt-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.88rem;
+    }
+
+    .success-receipt-row:last-child {
+      border-bottom: none;
+      padding-top: 0.75rem;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .success-receipt-label {
+      color: var(--text-muted);
+    }
+
+    .success-receipt-val {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .success-actions-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-new-order {
+      background: var(--unb-vinho);
+      color: #fff;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-new-order:hover {
+      background: var(--unb-vinho-hover);
+    }
+
+    .btn-view-dash-success {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-light);
+      padding: 0.9rem 1.8rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-view-dash-success:hover {
+      color: #fff;
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    @media (max-width: 600px) {
+      .confirm-actions-bar {
+        flex-direction: column-reverse;
+      }
+      .btn-confirm-back, .btn-confirm-finalize {
+        width: 100%;
+        justify-content: center;
+      }
+      .confirm-buyer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -2259,6 +2768,180 @@
             </div>
           </form>
         </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: PÁGINA DE CONFIRMAÇÃO DO PEDIDO -->
+    <section id="confirmOrderView" class="view-section">
+      <div class="confirm-order-wrap">
+
+        <!-- STEPPER / INDICADOR DE PROGRESSO -->
+        <div class="checkout-stepper" id="confirmStepper">
+          <div class="step-item completed">
+            <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+            <span class="step-label">1. Preenchimento</span>
+          </div>
+          <div class="step-connector active" id="stepConnectorConfirm"></div>
+          <div class="step-item active" id="stepItemConfirm">
+            <div class="step-circle">2</div>
+            <span class="step-label">2. Confirmação</span>
+          </div>
+          <div class="step-connector" id="stepConnectorDone"></div>
+          <div class="step-item" id="stepItemDone">
+            <div class="step-circle">3</div>
+            <span class="step-label">3. Concluído</span>
+          </div>
+        </div>
+
+        <!-- TELA 1: REVISÃO DOS DADOS DO PEDIDO -->
+        <div id="confirmReviewBox">
+          <div class="section-header">
+            <div class="confirm-badge-top">
+              <i class="fa-solid fa-clipboard-check"></i> Revisão de Pedido
+            </div>
+            <h1>Confirme os Dados do seu Pedido</h1>
+            <p>Verifique com atenção se as informações e os produtos abaixo estão corretos antes de confirmar.</p>
+          </div>
+
+          <div class="confirm-review-card">
+            <!-- CABEÇALHO DO CARD -->
+            <div class="confirm-card-header">
+              <div class="confirm-card-brand">
+                <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';">
+                <div class="confirm-card-brand-text">
+                  <h4>Atlética Pesadelo</h4>
+                  <span>AAAEFGA • UnB Gama</span>
+                </div>
+              </div>
+              <div class="confirm-status-pill">
+                <i class="fa-solid fa-clock"></i> Aguardando sua Confirmação
+              </div>
+            </div>
+
+            <!-- CORPO COM DADOS -->
+            <div class="confirm-card-body">
+              <!-- BLOCO 1: DADOS DO COMPRADOR -->
+              <div class="confirm-section-block">
+                <div class="confirm-block-title">
+                  <i class="fa-solid fa-user"></i> Dados do Comprador
+                </div>
+                <div class="confirm-buyer-grid">
+                  <div class="confirm-field-item">
+                    <span class="confirm-field-label">Nome Completo</span>
+                    <span class="confirm-field-value" id="revNome">-</span>
+                  </div>
+                  <div class="confirm-field-item">
+                    <span class="confirm-field-label">Telefone / WhatsApp</span>
+                    <span class="confirm-field-value" id="revTelefone">-</span>
+                  </div>
+                  <div class="confirm-field-item">
+                    <span class="confirm-field-label">CPF</span>
+                    <span class="confirm-field-value" id="revCPF">-</span>
+                  </div>
+                  <div class="confirm-field-item">
+                    <span class="confirm-field-label">Comissário Responsável</span>
+                    <span class="confirm-field-value" id="revComissario">-</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BLOCO 2: ITENS E PRODUTOS -->
+              <div class="confirm-section-block">
+                <div class="confirm-block-title">
+                  <i class="fa-solid fa-box-open"></i> Itens do Pedido (<span id="revItemsCount">0</span>)
+                </div>
+                <div style="overflow-x: auto;">
+                  <table class="confirm-items-table">
+                    <thead>
+                      <tr>
+                        <th>Produto</th>
+                        <th style="text-align: center;">Tamanho</th>
+                        <th style="text-align: center;">Qtd</th>
+                        <th>Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody id="revItemsList">
+                      <!-- Renderizado dinamicamente -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- TOTAL GERAL -->
+                <div class="confirm-total-box">
+                  <div class="confirm-total-label">
+                    <span>Valor Total do Pedido</span>
+                    <small style="display: block; color: var(--text-muted); font-size: 0.75rem; text-transform: none;">Pagamento via Pix Oficial da Atlética</small>
+                  </div>
+                  <div class="confirm-total-amount" id="revTotalAmount">R$ 0,00</div>
+                </div>
+              </div>
+
+              <!-- BLOCO 3: COMPROVANTE -->
+              <div class="confirm-section-block">
+                <div class="confirm-block-title">
+                  <i class="fa-solid fa-receipt"></i> Comprovante de Pagamento
+                </div>
+                <div id="revReceiptContent">
+                  <!-- Renderizado dinamicamente -->
+                </div>
+              </div>
+            </div>
+
+            <!-- BARRA DE AÇÕES -->
+            <div class="confirm-actions-bar">
+              <button type="button" class="btn-confirm-back" onclick="backToOrderForm()">
+                <i class="fa-solid fa-arrow-left"></i> Voltar e Corrigir
+              </button>
+              <button type="button" class="btn-confirm-finalize" id="btnConfirmFinalize" onclick="finalizeConfirmedOrder()">
+                <i class="fa-solid fa-check-double"></i> Confirmar e Enviar Pedido
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TELA 2: SUCESSO APÓS CONFIRMAÇÃO (INICIALMENTE OCULTA) -->
+        <div id="confirmSuccessBox" style="display: none;">
+          <div class="confirm-success-card">
+            <div class="success-celebration-icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2>Pedido Confirmado com Sucesso!</h2>
+            <p>Seu pedido foi registrado com sucesso na planilha oficial da diretoria da Atlética Pesadelo AAAEFGA.</p>
+
+            <div class="success-receipt-summary">
+              <div class="success-receipt-row">
+                <span class="success-receipt-label">Protocolo:</span>
+                <span class="success-receipt-val" id="successOrderProtocol">#0000</span>
+              </div>
+              <div class="success-receipt-row">
+                <span class="success-receipt-label">Comprador:</span>
+                <span class="success-receipt-val" id="successBuyerName">-</span>
+              </div>
+              <div class="success-receipt-row">
+                <span class="success-receipt-label">Comissário:</span>
+                <span class="success-receipt-val" id="successComissarioName">-</span>
+              </div>
+              <div class="success-receipt-row">
+                <span class="success-receipt-label">Produtos:</span>
+                <span class="success-receipt-val" id="successProductsSummary">-</span>
+              </div>
+              <div class="success-receipt-row">
+                <span class="success-receipt-label">Total Pago:</span>
+                <span class="success-receipt-val" id="successTotalAmount" style="color: var(--pesadelo-pink); font-family: 'JetBrains Mono', monospace;">R$ 0,00</span>
+              </div>
+            </div>
+
+            <div class="success-actions-wrap">
+              <button type="button" class="btn-new-order" onclick="startNewOrder()">
+                <i class="fa-solid fa-plus"></i> Fazer Novo Pedido
+              </button>
+              <button type="button" class="btn-view-dash-success" id="btnSuccessDash" onclick="goToDashboardAfterOrder()" style="display: none;">
+                <i class="fa-solid fa-table-list"></i> Ver na Planilha & Ranking
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -3222,8 +3905,14 @@
       document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
       document.querySelectorAll(".nav-pill").forEach(p => p.classList.remove("active"));
 
-      document.getElementById(viewId).classList.add("active");
-      if (btn) btn.classList.add("active");
+      const target = document.getElementById(viewId);
+      if (target) target.classList.add("active");
+      if (btn) {
+        btn.classList.add("active");
+      } else if (viewId === "confirmOrderView" || viewId === "formView") {
+        const btnForm = document.getElementById("btnNavForm");
+        if (btnForm) btnForm.classList.add("active");
+      }
 
       if (viewId === 'dashView') {
         saveAndRefresh();
@@ -3902,18 +4591,31 @@
       }
     }
 
-    // SUBMIT DO PEDIDO
+    // DADOS TEMPORÁRIOS DO PEDIDO EM REVISÃO
+    let pendingOrderData = null;
+
+    // ABRIR PÁGINA DE CONFIRMAÇÃO DO PEDIDO
     function handleOrderSubmit(e) {
       e.preventDefault();
 
-      const btnSubmit = document.getElementById("btnSubmitOrder");
-      if (btnSubmit) {
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Finalizando Pedido...`;
+      const nome = document.getElementById("f_nome").value.trim();
+      const telefone = document.getElementById("f_telefone").value.trim();
+      const cpf = document.getElementById("f_cpf").value.trim();
+      const comissario = document.getElementById("f_comissario").value;
+
+      if (!nome || !telefone || !cpf || !comissario) {
+        showToast("Por favor, preencha todos os campos obrigatórios do formulário.");
+        return;
       }
 
-      // Se houver produtos no carrinho, finaliza os produtos do carrinho!
-      // Se o carrinho estiver vazio, finaliza o produto atualmente selecionado no form.
+      if (!currentUploadedFile) {
+        showToast("Por favor, anexe o comprovante de pagamento antes de prosseguir.");
+        const uploadBox = document.querySelector(".upload-area");
+        if (uploadBox) uploadBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      // Se houver produtos no carrinho, usa o carrinho. Se não, usa o produto atual selecionado no form.
       const currentItem = getCurrentFormItem();
       const allItems = orderCart.length > 0 ? [...orderCart] : [currentItem];
 
@@ -3952,13 +4654,13 @@
         valorFormatado = "A definir";
       }
 
-      const novo = {
+      pendingOrderData = {
         id: Date.now(),
         data: new Date().toLocaleDateString("pt-BR") + " " + new Date().toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }),
-        nome: document.getElementById("f_nome").value.trim(),
-        telefone: document.getElementById("f_telefone").value.trim(),
-        cpf: document.getElementById("f_cpf").value.trim(),
-        comissario: document.getElementById("f_comissario").value,
+        nome: nome,
+        telefone: telefone,
+        cpf: cpf,
+        comissario: comissario,
         produto: produtoDescricao,
         tamanho: tamanhoDescricao,
         quantidade: totalQtd,
@@ -3973,15 +4675,141 @@
         statusEntrega: "Pendente"
       };
 
-      orders.unshift(novo);
+      // PREENCHE A PÁGINA DE CONFIRMAÇÃO
+      document.getElementById("revNome").innerText = pendingOrderData.nome;
+      document.getElementById("revTelefone").innerText = pendingOrderData.telefone;
+      document.getElementById("revCPF").innerText = pendingOrderData.cpf;
+      document.getElementById("revComissario").innerText = pendingOrderData.comissario;
+      document.getElementById("revItemsCount").innerText = totalQtd;
+      document.getElementById("revTotalAmount").innerText = valorFormatado;
+
+      // Renderiza itens
+      const listEl = document.getElementById("revItemsList");
+      listEl.innerHTML = "";
+      allItems.forEach(item => {
+        const tr = document.createElement("tr");
+        const priceTxt = item.unitPrice > 0 ? formatCurrency(item.subtotal) : '<span style="color: var(--text-muted); font-size: 0.8rem;">A definir</span>';
+        tr.innerHTML = `
+          <td>
+            <strong style="color: #fff;">${NOMES_PRODUTOS[item.produto] || item.produto}</strong>
+          </td>
+          <td style="text-align: center;">
+            <span class="size-badge-display">${item.tamanho}</span>
+          </td>
+          <td style="text-align: center; font-weight: 700; color: #fff;">
+            ${item.quantidade}x
+          </td>
+          <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #f69cb9;">
+            ${priceTxt}
+          </td>
+        `;
+        listEl.appendChild(tr);
+      });
+
+      // Renderiza comprovante na confirmação
+      const receiptEl = document.getElementById("revReceiptContent");
+      if (currentUploadedFile && currentUploadedFile.base64) {
+        const isImg = currentUploadedFile.type && currentUploadedFile.type.startsWith("image/");
+        receiptEl.innerHTML = `
+          <div class="confirm-receipt-preview">
+            ${isImg 
+              ? `<img src="${currentUploadedFile.base64}" alt="Comprovante" class="confirm-receipt-thumb">` 
+              : `<div class="confirm-receipt-thumb" style="display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: #ef4444;"><i class="fa-solid fa-file-pdf"></i></div>`}
+            <div class="confirm-receipt-info">
+              <span class="confirm-receipt-name">${currentUploadedFile.nome || "Comprovante"}</span>
+              <span class="confirm-receipt-status"><i class="fa-solid fa-circle-check"></i> Comprovante pronto para registro</span>
+            </div>
+          </div>
+        `;
+      } else {
+        receiptEl.innerHTML = `
+          <div style="padding: 0.85rem; color: var(--text-muted); font-size: 0.88rem; font-style: italic;">
+            Nenhum comprovante anexado.
+          </div>
+        `;
+      }
+
+      // Prepara estado dos blocos de revisão e sucesso
+      document.getElementById("confirmReviewBox").style.display = "block";
+      document.getElementById("confirmSuccessBox").style.display = "none";
+
+      // Reseta stepper para etapa 2 ativa
+      const stepItemConfirm = document.getElementById("stepItemConfirm");
+      const stepConnectorDone = document.getElementById("stepConnectorDone");
+      const stepItemDone = document.getElementById("stepItemDone");
+      if (stepItemConfirm) stepItemConfirm.className = "step-item active";
+      if (stepConnectorDone) stepConnectorDone.className = "step-connector";
+      if (stepItemDone) stepItemDone.className = "step-item";
+
+      const btnFinalConfirm = document.getElementById("btnConfirmFinalize");
+      if (btnFinalConfirm) {
+        btnFinalConfirm.disabled = false;
+        btnFinalConfirm.innerHTML = `<i class="fa-solid fa-check-double"></i> Confirmar e Enviar Pedido`;
+      }
+
+      // Abre a página de confirmação do pedido
+      switchMainView("confirmOrderView");
+    }
+
+    // VOLTAR PARA O FORMULÁRIO (MANTENDO TODOS OS DADOS)
+    function backToOrderForm() {
+      switchMainView("formView", document.getElementById("btnNavForm"));
+    }
+
+    // FINALIZAR E GRAVAR O PEDIDO CONFIRMADO
+    function finalizeConfirmedOrder() {
+      if (!pendingOrderData) return;
+
+      const btnFinal = document.getElementById("btnConfirmFinalize");
+      if (btnFinal) {
+        btnFinal.disabled = true;
+        btnFinal.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Gravando e Enviando...`;
+      }
+
+      // Adiciona o pedido à base e sincroniza
+      orders.unshift(pendingOrderData);
       saveAndRefresh();
-      sendToGoogleSheets({ action: "addOrder", order: novo });
+      sendToGoogleSheets({ action: "addOrder", order: pendingOrderData });
 
-      showToast("Pedido finalizado com sucesso!");
+      // Atualiza stepper para todas as etapas concluídas
+      const stepItemConfirm = document.getElementById("stepItemConfirm");
+      const stepConnectorDone = document.getElementById("stepConnectorDone");
+      const stepItemDone = document.getElementById("stepItemDone");
+      if (stepItemConfirm) stepItemConfirm.className = "step-item completed";
+      if (stepConnectorDone) stepConnectorDone.className = "step-connector active";
+      if (stepItemDone) stepItemDone.className = "step-item completed active";
 
+      // Preenche tela de sucesso
+      document.getElementById("successOrderProtocol").innerText = "#PED-" + pendingOrderData.id.toString().slice(-6);
+      document.getElementById("successBuyerName").innerText = pendingOrderData.nome;
+      document.getElementById("successComissarioName").innerText = pendingOrderData.comissario;
+      document.getElementById("successProductsSummary").innerText = pendingOrderData.produto;
+      document.getElementById("successTotalAmount").innerText = pendingOrderData.valorFormatado;
+
+      const btnSuccessDash = document.getElementById("btnSuccessDash");
+      if (btnSuccessDash) {
+        btnSuccessDash.style.display = isGestaoAuthed() ? "inline-flex" : "none";
+      }
+
+      // Alterna para tela de sucesso
+      document.getElementById("confirmReviewBox").style.display = "none";
+      document.getElementById("confirmSuccessBox").style.display = "block";
+
+      if (typeof confetti === "function") {
+        confetti({ particleCount: 75, spread: 80, origin: { y: 0.55 } });
+      }
+
+      showToast("Pedido confirmado e registrado com sucesso!");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // REINICIAR FORMULÁRIO PARA UM NOVO PEDIDO
+    function startNewOrder() {
       document.getElementById("orderForm").reset();
       currentUploadedFile = null;
       orderCart = [];
+      pendingOrderData = null;
+
       // Restaura produto e tamanho padrão
       document.getElementById("f_produto").value = "Oversize";
       document.getElementById("f_tamanho").value = "M";
@@ -3995,24 +4823,23 @@
       if (sizeContainer) sizeContainer.style.display = "flex";
 
       updateOrderTotals();
+      renderCartSummary();
 
       document.getElementById("uploadText").innerHTML = `<strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)`;
+      const btnSubmit = document.getElementById("btnSubmitOrder");
       if (btnSubmit) {
         btnSubmit.disabled = false;
         btnSubmit.innerHTML = `Finalizar Pedido`;
       }
 
-      if (isGestaoAuthed()) {
-        setTimeout(() => {
-          const btnDash = document.getElementById("btnNavDash");
-          switchMainView("dashView", btnDash);
-        }, 800);
-      } else {
-        const pixSec = document.querySelector(".pix-box");
-        if (pixSec) {
-          pixSec.scrollIntoView({ behavior: "smooth" });
-        }
-      }
+      switchMainView("formView", document.getElementById("btnNavForm"));
+    }
+
+    // IR PARA O DASHBOARD APÓS O PEDIDO
+    function goToDashboardAfterOrder() {
+      startNewOrder();
+      const btnDash = document.getElementById("btnNavDash");
+      switchMainView("dashView", btnDash);
     }
 
     // EXPORTAR EXCEL (.XLSX)

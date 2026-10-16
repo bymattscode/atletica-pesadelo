@@ -1,4 +1,5 @@
 /**
+
  * =========================================================================
  * BANCO DE DADOS ONLINE - ATLETICA PESADELO (AAAEFGA)
  * Google Apps Script para Google Sheets & Google Drive
@@ -21,14 +22,14 @@
 
 function setupDatabase() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
+
   // Aba de Pedidos
   let sheetPedidos = ss.getSheetByName("Pedidos");
   if (!sheetPedidos) {
     sheetPedidos = ss.insertSheet("Pedidos");
     sheetPedidos.appendRow([
-      "ID", "Data", "Nome", "Telefone", "CPF", 
-      "Comissário", "Produto", "Tamanho", "Quantidade", 
+      "ID", "Data", "Nome", "Telefone", "CPF",
+      "Comissário", "Produto", "Tamanho", "Quantidade",
       "Status Pagamento", "Status Entrega", "Comprovante", "Valor Total"
     ]);
     sheetPedidos.getRange(1, 1, 1, 13).setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
@@ -59,7 +60,7 @@ function setupDatabase() {
 function salvarComprovanteNoDrive(nomeArquivo, base64Data, mimeType, clienteNome, pedidoId) {
   try {
     if (!base64Data || base64Data.toString().trim() === "") return "";
-    
+
     // Pasta no Google Drive
     const nomePasta = "Comprovantes - Atletica Pesadelo";
     let folders = DriveApp.getFoldersByName(nomePasta);
@@ -69,7 +70,7 @@ function salvarComprovanteNoDrive(nomeArquivo, base64Data, mimeType, clienteNome
     } else {
       folder = DriveApp.createFolder(nomePasta);
     }
-    
+
     // Remove cabecalho de Data URL (ex: data:image/jpeg;base64,...)
     let pureBase64 = base64Data.toString();
     let detectedMime = mimeType || "image/jpeg";
@@ -81,7 +82,7 @@ function salvarComprovanteNoDrive(nomeArquivo, base64Data, mimeType, clienteNome
       }
       pureBase64 = parts[1];
     }
-    
+
     const decodedBytes = Utilities.base64Decode(pureBase64);
     let extensao = "jpg";
     if (nomeArquivo && nomeArquivo.indexOf(".") > -1) {
@@ -91,20 +92,20 @@ function salvarComprovanteNoDrive(nomeArquivo, base64Data, mimeType, clienteNome
     } else if (detectedMime.indexOf("pdf") > -1) {
       extensao = "pdf";
     }
-    
+
     const nomeLimpo = (clienteNome || "Pedido").replace(/[^a-zA-Z0-9]/g, "_");
     const nomeFinal = "Comprovante_" + nomeLimpo + "_" + pedidoId + "." + extensao;
-    
+
     const blob = Utilities.newBlob(decodedBytes, detectedMime, nomeFinal);
     const file = folder.createFile(blob);
-    
+
     // Torna o arquivo acessivel por link para visualizacao
     try {
       file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     } catch (eShare) {
       Logger.log("Aviso de compartilhamento: " + eShare.toString());
     }
-    
+
     return file.getUrl();
   } catch (err) {
     Logger.log("Erro ao salvar comprovante no Drive: " + err.toString());
@@ -116,12 +117,12 @@ function salvarComprovanteNoDrive(nomeArquivo, base64Data, mimeType, clienteNome
 function doGet(e) {
   setupDatabase();
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
+
   // Ler Pedidos
   const sheetPedidos = ss.getSheetByName("Pedidos");
   const pedidosData = sheetPedidos.getDataRange().getValues();
   const orders = [];
-  
+
   // Pula linha 1 de cabecalho
   for (let i = 1; i < pedidosData.length; i++) {
     const row = pedidosData[i];
@@ -135,8 +136,8 @@ function doGet(e) {
         const prod = (row[6] || "").toString();
         const qtd = parseInt(row[8] || 1);
         let sum = 0;
-        const PRECOS = { "Jersey": 100, "Tube Top": 50, "Oversize": 65, "Corta Vento": 165 };
-        Object.keys(PRECOS).forEach(function(pKey) {
+        const PRECOS = { "Jersey": 100, "Tube Top": 50, "Oversize": 65, "Corta Vento": 165, "Caneca": 45, "Eco Bag": 35 };
+        Object.keys(PRECOS).forEach(function (pKey) {
           if (prod.toLowerCase().indexOf(pKey.toLowerCase()) > -1) {
             const reg = new RegExp(pKey + "[^\\+]*x(\\d+)", "i");
             const match = prod.match(reg);
@@ -234,8 +235,8 @@ function doPost(e) {
         const prod = (o.produto || "").toString();
         const qtd = parseInt(o.quantidade || 1);
         let sum = 0;
-        const PRECOS = { "Jersey": 100, "Tube Top": 50, "Oversize": 65, "Corta Vento": 165 };
-        Object.keys(PRECOS).forEach(function(pKey) {
+        const PRECOS = { "Jersey": 100, "Tube Top": 50, "Oversize": 65, "Corta Vento": 165, "Caneca": 45, "Eco Bag": 35 };
+        Object.keys(PRECOS).forEach(function (pKey) {
           if (prod.toLowerCase().indexOf(pKey.toLowerCase()) > -1) {
             const reg = new RegExp(pKey + "[^\\+]*x(\\d+)", "i");
             const match = prod.match(reg);
@@ -266,8 +267,8 @@ function doPost(e) {
         valorGravado
       ]);
 
-      return ContentService.createTextOutput(JSON.stringify({ 
-        status: "success", 
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
         message: "Pedido gravado no Google Sheets",
         comprovanteUrl: comprovanteLink,
         valorTotal: valorGravado

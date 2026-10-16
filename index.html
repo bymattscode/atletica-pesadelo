@@ -2535,10 +2535,13 @@
       .confirm-actions-bar {
         flex-direction: column-reverse;
       }
-      .btn-confirm-back, .btn-confirm-finalize {
+
+      .btn-confirm-back,
+      .btn-confirm-finalize {
         width: 100%;
         justify-content: center;
       }
+
       .confirm-buyer-grid {
         grid-template-columns: 1fr;
       }
@@ -2642,7 +2645,7 @@
                   </div>
                   <div class="product-tile" onclick="selectProduct('Caneca', this)">
                     <span class="product-name">Caneca + Tirante</span>
-                    <span class="product-price price-tbd">A definir</span>
+                    <span class="product-price">R$ 45,00</span>
                   </div>
                   <div class="product-tile" onclick="selectProduct('Corta Vento', this)">
                     <span class="product-name">Corta Vento</span>
@@ -2650,7 +2653,7 @@
                   </div>
                   <div class="product-tile" onclick="selectProduct('Eco Bag', this)">
                     <span class="product-name">Eco Bag</span>
-                    <span class="product-price price-tbd">A definir</span>
+                    <span class="product-price">R$ 35,00</span>
                   </div>
                 </div>
                 <input type="hidden" id="f_produto" value="Oversize">
@@ -2794,7 +2797,8 @@
             <!-- CABEÇALHO DO CARD -->
             <div class="confirm-card-header">
               <div class="confirm-card-brand">
-                <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';">
+                <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo"
+                  onerror="this.onerror=null; this.src='../assets/logo_pesadelo.png';">
                 <div class="confirm-card-brand-text">
                   <h4>Atlética Pesadelo</h4>
                   <span>AAAEFGA • UnB Gama</span>
@@ -2848,7 +2852,6 @@
                       </tr>
                     </thead>
                     <tbody id="revItemsList">
-                      <!-- Renderizado dinamicamente -->
                     </tbody>
                   </table>
                 </div>
@@ -2857,7 +2860,9 @@
                 <div class="confirm-total-box">
                   <div class="confirm-total-label">
                     <span>Valor Total do Pedido</span>
-                    <small style="display: block; color: var(--text-muted); font-size: 0.75rem; text-transform: none;">Pagamento via Pix Oficial da Atlética</small>
+                    <small
+                      style="display: block; color: var(--text-muted); font-size: 0.75rem; text-transform: none;">Pagamento
+                      via Pix Oficial da Atlética</small>
                   </div>
                   <div class="confirm-total-amount" id="revTotalAmount">R$ 0,00</div>
                 </div>
@@ -2869,7 +2874,6 @@
                   <i class="fa-solid fa-receipt"></i> Comprovante de Pagamento
                 </div>
                 <div id="revReceiptContent">
-                  <!-- Renderizado dinamicamente -->
                 </div>
               </div>
             </div>
@@ -2879,7 +2883,8 @@
               <button type="button" class="btn-confirm-back" onclick="backToOrderForm()">
                 <i class="fa-solid fa-arrow-left"></i> Voltar e Corrigir
               </button>
-              <button type="button" class="btn-confirm-finalize" id="btnConfirmFinalize" onclick="finalizeConfirmedOrder()">
+              <button type="button" class="btn-confirm-finalize" id="btnConfirmFinalize"
+                onclick="finalizeConfirmedOrder()">
                 <i class="fa-solid fa-check-double"></i> Confirmar e Enviar Pedido
               </button>
             </div>
@@ -2893,14 +2898,18 @@
               <i class="fa-solid fa-circle-check"></i>
             </div>
             <h2>Pedido Confirmado com Sucesso!</h2>
-            <p style="max-width: 580px; margin: 0 auto 1.4rem; color: var(--text-secondary); line-height: 1.55; font-size: 0.95rem;">
+            <p
+              style="max-width: 580px; margin: 0 auto 1.4rem; color: var(--text-secondary); line-height: 1.55; font-size: 0.95rem;">
               Seu pedido foi registrado no sistema oficial da Atlética Pesadelo.
             </p>
 
-            <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 0.85rem 1.15rem; margin: 0 auto 1.5rem; max-width: 500px; display: flex; align-items: center; gap: 0.75rem; text-align: left;">
-              <i class="fa-solid fa-file-invoice" style="color: var(--success); font-size: 1.25rem; flex-shrink: 0;"></i>
+            <div
+              style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 0.85rem 1.15rem; margin: 0 auto 1.5rem; max-width: 500px; display: flex; align-items: center; gap: 0.75rem; text-align: left;">
+              <i class="fa-solid fa-file-invoice"
+                style="color: var(--success); font-size: 1.25rem; flex-shrink: 0;"></i>
               <span style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.45;">
-                <strong style="color: #fff;">Importante:</strong> Salve uma cópia ou captura do seu comprovante de pagamento para apresentação no momento da retirada das peças.
+                <strong style="color: #fff;">Importante:</strong> Salve uma cópia ou captura do seu comprovante de
+                pagamento para apresentação no momento da retirada das peças.
               </span>
             </div>
 
@@ -2919,7 +2928,8 @@
               </div>
               <div class="success-receipt-row">
                 <span class="success-receipt-label">Total Pago:</span>
-                <span class="success-receipt-val" id="successTotalAmount" style="color: var(--pesadelo-pink); font-family: 'JetBrains Mono', monospace;">R$ 0,00</span>
+                <span class="success-receipt-val" id="successTotalAmount"
+                  style="color: var(--pesadelo-pink); font-family: 'JetBrains Mono', monospace;">R$ 0,00</span>
               </div>
             </div>
 
@@ -2927,7 +2937,8 @@
               <button type="button" class="btn-new-order" onclick="startNewOrder()">
                 <i class="fa-solid fa-plus"></i> Fazer Novo Pedido
               </button>
-              <button type="button" class="btn-view-dash-success" id="btnSuccessDash" onclick="goToDashboardAfterOrder()" style="display: none;">
+              <button type="button" class="btn-view-dash-success" id="btnSuccessDash"
+                onclick="goToDashboardAfterOrder()" style="display: none;">
                 <i class="fa-solid fa-table-list"></i> Ver na Planilha & Ranking
               </button>
             </div>
@@ -2976,20 +2987,25 @@
       <div class="delivery-filters-bar" id="deliveryFiltersBar">
         <div class="delivery-filter-pills">
           <span class="delivery-filter-label">Entrega:</span>
-          <button type="button" class="delivery-pill active" id="btnFilterDeliveryAll" onclick="setDeliveryFilter('all', this)">
+          <button type="button" class="delivery-pill active" id="btnFilterDeliveryAll"
+            onclick="setDeliveryFilter('all', this)">
             Todos (<span id="countDeliveryAll">0</span>)
           </button>
-          <button type="button" class="delivery-pill pill-pendente" id="btnFilterDeliveryPending" onclick="setDeliveryFilter('pending', this)">
+          <button type="button" class="delivery-pill pill-pendente" id="btnFilterDeliveryPending"
+            onclick="setDeliveryFilter('pending', this)">
             Pendentes (<span id="countDeliveryPending">0</span>)
           </button>
-          <button type="button" class="delivery-pill pill-entregue" id="btnFilterDeliveryDone" onclick="setDeliveryFilter('delivered', this)">
+          <button type="button" class="delivery-pill pill-entregue" id="btnFilterDeliveryDone"
+            onclick="setDeliveryFilter('delivered', this)">
             Entregues (<span id="countDeliveryDone">0</span>)
           </button>
         </div>
         <div class="search-orders-container">
           <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" id="searchOrdersInput" placeholder="Pesquisar por nome ou CPF..." oninput="handleSearchOrders(this.value)" autocomplete="off">
-          <button type="button" class="btn-clear-search" id="btnClearSearch" onclick="clearSearchOrders()" title="Limpar pesquisa" style="display: none;">
+          <input type="text" id="searchOrdersInput" placeholder="Pesquisar por nome ou CPF..."
+            oninput="handleSearchOrders(this.value)" autocomplete="off">
+          <button type="button" class="btn-clear-search" id="btnClearSearch" onclick="clearSearchOrders()"
+            title="Limpar pesquisa" style="display: none;">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
@@ -3148,7 +3164,6 @@
       </div>
 
       <div class="receipt-preview-body" id="receiptPreviewContent">
-        <!-- Renderizado dinamicamente -->
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
@@ -3186,9 +3201,9 @@
       "Jersey": 100,
       "Tube Top": 50,
       "Oversize": 65,
-      "Caneca": 0,
+      "Caneca": 45,
       "Corta Vento": 165,
-      "Eco Bag": 0
+      "Eco Bag": 35
     };
 
     const NOMES_PRODUTOS = {
@@ -3211,15 +3226,15 @@
       return isNaN(num) ? "A definir" : "R$ " + num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // EXTRAÇÃO SEGURA DO VALOR NUMÉRICO EM REAIS DE UM PEDIDO
+    // EXTRAÇÃO SEGURA DO VALOR NUMÉRICO
     function getOrderNumericValue(order) {
       if (!order) return 0;
-      
+
       // 1. Número positivo direto
       if (typeof order.valorTotal === "number" && !isNaN(order.valorTotal) && order.valorTotal > 0) {
         return order.valorTotal;
       }
-      
+
       // 2. String numérica válida em valorTotal (ex: "R$ 165,00", "165.00")
       if (typeof order.valorTotal === "string" && order.valorTotal.trim() !== "" && !order.valorTotal.toLowerCase().includes("definir")) {
         const clean = order.valorTotal.replace("R$", "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
@@ -3237,7 +3252,7 @@
       // 4. Se tiver array de itens no carrinho
       let itemsList = order.itens;
       if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
-        try { itemsList = JSON.parse(itemsList); } catch(e) {}
+        try { itemsList = JSON.parse(itemsList); } catch (e) { }
       }
       if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
         let sum = 0;
@@ -3288,11 +3303,11 @@
       // 1. Se estiver numa aba de produto específico (ex: "Oversize", "Jersey", "Corta Vento", etc.)
       if (tab && tab !== "todas" && tab !== "ranking") {
         const prodPrice = PRECOS_PRODUTOS[tab] !== undefined ? PRECOS_PRODUTOS[tab] : 0;
-        
+
         // Verifica itens do carrinho
         let itemsList = order.itens;
         if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
-          try { itemsList = JSON.parse(itemsList); } catch(e) {}
+          try { itemsList = JSON.parse(itemsList); } catch (e) { }
         }
         if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
           const matching = itemsList.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
@@ -4168,8 +4183,8 @@
         filtered = filtered.filter(o => {
           const nomeMatch = (o.nome || "").toLowerCase().includes(searchFilterTerm);
           const cpfRaw = o.cpf || "";
-          const cpfMatch = cpfRaw.toLowerCase().includes(searchFilterTerm) || 
-                           (cleanTerm.length > 0 && cpfRaw.replace(/\D/g, "").includes(cleanTerm));
+          const cpfMatch = cpfRaw.toLowerCase().includes(searchFilterTerm) ||
+            (cleanTerm.length > 0 && cpfRaw.replace(/\D/g, "").includes(cleanTerm));
           return nomeMatch || cpfMatch;
         });
       }
@@ -4761,9 +4776,9 @@
         const isImg = currentUploadedFile.type && currentUploadedFile.type.startsWith("image/");
         receiptEl.innerHTML = `
           <div class="confirm-receipt-preview">
-            ${isImg 
-              ? `<img src="${currentUploadedFile.base64}" alt="Comprovante" class="confirm-receipt-thumb">` 
-              : `<div class="confirm-receipt-thumb" style="display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: #ef4444;"><i class="fa-solid fa-file-pdf"></i></div>`}
+            ${isImg
+            ? `<img src="${currentUploadedFile.base64}" alt="Comprovante" class="confirm-receipt-thumb">`
+            : `<div class="confirm-receipt-thumb" style="display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: #ef4444;"><i class="fa-solid fa-file-pdf"></i></div>`}
             <div class="confirm-receipt-info">
               <span class="confirm-receipt-name">${currentUploadedFile.nome || "Comprovante"}</span>
               <span class="confirm-receipt-status"><i class="fa-solid fa-circle-check"></i> Comprovante pronto para registro</span>

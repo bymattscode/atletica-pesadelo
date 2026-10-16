@@ -19,8 +19,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- SheetJS para exportação real para Excel (.xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <!-- Confetti para celebrações visuais -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
@@ -2106,7 +2104,6 @@
       background: var(--unb-vinho);
       border-color: var(--pesadelo-pink);
       color: #fff;
-      box-shadow: 0 0 16px rgba(200, 70, 118, 0.4);
     }
 
     .step-item.active .step-label {
@@ -2405,15 +2402,12 @@
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      transition: all 0.2s;
+      transition: background 0.15s;
       font-family: inherit;
-      box-shadow: 0 4px 18px rgba(152, 24, 68, 0.4);
     }
 
     .btn-confirm-finalize:hover {
       background: var(--unb-vinho-hover);
-      box-shadow: 0 6px 22px rgba(200, 70, 118, 0.5);
-      transform: translateY(-1px);
     }
 
     /* TELA DE SUCESSO APÓS CONFIRMAÇÃO */
@@ -2427,24 +2421,17 @@
     }
 
     .success-celebration-icon {
-      width: 76px;
-      height: 76px;
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(16, 185, 129, 0.12);
       border: 2px solid var(--success);
       color: var(--success);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       margin-bottom: 1.25rem;
-      box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
-      animation: pulseSuccess 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseSuccess {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(16, 185, 129, 0.55); }
     }
 
     .confirm-success-card h2 {
@@ -2906,13 +2893,18 @@
               <i class="fa-solid fa-circle-check"></i>
             </div>
             <h2>Pedido Confirmado com Sucesso!</h2>
-            <p>Seu pedido foi registrado com sucesso na planilha oficial da diretoria da Atlética Pesadelo AAAEFGA.</p>
+            <p style="max-width: 580px; margin: 0 auto 1.4rem; color: var(--text-secondary); line-height: 1.55; font-size: 0.95rem;">
+              Seu pedido foi registrado no sistema oficial da Atlética Pesadelo.
+            </p>
+
+            <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 0.85rem 1.15rem; margin: 0 auto 1.5rem; max-width: 500px; display: flex; align-items: center; gap: 0.75rem; text-align: left;">
+              <i class="fa-solid fa-file-invoice" style="color: var(--success); font-size: 1.25rem; flex-shrink: 0;"></i>
+              <span style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.45;">
+                <strong style="color: #fff;">Importante:</strong> Salve uma cópia ou captura do seu comprovante de pagamento para apresentação no momento da retirada das peças.
+              </span>
+            </div>
 
             <div class="success-receipt-summary">
-              <div class="success-receipt-row">
-                <span class="success-receipt-label">Protocolo:</span>
-                <span class="success-receipt-val" id="successOrderProtocol">#0000</span>
-              </div>
               <div class="success-receipt-row">
                 <span class="success-receipt-label">Comprador:</span>
                 <span class="success-receipt-val" id="successBuyerName">-</span>
@@ -4197,9 +4189,6 @@
       saveAndRefresh();
       sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: novoStatus });
 
-      if (novoStatus === "Entregue" && typeof confetti === "function") {
-        confetti({ particleCount: 40, spread: 65, origin: { y: 0.7 } });
-      }
       const primeiroNome = (ord.nome || "Cliente").trim().split(" ")[0];
       showToast(`Pedido de ${primeiroNome} marcado como ${novoStatus}.`);
     }
@@ -4221,9 +4210,7 @@
         ord.statusEntrega = val;
         saveAndRefresh();
         sendToGoogleSheets({ action: "updateOrder", id: id, statusEntrega: val });
-        if (val === "Entregue" && typeof confetti === "function") {
-          confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
-        }
+
         const primeiroNome = (ord.nome || "Cliente").trim().split(" ")[0];
         showToast(`Pedido de ${primeiroNome} marcado como ${val}.`);
       }
@@ -4780,7 +4767,6 @@
       if (stepItemDone) stepItemDone.className = "step-item completed active";
 
       // Preenche tela de sucesso
-      document.getElementById("successOrderProtocol").innerText = "#PED-" + pendingOrderData.id.toString().slice(-6);
       document.getElementById("successBuyerName").innerText = pendingOrderData.nome;
       document.getElementById("successComissarioName").innerText = pendingOrderData.comissario;
       document.getElementById("successProductsSummary").innerText = pendingOrderData.produto;
@@ -4794,10 +4780,6 @@
       // Alterna para tela de sucesso
       document.getElementById("confirmReviewBox").style.display = "none";
       document.getElementById("confirmSuccessBox").style.display = "block";
-
-      if (typeof confetti === "function") {
-        confetti({ particleCount: 75, spread: 80, origin: { y: 0.55 } });
-      }
 
       showToast("Pedido confirmado e registrado com sucesso!");
       window.scrollTo({ top: 0, behavior: "smooth" });

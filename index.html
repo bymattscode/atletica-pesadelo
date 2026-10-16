@@ -1241,6 +1241,105 @@
       color: #fff;
     }
 
+    .podium-seller-total {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #34d399;
+      margin: 0.35rem 0 0.25rem;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.3px;
+    }
+
+    .podium-card.first .podium-seller-total {
+      color: #4ade80;
+      font-size: 1.6rem;
+    }
+
+    /* FOOTER DA TABELA DE RANKING (SOMA TOTAL) */
+    tr.ranking-tfoot-row {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-top: 2px solid var(--border-light) !important;
+    }
+
+    tr.ranking-tfoot-row td {
+      padding: 0.95rem 1rem !important;
+      font-size: 0.88rem !important;
+      color: #fff;
+    }
+
+    .badge-total-geral {
+      display: inline-block;
+      padding: 0.25rem 0.55rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* CARDS DE SOMA TOTAL ABAIXO DE TUDO */
+    .ranking-grand-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.15rem;
+      margin-top: 1.75rem;
+    }
+
+    .summary-kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-kpi-card.highlight-green {
+      border-color: rgba(34, 197, 94, 0.4);
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.1) 0%, var(--bg-card) 100%);
+    }
+
+    .summary-kpi-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .summary-kpi-value {
+      font-size: 1.65rem;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.15;
+    }
+
+    .summary-kpi-card.highlight-green .summary-kpi-value {
+      color: #4ade80;
+    }
+
+    .summary-kpi-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .ranking-grand-summary {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+    }
+
     /* TOAST */
     .toast {
       position: fixed;
@@ -2344,8 +2443,9 @@
               <tr>
                 <th>Posição</th>
                 <th>Comissário</th>
+                <th>Total Vendido (R$)</th>
                 <th>Total de Pedidos</th>
-                <th>Total de Peças Vendidas</th>
+                <th>Total de Peças</th>
                 <th>Situação</th>
                 <th>Ações</th>
               </tr>
@@ -2353,7 +2453,29 @@
             <tbody id="rankingTbody">
               <!-- Gerado via JS -->
             </tbody>
+            <tfoot id="rankingTfoot">
+              <!-- Soma total gerada via JS -->
+            </tfoot>
           </table>
+        </div>
+
+        <!-- SOMA TOTAL DE TUDO (ABAIXO DE TUDO) -->
+        <div class="ranking-grand-summary" id="rankingGrandSummary" style="display: none;">
+          <div class="summary-kpi-card highlight-green">
+            <div class="summary-kpi-label"><i class="fa-solid fa-sack-dollar"></i> Faturamento Total Vendido</div>
+            <div class="summary-kpi-value" id="sumTotalValor">R$ 0,00</div>
+            <div class="summary-kpi-sub">Soma acumulada de todas as vendas</div>
+          </div>
+          <div class="summary-kpi-card">
+            <div class="summary-kpi-label"><i class="fa-solid fa-shirt"></i> Total de Peças Vendidas</div>
+            <div class="summary-kpi-value" id="sumTotalItens">0 peças</div>
+            <div class="summary-kpi-sub">Quantidade somada de produtos</div>
+          </div>
+          <div class="summary-kpi-card">
+            <div class="summary-kpi-label"><i class="fa-solid fa-clipboard-list"></i> Total de Pedidos Realizados</div>
+            <div class="summary-kpi-value" id="sumTotalPedidos">0 pedidos</div>
+            <div class="summary-kpi-sub">Lançamentos registrados no sistema</div>
+          </div>
         </div>
 
       </div>
@@ -3370,29 +3492,103 @@
       );
     }
 
-    // SEÇÃO DE COMISSÁRIOS & RANKING
+    // EXTRAÇÃO SEGURA DO VALOR NUMÉRICO EM REAIS DE UM PEDIDO
+    function getOrderNumericValue(order) {
+      if (!order) return 0;
+      if (typeof order.valorTotal === "number" && !isNaN(order.valorTotal) && order.valorTotal > 0) {
+        return order.valorTotal;
+      }
+      if (typeof order.valorTotal === "string" && order.valorTotal.trim() !== "") {
+        const clean = order.valorTotal.replace("R$", "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
+        const parsed = parseFloat(clean);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      if (typeof order.valorFormatado === "string" && order.valorFormatado.trim() !== "") {
+        const clean = order.valorFormatado.replace("R$", "").replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
+        const parsed = parseFloat(clean);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
+        let sum = 0;
+        order.itens.forEach(item => {
+          const p = item.subtotal || ((PRECOS_PRODUTOS[item.produto] || 0) * (item.quantidade || 1));
+          sum += (p || 0);
+        });
+        if (sum > 0) return sum;
+      }
+      if (order.produto && PRECOS_PRODUTOS[order.produto]) {
+        const qtd = parseInt(order.quantidade || 1, 10);
+        return PRECOS_PRODUTOS[order.produto] * (isNaN(qtd) || qtd < 1 ? 1 : qtd);
+      }
+      if (order.produto && typeof order.produto === "string") {
+        let sum = 0;
+        Object.keys(PRECOS_PRODUTOS).forEach(prodName => {
+          const price = PRECOS_PRODUTOS[prodName];
+          if (price > 0 && order.produto.includes(prodName)) {
+            const reg = new RegExp(prodName + "[^\\+]*x(\\d+)", "i");
+            const match = order.produto.match(reg);
+            const qtd = match ? parseInt(match[1], 10) : 1;
+            sum += price * qtd;
+          }
+        });
+        if (sum > 0) return sum;
+      }
+      return 0;
+    }
+
+    // SEÇÃO DE COMISSÁRIOS & RANKING (POR VALOR VENDIDO EM REAIS)
     function renderRanking() {
       const comissariosMap = {};
       comissarios.forEach(c => {
-        comissariosMap[c] = { pedidos: 0, itens: 0 };
+        comissariosMap[c] = { pedidos: 0, itens: 0, valorTotal: 0 };
       });
+
+      let grandTotalValor = 0;
+      let grandTotalPedidos = 0;
+      let grandTotalItens = 0;
 
       orders.forEach(o => {
-        if (!comissariosMap[o.comissario]) {
-          comissariosMap[o.comissario] = { pedidos: 0, itens: 0 };
+        const val = getOrderNumericValue(o);
+        const qtd = parseInt(o.quantidade || 1, 10);
+        const qtdValida = (isNaN(qtd) || qtd < 1) ? 1 : qtd;
+
+        if (o.comissario) {
+          if (!comissariosMap[o.comissario]) {
+            comissariosMap[o.comissario] = { pedidos: 0, itens: 0, valorTotal: 0 };
+          }
+          comissariosMap[o.comissario].pedidos += 1;
+          comissariosMap[o.comissario].itens += qtdValida;
+          comissariosMap[o.comissario].valorTotal += val;
         }
-        comissariosMap[o.comissario].pedidos += 1;
-        comissariosMap[o.comissario].itens += parseInt(o.quantidade || 1);
+
+        // Acumula os totais gerais de todos os pedidos
+        grandTotalValor += val;
+        grandTotalPedidos += 1;
+        grandTotalItens += qtdValida;
       });
 
+      // ORDENAÇÃO POR VALOR VENDIDO EM REAIS (R$)
       const rankingArray = Object.keys(comissariosMap).map(nome => ({
         nome: nome,
         pedidos: comissariosMap[nome].pedidos,
-        itens: comissariosMap[nome].itens
-      })).sort((a, b) => b.itens - a.itens);
+        itens: comissariosMap[nome].itens,
+        valorTotal: comissariosMap[nome].valorTotal
+      })).sort((a, b) => {
+        if (b.valorTotal !== a.valorTotal) {
+          return b.valorTotal - a.valorTotal; // 1º Critério: Maior valor vendido em R$
+        }
+        if (b.itens !== a.itens) {
+          return b.itens - a.itens; // 2º Critério: Maior número de peças
+        }
+        return b.pedidos - a.pedidos; // 3º Critério: Maior número de pedidos
+      });
 
       const podiumEl = document.getElementById("podiumContent");
       podiumEl.innerHTML = "";
+
+      const tbody = document.getElementById("rankingTbody");
+      const tfoot = document.getElementById("rankingTfoot");
+      const summaryCard = document.getElementById("rankingGrandSummary");
 
       if (rankingArray.length === 0) {
         podiumEl.innerHTML = `
@@ -3400,13 +3596,14 @@
             Nenhum comissário cadastrado ainda. Utilize o formulário acima para cadastrar os membros oficiais da atlética.
           </div>
         `;
-        const tbody = document.getElementById("rankingTbody");
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum comissário cadastrado até o momento.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum comissário cadastrado até o momento.</td></tr>`;
+        if (tfoot) tfoot.innerHTML = "";
+        if (summaryCard) summaryCard.style.display = "none";
         return;
       }
 
-      // Pódio mostra quem já tem vendas
-      const comVendas = rankingArray.filter(c => c.itens > 0);
+      // Pódio mostra quem já tem vendas registradas
+      const comVendas = rankingArray.filter(c => c.valorTotal > 0 || c.itens > 0);
       if (comVendas.length === 0) {
         podiumEl.innerHTML = `
           <div style="grid-column: 1 / -1; text-align: center; padding: 2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-muted); font-size: 0.9rem;">
@@ -3414,42 +3611,46 @@
           </div>
         `;
       } else {
-        const first = comVendas[0] || { nome: "-", itens: 0, pedidos: 0 };
-        const second = comVendas[1] || { nome: "-", itens: 0, pedidos: 0 };
-        const third = comVendas[2] || { nome: "-", itens: 0, pedidos: 0 };
+        const first = comVendas[0] || { nome: "-", itens: 0, pedidos: 0, valorTotal: 0 };
+        const second = comVendas[1] || { nome: "-", itens: 0, pedidos: 0, valorTotal: 0 };
+        const third = comVendas[2] || { nome: "-", itens: 0, pedidos: 0, valorTotal: 0 };
 
         podiumEl.innerHTML = `
           <div class="podium-card second">
             <div class="podium-rank-tag">2º Lugar</div>
             <div class="podium-seller-name">${second.nome}</div>
-            <div class="podium-seller-sales"><strong>${second.itens}</strong> peças vendidas (${second.pedidos} pedidos)</div>
+            <div class="podium-seller-total">${formatCurrency(second.valorTotal)}</div>
+            <div class="podium-seller-sales"><strong>${second.itens}</strong> peças vendidas (${second.pedidos} ${second.pedidos === 1 ? 'pedido' : 'pedidos'})</div>
           </div>
 
           <div class="podium-card first">
             <div class="podium-rank-tag">1º Lugar • Líder</div>
             <div class="podium-seller-name">${first.nome}</div>
-            <div class="podium-seller-sales"><strong>${first.itens}</strong> peças vendidas (${first.pedidos} pedidos)</div>
+            <div class="podium-seller-total">${formatCurrency(first.valorTotal)}</div>
+            <div class="podium-seller-sales"><strong>${first.itens}</strong> peças vendidas (${first.pedidos} ${first.pedidos === 1 ? 'pedido' : 'pedidos'})</div>
           </div>
 
           <div class="podium-card third">
             <div class="podium-rank-tag">3º Lugar</div>
             <div class="podium-seller-name">${third.nome}</div>
-            <div class="podium-seller-sales"><strong>${third.itens}</strong> peças vendidas (${third.pedidos} pedidos)</div>
+            <div class="podium-seller-total">${formatCurrency(third.valorTotal)}</div>
+            <div class="podium-seller-sales"><strong>${third.itens}</strong> peças vendidas (${third.pedidos} ${third.pedidos === 1 ? 'pedido' : 'pedidos'})</div>
           </div>
         `;
       }
 
       // TABELA COMPLETA DO RANKING
-      const tbody = document.getElementById("rankingTbody");
       tbody.innerHTML = "";
 
       rankingArray.forEach((c, idx) => {
-        const medal = c.itens > 0 ? (idx === 0 ? "1º Lugar" : idx === 1 ? "2º Lugar" : idx === 2 ? "3º Lugar" : `${idx + 1}º Lugar`) : "-";
+        const hasSales = c.valorTotal > 0 || c.itens > 0;
+        const medal = hasSales ? (idx === 0 ? "1º Lugar" : idx === 1 ? "2º Lugar" : idx === 2 ? "3º Lugar" : `${idx + 1}º Lugar`) : "-";
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>${medal}</strong></td>
           <td><strong>${c.nome}</strong></td>
-          <td>${c.pedidos} pedidos</td>
+          <td><span class="val-total-badge" style="font-size: 0.88rem; font-weight: 800; color: #34d399;">${formatCurrency(c.valorTotal)}</span></td>
+          <td>${c.pedidos} ${c.pedidos === 1 ? 'pedido' : 'pedidos'}</td>
           <td><strong>${c.itens} peças</strong></td>
           <td><span class="status-badge status-pago">Ativo</span></td>
           <td>
@@ -3460,6 +3661,36 @@
         `;
         tbody.appendChild(tr);
       });
+
+      // LINHA DE SOMA TOTAL NO RODAPÉ DA TABELA
+      if (tfoot) {
+        tfoot.innerHTML = `
+          <tr class="ranking-tfoot-row">
+            <td colspan="2" style="text-align: right; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+              Soma Total Geral:
+            </td>
+            <td>
+              <span class="val-total-badge" style="font-size: 0.95rem; font-weight: 900; color: #4ade80; background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.4);">
+                ${formatCurrency(grandTotalValor)}
+              </span>
+            </td>
+            <td><strong>${grandTotalPedidos} pedidos</strong></td>
+            <td><strong>${grandTotalItens} peças</strong></td>
+            <td colspan="2"><span class="badge-total-geral">100% Apurado</span></td>
+          </tr>
+        `;
+      }
+
+      // CARD DE SOMA TOTAL ABAIXO DE TUDO
+      if (summaryCard) {
+        summaryCard.style.display = "grid";
+        const valEl = document.getElementById("sumTotalValor");
+        const itensEl = document.getElementById("sumTotalItens");
+        const pedidosEl = document.getElementById("sumTotalPedidos");
+        if (valEl) valEl.innerText = formatCurrency(grandTotalValor);
+        if (itensEl) itensEl.innerText = `${grandTotalItens} ${grandTotalItens === 1 ? 'peça' : 'peças'}`;
+        if (pedidosEl) pedidosEl.innerText = `${grandTotalPedidos} ${grandTotalPedidos === 1 ? 'pedido' : 'pedidos'}`;
+      }
     }
 
     // PRODUTO / TAMANHO
@@ -3829,23 +4060,59 @@
 
       const comissariosMap = {};
       comissarios.forEach(c => {
-        comissariosMap[c] = { pedidos: 0, itens: 0 };
+        comissariosMap[c] = { pedidos: 0, itens: 0, valorTotal: 0 };
       });
+      let excelGrandValor = 0;
+      let excelGrandPedidos = 0;
+      let excelGrandItens = 0;
+
       orders.forEach(o => {
-        if (!comissariosMap[o.comissario]) comissariosMap[o.comissario] = { pedidos: 0, itens: 0 };
-        comissariosMap[o.comissario].pedidos += 1;
-        comissariosMap[o.comissario].itens += parseInt(o.quantidade || 1);
+        const val = getOrderNumericValue(o);
+        const qtd = parseInt(o.quantidade || 1, 10);
+        const qtdValida = (isNaN(qtd) || qtd < 1) ? 1 : qtd;
+
+        if (o.comissario) {
+          if (!comissariosMap[o.comissario]) comissariosMap[o.comissario] = { pedidos: 0, itens: 0, valorTotal: 0 };
+          comissariosMap[o.comissario].pedidos += 1;
+          comissariosMap[o.comissario].itens += qtdValida;
+          comissariosMap[o.comissario].valorTotal += val;
+        }
+        excelGrandValor += val;
+        excelGrandPedidos += 1;
+        excelGrandItens += qtdValida;
       });
+
       const rankingData = [
-        ["Posição", "Comissário", "Total de Pedidos", "Total de Itens Vendidos"]
+        ["Posição", "Comissário", "Total Vendido (R$)", "Total de Pedidos", "Total de Peças Vendidas"]
       ];
       Object.keys(comissariosMap).map(n => ({
         nome: n,
         pedidos: comissariosMap[n].pedidos,
-        itens: comissariosMap[n].itens
-      })).sort((a, b) => b.itens - a.itens).forEach((c, i) => {
-        rankingData.push([`${i + 1}º Lugar`, c.nome, c.pedidos, c.itens]);
+        itens: comissariosMap[n].itens,
+        valorTotal: comissariosMap[n].valorTotal
+      })).sort((a, b) => {
+        if (b.valorTotal !== a.valorTotal) return b.valorTotal - a.valorTotal;
+        if (b.itens !== a.itens) return b.itens - a.itens;
+        return b.pedidos - a.pedidos;
+      }).forEach((c, i) => {
+        rankingData.push([
+          `${i + 1}º Lugar`,
+          c.nome,
+          formatCurrency(c.valorTotal),
+          c.pedidos,
+          c.itens
+        ]);
       });
+
+      // Linha de Soma Total
+      rankingData.push([
+        "TOTAL GERAL",
+        "TODOS",
+        formatCurrency(excelGrandValor),
+        excelGrandPedidos,
+        excelGrandItens
+      ]);
+
       const wsRank = XLSX.utils.aoa_to_sheet(rankingData);
       XLSX.utils.book_append_sheet(wb, wsRank, "Ranking Comissarios");
 

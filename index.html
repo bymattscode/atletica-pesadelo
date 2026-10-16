@@ -1280,66 +1280,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* CARDS DE SOMA TOTAL ABAIXO DE TUDO */
-    .ranking-grand-summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.15rem;
-      margin-top: 1.75rem;
-    }
-
-    .summary-kpi-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.35rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .summary-kpi-card.highlight-green {
-      border-color: rgba(34, 197, 94, 0.4);
-      background: linear-gradient(180deg, rgba(34, 197, 94, 0.1) 0%, var(--bg-card) 100%);
-    }
-
-    .summary-kpi-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-
-    .summary-kpi-value {
-      font-size: 1.65rem;
-      font-weight: 900;
-      color: #fff;
-      font-family: 'Outfit', sans-serif;
-      line-height: 1.15;
-    }
-
-    .summary-kpi-card.highlight-green .summary-kpi-value {
-      color: #4ade80;
-    }
-
-    .summary-kpi-sub {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-    }
-
-    @media (max-width: 768px) {
-      .ranking-grand-summary {
-        grid-template-columns: 1fr;
-        gap: 0.85rem;
-      }
-    }
-
     /* TOAST */
     .toast {
       position: fixed;
@@ -2459,25 +2399,6 @@
           </table>
         </div>
 
-        <!-- SOMA TOTAL DE TUDO (ABAIXO DE TUDO) -->
-        <div class="ranking-grand-summary" id="rankingGrandSummary" style="display: none;">
-          <div class="summary-kpi-card highlight-green">
-            <div class="summary-kpi-label"><i class="fa-solid fa-sack-dollar"></i> Faturamento Total Vendido</div>
-            <div class="summary-kpi-value" id="sumTotalValor">R$ 0,00</div>
-            <div class="summary-kpi-sub">Soma acumulada de todas as vendas</div>
-          </div>
-          <div class="summary-kpi-card">
-            <div class="summary-kpi-label"><i class="fa-solid fa-shirt"></i> Total de Peças Vendidas</div>
-            <div class="summary-kpi-value" id="sumTotalItens">0 peças</div>
-            <div class="summary-kpi-sub">Quantidade somada de produtos</div>
-          </div>
-          <div class="summary-kpi-card">
-            <div class="summary-kpi-label"><i class="fa-solid fa-clipboard-list"></i> Total de Pedidos Realizados</div>
-            <div class="summary-kpi-value" id="sumTotalPedidos">0 pedidos</div>
-            <div class="summary-kpi-sub">Lançamentos registrados no sistema</div>
-          </div>
-        </div>
-
       </div>
 
     </section>
@@ -3588,7 +3509,6 @@
 
       const tbody = document.getElementById("rankingTbody");
       const tfoot = document.getElementById("rankingTfoot");
-      const summaryCard = document.getElementById("rankingGrandSummary");
 
       if (rankingArray.length === 0) {
         podiumEl.innerHTML = `
@@ -3598,7 +3518,6 @@
         `;
         tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Nenhum comissário cadastrado até o momento.</td></tr>`;
         if (tfoot) tfoot.innerHTML = "";
-        if (summaryCard) summaryCard.style.display = "none";
         return;
       }
 
@@ -3624,7 +3543,7 @@
           </div>
 
           <div class="podium-card first">
-            <div class="podium-rank-tag">1º Lugar • Líder</div>
+            <div class="podium-rank-tag">1º Lugar</div>
             <div class="podium-seller-name">${first.nome}</div>
             <div class="podium-seller-total">${formatCurrency(first.valorTotal)}</div>
             <div class="podium-seller-sales"><strong>${first.itens}</strong> peças vendidas (${first.pedidos} ${first.pedidos === 1 ? 'pedido' : 'pedidos'})</div>
@@ -3679,17 +3598,6 @@
             <td colspan="2"><span class="badge-total-geral">100% Apurado</span></td>
           </tr>
         `;
-      }
-
-      // CARD DE SOMA TOTAL ABAIXO DE TUDO
-      if (summaryCard) {
-        summaryCard.style.display = "grid";
-        const valEl = document.getElementById("sumTotalValor");
-        const itensEl = document.getElementById("sumTotalItens");
-        const pedidosEl = document.getElementById("sumTotalPedidos");
-        if (valEl) valEl.innerText = formatCurrency(grandTotalValor);
-        if (itensEl) itensEl.innerText = `${grandTotalItens} ${grandTotalItens === 1 ? 'peça' : 'peças'}`;
-        if (pedidosEl) pedidosEl.innerText = `${grandTotalPedidos} ${grandTotalPedidos === 1 ? 'pedido' : 'pedidos'}`;
       }
     }
 

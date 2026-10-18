@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- SheetJS para exportação real para Excel (.xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="assets/kits.js"></script>
 
   <style>
     :root {
@@ -375,6 +376,200 @@
 
     .product-tile.selected .price-tbd {
       color: rgba(255, 255, 255, 0.75);
+    }
+
+    .jersey-customization[hidden] {
+      display: none;
+    }
+
+    .jersey-customization {
+      padding: 1rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+    }
+
+    .kits-section {
+      margin-top: 1rem;
+      border-top: 1px solid var(--border-light);
+      padding-top: 1.5rem;
+    }
+
+    .kits-section h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.35rem;
+      display: inline;
+    }
+
+    .kits-section > summary {
+      cursor: pointer;
+      color: #f69cb9;
+      margin-bottom: 0.75rem;
+    }
+
+    .kit-catalog,
+    .kit-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .kit-card,
+    .kit-configurator {
+      min-width: 0;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      background: var(--bg-input);
+      padding: 1rem;
+    }
+
+    .kit-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .kit-card-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .kit-card-heading img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .kit-card h3,
+    .kit-configurator h3 {
+      font-size: 1rem;
+    }
+
+    .kit-card p,
+    .kit-composition,
+    .kit-item-details {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      overflow-wrap: anywhere;
+    }
+
+    .kit-promo-price {
+      color: #f69cb9;
+      font-size: 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+    }
+
+    .kit-saving {
+      color: var(--success);
+      font-size: 0.8rem;
+    }
+
+    .kit-card button {
+      margin-top: auto;
+      justify-content: center;
+    }
+
+    .kit-configurator {
+      margin-top: 1rem;
+      border-color: var(--pesadelo-pink);
+      scroll-margin-top: 10rem;
+    }
+
+    .kit-configurator[hidden],
+    .kit-configurator [hidden] {
+      display: none;
+    }
+
+    .kit-fields input,
+    .kit-fields select,
+    .kit-accessory-select {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .kit-composition {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1rem 0;
+    }
+
+    .kit-item-details {
+      display: block;
+      margin-top: 0.35rem;
+    }
+
+    .kit-cart-quantity {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .kit-cart-quantity input {
+      width: 5rem;
+      padding: 0.35rem;
+    }
+
+    @media (max-width: 600px) {
+      .kit-catalog,
+      .kit-fields {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .jersey-fields {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .jersey-fields input {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .customization-hint,
+    .item-personalization {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      overflow-wrap: anywhere;
+    }
+
+    .customization-error {
+      color: #fda4af;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 520px) {
+      .jersey-fields {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .order-summary-header,
+      .order-item-row {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .order-summary-total,
+      .order-item-price {
+        white-space: nowrap;
+      }
+
+      .order-item-info {
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+
+      .order-item-row > :last-child {
+        margin-left: auto;
+      }
     }
 
     /* BOTÃO ADICIONAR MAIS PRODUTOS */
@@ -2291,6 +2486,18 @@
       border-bottom: none;
     }
 
+    .confirm-items-table .confirm-kit-item {
+      width: 52%;
+      min-width: 12rem;
+      white-space: normal;
+      text-align: left;
+    }
+
+    .confirm-kit-item .kit-item-details {
+      white-space: normal;
+      text-align: left;
+    }
+
     .confirm-total-box {
       background: linear-gradient(135deg, rgba(152, 24, 68, 0.2) 0%, rgba(200, 70, 118, 0.08) 100%);
       border: 1px solid rgba(200, 70, 118, 0.35);
@@ -2631,28 +2838,36 @@
               <div class="form-group full">
                 <label>Produto Selecionado <span class="req">*</span></label>
                 <div class="product-tiles-grid">
-                  <div class="product-tile selected" onclick="selectProduct('Oversize', this)">
+                  <div class="product-tile selected" data-product="Oversize" onclick="selectProduct('Oversize', this)">
                     <span class="product-name">Oversize</span>
                     <span class="product-price">R$ 65,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Jersey', this)">
+                  <div class="product-tile" data-product="Jersey" onclick="selectProduct('Jersey', this)">
                     <span class="product-name">Jersey</span>
                     <span class="product-price">R$ 100,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Tube Top', this)">
+                  <div class="product-tile" data-product="Tube Top" onclick="selectProduct('Tube Top', this)">
                     <span class="product-name">Tube Top</span>
                     <span class="product-price">R$ 50,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Caneca', this)">
+                  <div class="product-tile" data-product="Caneca" onclick="selectProduct('Caneca', this)">
                     <span class="product-name">Caneca + Tirante</span>
                     <span class="product-price">R$ 45,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Corta Vento', this)">
-                    <span class="product-name">Corta Vento</span>
-                    <span class="product-price">R$ 165,00</span>
+                  <div class="product-tile" data-product="Caneca individual" onclick="selectProduct('Caneca individual', this)">
+                    <span class="product-name">Caneca individual</span>
+                    <span class="product-price">R$ 35,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Eco Bag', this)">
-                    <span class="product-name">Eco Bag</span>
+                  <div class="product-tile" data-product="Tirante individual" onclick="selectProduct('Tirante individual', this)">
+                    <span class="product-name">Tirante individual</span>
+                    <span class="product-price">R$ 15,00</span>
+                  </div>
+                  <div class="product-tile" data-product="Corta Vento" onclick="selectProduct('Corta Vento', this)">
+                    <span class="product-name">Corta Vento</span>
+                    <span class="product-price">R$ 180,00</span>
+                  </div>
+                  <div class="product-tile" data-product="Eco Bag" onclick="selectProduct('Eco Bag', this)">
+                    <span class="product-name">Ecobag</span>
                     <span class="product-price">R$ 35,00</span>
                   </div>
                 </div>
@@ -2685,6 +2900,24 @@
                 </div>
               </div>
 
+              <div class="form-group full jersey-customization" id="jerseyCustomization" hidden>
+                <div class="jersey-fields">
+                  <div class="form-group">
+                    <label for="f_jersey_nome">Nome na camisa</label>
+                    <input type="text" id="f_jersey_nome" maxlength="30" placeholder="Ex: ALESSANDRO"
+                      autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                  </div>
+                  <div class="form-group">
+                    <label for="f_jersey_numero">Número na camisa</label>
+                    <input type="text" id="f_jersey_numero" inputmode="numeric" maxlength="2" placeholder="Ex: 07"
+                      autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                  </div>
+                </div>
+                <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros à esquerda são mantidos.</p>
+                <p class="customization-hint" id="jerseyPreview" aria-live="polite"></p>
+                <p class="customization-error" id="jerseyError" role="alert" hidden></p>
+              </div>
+
               <!-- BOTÃO ADICIONAR AO CARRINHO E CARRINHO DE COMPRAS -->
               <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem;">
                 <div
@@ -2697,12 +2930,51 @@
                   </span>
                 </div>
 
+                <details class="kits-section" id="kitsSection" aria-labelledby="kitsTitle">
+                  <summary><h2 id="kitsTitle">Kits promocionais · ver opções</h2></summary>
+                  <p class="customization-hint">6 kits e 2 versões adicionais, com descontos próprios.</p>
+                  <p class="customization-hint">Escolha um kit, configure os tamanhos e adicione ao mesmo carrinho dos produtos avulsos.</p>
+                  <div class="kit-catalog" id="kitCatalog"></div>
+                  <div class="kit-configurator" id="kitConfigurator" hidden>
+                    <h3 id="kitConfigTitle"></h3>
+                    <div class="form-group" id="kitAccessoryGroup" style="margin-top: 1rem;">
+                      <label for="kitAccessorySelect">Acessórios do kit</label>
+                      <select class="kit-accessory-select" id="kitAccessorySelect" onchange="handleKitConfigChange()"></select>
+                    </div>
+                    <div class="kit-fields" id="kitSizeFields"></div>
+                    <div class="kit-fields" id="kitJerseyFields" hidden>
+                      <div class="form-group">
+                        <label for="kitJerseyName">Nome na Jersey do kit</label>
+                        <input type="text" id="kitJerseyName" maxlength="30" autocomplete="off" placeholder="Ex: ALESSANDRO"
+                          aria-describedby="kitJerseyHint kitError" oninput="handleKitConfigChange()" disabled>
+                      </div>
+                      <div class="form-group">
+                        <label for="kitJerseyNumber">Número na Jersey do kit</label>
+                        <input type="text" id="kitJerseyNumber" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="Ex: 07"
+                          aria-describedby="kitJerseyHint kitError" oninput="handleKitConfigChange()" disabled>
+                      </div>
+                      <p class="customization-hint" id="kitJerseyHint">Personalização opcional. Preencha nome e número juntos; zeros à esquerda são mantidos.</p>
+                    </div>
+                    <div class="kit-fields">
+                      <div class="form-group">
+                        <label for="kitQuantity">Quantidade de kits</label>
+                        <input type="number" id="kitQuantity" min="1" max="50" value="1" oninput="handleKitConfigChange()">
+                      </div>
+                      <div class="form-group" aria-live="polite" id="kitPriceSummary"></div>
+                    </div>
+                    <div class="kit-composition" id="kitComposition" aria-live="polite"></div>
+                    <p class="customization-error" id="kitError" role="alert" hidden></p>
+                    <button type="button" class="btn-add-item" onclick="addKitToOrder()">Adicionar kit ao carrinho</button>
+                    <p class="customization-hint" style="margin-top: 0.5rem;">Configure e adicione cada kit separadamente quando os tamanhos ou a personalização forem diferentes.</p>
+                  </div>
+                </details>
+
                 <!-- CARD DO CARRINHO DE COMPRAS -->
                 <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
                   <div class="order-summary-header">
                     <div class="order-summary-title">
-                      <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i> Carrinho de Compras
-                      (<span id="cartItemsCount">0</span>)
+                      <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i>
+                      <span>Carrinho de Compras (<span id="cartItemsCount">0</span>)</span>
                     </div>
                     <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
                   </div>
@@ -2970,13 +3242,19 @@
           Tube Top <span class="sub-tab-count" id="count-Tube Top">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Caneca', this)">
-          Canecas <span class="sub-tab-count" id="count-Caneca">0</span>
+          Caneca + Tirante <span class="sub-tab-count" id="count-Caneca">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Caneca individual', this)">
+          Canecas individuais <span class="sub-tab-count" id="count-Caneca individual">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Tirante individual', this)">
+          Tirantes individuais <span class="sub-tab-count" id="count-Tirante individual">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Corta Vento', this)">
           Corta Vento <span class="sub-tab-count" id="count-Corta Vento">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Eco Bag', this)">
-          Eco Bag <span class="sub-tab-count" id="count-Eco Bag">0</span>
+          Ecobag <span class="sub-tab-count" id="count-Eco Bag">0</span>
         </button>
         <button class="sub-tab-btn active" id="btnTabTodas" onclick="switchSubTab('todas', this)">
           Todas as Respostas <span class="sub-tab-count" id="count-todas">0</span>
@@ -3201,8 +3479,11 @@
       "Jersey": 100,
       "Tube Top": 50,
       "Oversize": 65,
+      // Identificador histórico do combo: não reutilizar para a caneca avulsa.
       "Caneca": 45,
-      "Corta Vento": 165,
+      "Caneca individual": 35,
+      "Tirante individual": 15,
+      "Corta Vento": 180,
       "Eco Bag": 35
     };
 
@@ -3211,9 +3492,212 @@
       "Tube Top": "Tube Top",
       "Oversize": "Oversize",
       "Caneca": "Caneca + Tirante",
+      "Caneca individual": "Caneca individual",
+      "Tirante individual": "Tirante individual",
       "Corta Vento": "Corta Vento",
-      "Eco Bag": "Eco Bag"
+      "Eco Bag": "Ecobag"
     };
+
+    const PRODUTOS_SEM_TAMANHO = ["Caneca", "Caneca individual", "Tirante individual", "Eco Bag"];
+    const TAMANHOS_PRODUTOS = {};
+    const kitDrafts = {};
+    let selectedKitId = null;
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function getPersonalizationText(item) {
+      if (item.produto !== "Jersey" || (!item.nomeCamisa && !item.numeroCamisa)) return "";
+      return `Nome: ${item.nomeCamisa}; Número: ${item.numeroCamisa}`;
+    }
+
+    function describeOrderItem(item) {
+      if (item.tipo === "kit") return PesadeloKits.describeItem(item, describeOrderItem, formatCurrency);
+      const customization = getPersonalizationText(item);
+      return `${NOMES_PRODUTOS[item.produto] || item.produto} (${item.tamanho}) x${item.quantidade}${customization ? ` [${customization}]` : ""}`;
+    }
+
+    // O backend existente guarda a descrição integral em Produto, mas não devolve itens.
+    // Leia essa descrição sem alterar pedidos antigos nem a estrutura da planilha.
+    function getOrderItems(order) {
+      if (!order) return [];
+      let items = order.itens;
+      if (typeof items === "string") {
+        try { items = JSON.parse(items); } catch (_) { items = null; }
+      }
+      if (Array.isArray(items) && items.length > 0) return PesadeloKits.expandItems(items);
+      const parsed = PesadeloKits.extractDescriptions(String(order.produto || "").trim(), parseOrderProducts);
+      return [...parsed.items, ...parseOrderProducts(parsed.remainder, order)];
+    }
+
+    function parseOrderProducts(text, order = {}) {
+      const aliases = new Map();
+      Object.keys(PRECOS_PRODUTOS).forEach(key => {
+        aliases.set(key.toLowerCase(), key);
+        aliases.set(NOMES_PRODUTOS[key].toLowerCase(), key);
+      });
+      const names = [...aliases.keys()].sort((a, b) => b.length - a.length)
+        .map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      const pattern = new RegExp(
+        "(?:^|\\s+\\+\\s+)(?:Camisa\\s+)?(" + names.join("|") + ")" +
+        "(?:\\s*\\(([^)]+)\\))?(?:\\s*x(\\d+))?" +
+        "(?:\\s*\\[Nome: ([^;\\]]+); Número: (\\d{1,2})\\])?(?=\\s+\\+\\s+|$)", "gi"
+      );
+      const matches = [...text.trim().matchAll(pattern)];
+      return matches.map(match => {
+        const produto = aliases.get(match[1].toLowerCase());
+        const quantity = Number.parseInt(match[3] || (matches.length === 1 ? order.quantidade : 1), 10);
+        const quantidade = Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
+        const unitPrice = PRECOS_PRODUTOS[produto];
+        return {
+          produto,
+          tamanho: match[2] || (PRODUTOS_SEM_TAMANHO.includes(produto) ? "-" : order.tamanho || "-"),
+          quantidade, unitPrice, subtotal: unitPrice * quantidade,
+          ...(match[4] ? { nomeCamisa: match[4], numeroCamisa: match[5] } : {})
+        };
+      });
+    }
+
+    function orderHasProduct(order, product) {
+      return getOrderItems(order).some(item => item.produto === product);
+    }
+
+    function refreshCatalogPrices() {
+      document.querySelectorAll(".product-tile[data-product]").forEach(tile => {
+        tile.querySelector(".product-price").textContent = formatCurrency(PRECOS_PRODUTOS[tile.dataset.product]);
+      });
+    }
+
+    function kitSizeId(product) {
+      return "kitSize-" + product.replace(/\s/g, "");
+    }
+
+    function renderKitCatalog() {
+      document.getElementById("kitCatalog").innerHTML = Object.entries(PesadeloKits.definitions).map(([id, definition]) => {
+        const base = PesadeloKits.createItem(id, {}, PRECOS_PRODUTOS);
+        const additional = definition.ambos ? PesadeloKits.createItem(id, { acessorio: "ambos" }, PRECOS_PRODUTOS) : null;
+        return `<article class="kit-card" data-kit="${id}">
+          <div class="kit-card-heading"><img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" loading="lazy"><h3>${definition.nome}</h3></div>
+          <p>${escapeHtml(definition.descricao)}</p>
+          <p>Avulsos: <s>${formatCurrency(base.valorAvulso)}</s></p>
+          <div class="kit-promo-price">${formatCurrency(base.unitPrice)}</div>
+          <div class="kit-saving">Economize ${formatCurrency(base.economia)}</div>
+          ${additional ? `<p>Com Ecobag + Caneca: <strong>${formatCurrency(additional.unitPrice)}</strong> (+ R$ 30,00). Avulsos: ${formatCurrency(additional.valorAvulso)} · Economia: ${formatCurrency(additional.economia)}.</p>` : ""}
+          <button type="button" class="btn-add-item" onclick="configureKit('${id}')">Configurar ${definition.nome}</button>
+        </article>`;
+      }).join("");
+    }
+
+    function readKitOptions() {
+      const definition = PesadeloKits.definitions[selectedKitId];
+      const tamanhos = {};
+      definition.roupas.forEach(product => { tamanhos[product] = document.getElementById(kitSizeId(product)).value; });
+      return {
+        acessorio: definition.escolha ? document.getElementById("kitAccessorySelect").value : "",
+        tamanhos, quantidade: document.getElementById("kitQuantity").value,
+        nomeCamisa: definition.roupas.includes("Jersey") ? document.getElementById("kitJerseyName").value : "",
+        numeroCamisa: definition.roupas.includes("Jersey") ? document.getElementById("kitJerseyNumber").value : ""
+      };
+    }
+
+    function configureKit(id) {
+      if (selectedKitId) kitDrafts[selectedKitId] = readKitOptions();
+      const definition = PesadeloKits.definitions[id];
+      if (!definition) return;
+      selectedKitId = id;
+      const draft = kitDrafts[id] || {};
+      document.getElementById("kitsSection").open = true;
+      document.getElementById("kitConfigurator").hidden = false;
+      document.getElementById("kitConfigTitle").textContent = definition.nome;
+      document.getElementById("kitAccessoryGroup").hidden = !definition.escolha;
+      document.getElementById("kitAccessorySelect").innerHTML = '<option value="Eco Bag">Ecobag</option><option value="Caneca individual">Caneca</option>' +
+        (definition.ambos ? '<option value="ambos">Ecobag + Caneca (+ R$ 30,00)</option>' : "");
+      document.getElementById("kitAccessorySelect").value = draft.acessorio || "Eco Bag";
+      document.getElementById("kitSizeFields").innerHTML = definition.roupas.map(product => `
+        <div class="form-group"><label for="${kitSizeId(product)}">Tamanho · ${escapeHtml(NOMES_PRODUTOS[product])}</label>
+          <select id="${kitSizeId(product)}" onchange="handleKitConfigChange()">${PesadeloKits.sizes.map(size => `<option value="${size}">${size}</option>`).join("")}</select>
+        </div>`).join("");
+      definition.roupas.forEach(product => { document.getElementById(kitSizeId(product)).value = draft.tamanhos?.[product] || "M"; });
+      const hasJersey = definition.roupas.includes("Jersey");
+      document.getElementById("kitJerseyFields").hidden = !hasJersey;
+      document.getElementById("kitJerseyName").disabled = !hasJersey;
+      document.getElementById("kitJerseyNumber").disabled = !hasJersey;
+      document.getElementById("kitJerseyName").value = draft.nomeCamisa || "";
+      document.getElementById("kitJerseyNumber").value = draft.numeroCamisa || "";
+      document.getElementById("kitQuantity").value = draft.quantidade || 1;
+      handleKitConfigChange();
+      document.getElementById("kitConfigurator").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function renderKitItemDetails(item) {
+      return item.componentes.map(component => `<span class="kit-item-details">${escapeHtml(describeOrderItem(component))} · ${formatCurrency(component.unitPrice)} por kit</span>`).join("");
+    }
+
+    function handleKitConfigChange() {
+      if (!selectedKitId) return;
+      const options = readKitOptions();
+      kitDrafts[selectedKitId] = options;
+      const error = document.getElementById("kitError");
+      error.hidden = true;
+      // O preço independe do texto da personalização: o rascunho é validado ao adicionar.
+      try {
+        const item = PesadeloKits.createItem(selectedKitId, { ...options, nomeCamisa: "", numeroCamisa: "" }, PRECOS_PRODUTOS);
+        document.getElementById("kitPriceSummary").innerHTML = `<span>Avulsos por kit: <s>${formatCurrency(item.valorAvulso)}</s></span>
+          <strong class="kit-promo-price">${formatCurrency(item.unitPrice)} por kit</strong>
+          <span class="kit-saving">Economize ${formatCurrency(item.economia)} por kit</span><strong>Subtotal: ${formatCurrency(item.subtotal)}</strong>`;
+        const jersey = item.componentes.find(component => component.produto === "Jersey");
+        if (jersey) Object.assign(jersey, { nomeCamisa: options.nomeCamisa, numeroCamisa: options.numeroCamisa });
+        document.getElementById("kitComposition").innerHTML = renderKitItemDetails(item);
+      } catch (err) {
+        document.getElementById("kitPriceSummary").textContent = "Confira as opções do kit.";
+        error.textContent = err.message;
+        error.hidden = false;
+      }
+    }
+
+    function addKitToOrder() {
+      if (!selectedKitId) return;
+      try {
+        const item = PesadeloKits.createItem(selectedKitId, readKitOptions(), PRECOS_PRODUTOS);
+        const signature = value => JSON.stringify([value.kitId, value.acessorio, value.componentes]);
+        const existing = orderCart.find(other => other.tipo === "kit" && signature(other) === signature(item));
+        if (existing) {
+          if (existing.quantidade + item.quantidade > 50) throw new Error("O limite é de 50 kits por configuração.");
+          existing.quantidade += item.quantidade;
+          existing.subtotal = Math.round(existing.unitPrice * 100) * existing.quantidade / 100;
+        } else {
+          orderCart.push(item);
+        }
+        updateOrderTotals();
+        showToast(`${item.produto} adicionado ao carrinho!`);
+      } catch (err) {
+        const error = document.getElementById("kitError");
+        error.textContent = err.message;
+        error.hidden = false;
+        error.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+
+    function changeKitQuantity(index, value) {
+      const item = orderCart[index];
+      if (!item || item.tipo !== "kit") return;
+      const quantity = Number(value);
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 50) {
+        showToast("Informe de 1 a 50 kits.");
+        renderCartSummary();
+        return;
+      }
+      item.quantidade = quantity;
+      item.subtotal = Math.round(item.unitPrice * 100) * quantity / 100;
+      updateOrderTotals();
+    }
+
+    function itemPieceCount(item) {
+      return getOrderItems({ itens: [item] }).reduce((sum, component) => sum + Number(component.quantidade || 1), 0);
+    }
 
     // CARRINHO MULTI-PRODUTOS
     let orderCart = [];
@@ -3249,51 +3733,13 @@
         if (!isNaN(parsed) && parsed > 0) return parsed;
       }
 
-      // 4. Se tiver array de itens no carrinho
-      let itemsList = order.itens;
-      if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
-        try { itemsList = JSON.parse(itemsList); } catch (e) { }
-      }
-      if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
-        let sum = 0;
-        itemsList.forEach(item => {
-          const unitP = (item.unitPrice !== undefined && item.unitPrice > 0) ? item.unitPrice : (PRECOS_PRODUTOS[item.produto] || 0);
-          const q = parseInt(item.quantidade || 1, 10);
-          sum += unitP * (isNaN(q) || q < 1 ? 1 : q);
-        });
-        if (sum > 0) return sum;
-      }
-
-      // 5. Se o produto bate direto com a tabela oficial de preços
-      if (order.produto && typeof order.produto === "string") {
-        const pTrim = order.produto.trim();
-        if (PRECOS_PRODUTOS[pTrim] !== undefined && PRECOS_PRODUTOS[pTrim] > 0) {
-          const q = parseInt(order.quantidade || 1, 10);
-          return PRECOS_PRODUTOS[pTrim] * (isNaN(q) || q < 1 ? 1 : q);
-        }
-
-        // 6. Varre todos os produtos conhecidos dentro da string do produto (ex: "Corta Vento (M) x1 + Oversize (M) x1" ou "Camisa Oversize (G)")
-        let sum = 0;
-        let matchedAny = false;
-        Object.keys(PRECOS_PRODUTOS).forEach(prodName => {
-          const price = PRECOS_PRODUTOS[prodName];
-          if (price > 0 && order.produto.toLowerCase().includes(prodName.toLowerCase())) {
-            matchedAny = true;
-            const reg = new RegExp(prodName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "[^\\+]*x(\\d+)", "i");
-            const match = order.produto.match(reg);
-            let q = 1;
-            if (match) {
-              q = parseInt(match[1], 10);
-            } else if (!order.produto.includes("+")) {
-              q = parseInt(order.quantidade || 1, 10);
-            }
-            sum += price * (isNaN(q) || q < 1 ? 1 : q);
-          }
-        });
-        if (matchedAny && sum > 0) return sum;
-      }
-
-      return 0;
+      // Fallback apenas quando não há total registrado. A identificação exata
+      // distingue o combo histórico dos avulsos e soma produtos repetidos.
+      return getOrderItems(order).reduce((sum, item) => {
+        const unitPrice = item.unitPrice > 0 ? item.unitPrice : (PRECOS_PRODUTOS[item.produto] || 0);
+        const quantity = parseInt(item.quantidade || 1, 10);
+        return sum + unitPrice * (isNaN(quantity) || quantity < 1 ? 1 : quantity);
+      }, 0);
     }
 
     // RESOLVE O VALOR A EXIBIR PARA O PEDIDO EM QUALQUER ABA
@@ -3302,34 +3748,16 @@
 
       // 1. Se estiver numa aba de produto específico (ex: "Oversize", "Jersey", "Corta Vento", etc.)
       if (tab && tab !== "todas" && tab !== "ranking") {
-        const prodPrice = PRECOS_PRODUTOS[tab] !== undefined ? PRECOS_PRODUTOS[tab] : 0;
-
-        // Verifica itens do carrinho
-        let itemsList = order.itens;
-        if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
-          try { itemsList = JSON.parse(itemsList); } catch (e) { }
-        }
-        if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
-          const matching = itemsList.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
-          if (matching.length > 0) {
-            let sumTab = 0;
-            matching.forEach(m => {
-              const q = parseInt(m.quantidade || 1, 10);
-              sumTab += (m.unitPrice !== undefined && m.unitPrice > 0 ? m.unitPrice : prodPrice) * (isNaN(q) || q < 1 ? 1 : q);
-            });
-            if (sumTab > 0) return formatCurrency(sumTab);
-          }
-        }
-
-        // Se o produto geral contém o nome da aba
-        if (order.produto && order.produto.includes(tab)) {
-          if (prodPrice > 0) {
-            const reg = new RegExp(tab.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "[^\\+]*x(\\d+)", "i");
-            const match = order.produto.match(reg);
-            const q = match ? parseInt(match[1], 10) : (order.produto.includes("+") ? 1 : parseInt(order.quantidade || 1, 10));
-            return formatCurrency(prodPrice * (isNaN(q) || q < 1 ? 1 : q));
-          }
-        }
+        const items = getOrderItems(order);
+        const matching = items.filter(item => item.produto === tab);
+        if (matching.length === 0) return "A definir";
+        // Um pedido inteiro desse produto mantém o total histórico registrado.
+        if (matching.length === items.length) return formatCurrency(getOrderNumericValue(order));
+        const sumTab = matching.reduce((sum, item) => {
+          const quantity = parseInt(item.quantidade || 1, 10);
+          return sum + (item.unitPrice > 0 ? item.unitPrice : PRECOS_PRODUTOS[tab] || 0) * (isNaN(quantity) || quantity < 1 ? 1 : quantity);
+        }, 0);
+        return sumTab > 0 ? formatCurrency(sumTab) : "A definir";
       }
 
       // 2. Aba "Todas as Respostas" (Geral)
@@ -3375,11 +3803,40 @@
       if (isNaN(qtd) || qtd < 1) qtd = 1;
       const unitPrice = PRECOS_PRODUTOS[prod] !== undefined ? PRECOS_PRODUTOS[prod] : 0;
       const subtotal = unitPrice * qtd;
-      return { produto: prod, tamanho: tam, quantidade: qtd, unitPrice: unitPrice, subtotal: subtotal };
+      const personalization = prod === "Jersey" ? {
+        nomeCamisa: document.getElementById("f_jersey_nome").value.normalize("NFC").trim().replace(/\s+/g, " "),
+        numeroCamisa: document.getElementById("f_jersey_numero").value.trim()
+      } : {};
+      return { produto: prod, tamanho: tam, quantidade: qtd, unitPrice: unitPrice, subtotal: subtotal, ...personalization };
+    }
+
+    function handleJerseyCustomizationChange() {
+      document.getElementById("jerseyError").hidden = true;
+      document.getElementById("f_jersey_nome").removeAttribute("aria-invalid");
+      document.getElementById("f_jersey_numero").removeAttribute("aria-invalid");
+      updateOrderTotals();
+    }
+
+    function validateJerseyCustomization(item) {
+      if (item.produto !== "Jersey") return true;
+      const name = item.nomeCamisa || "";
+      const number = item.numeroCamisa || "";
+      const validation = PesadeloKits.jerseyError(name, number);
+      if (!validation) return true;
+      const error = document.getElementById("jerseyError");
+      error.textContent = validation.message;
+      error.hidden = false;
+      const input = document.getElementById("f_jersey_" + validation.field);
+      input.setAttribute("aria-invalid", "true");
+      input.focus();
+      return false;
     }
 
     function updateOrderTotals() {
       const current = getCurrentFormItem();
+      if (current.produto === "Jersey") {
+        document.getElementById("jerseyPreview").textContent = `Jersey • Tamanho ${current.tamanho} • ${getPersonalizationText(current) || "Sem personalização"}`;
+      }
 
       // Atualiza badge de subtotal do item atualmente sendo configurado
       const subBadge = document.getElementById("currentItemSubtotalBadge");
@@ -3409,7 +3866,7 @@
 
       if (orderCart.length > 0) {
         orderCart.forEach(item => {
-          totalPieces += item.quantidade;
+          totalPieces += itemPieceCount(item);
           totalMoney += item.subtotal;
           if (item.unitPrice === 0) hasTbd = true;
         });
@@ -3453,9 +3910,11 @@
 
     function addItemToOrder() {
       const current = getCurrentFormItem();
+      if (!validateJerseyCustomization(current)) return;
 
-      // Verifica se o mesmo produto e tamanho já está no carrinho
-      const existing = orderCart.find(i => i.produto === current.produto && i.tamanho === current.tamanho);
+      // Jerseys diferentes não podem compartilhar a mesma linha do carrinho.
+      const existing = orderCart.find(i => i.produto === current.produto && i.tamanho === current.tamanho &&
+        (i.nomeCamisa || "") === (current.nomeCamisa || "") && (i.numeroCamisa || "") === (current.numeroCamisa || ""));
       if (existing) {
         existing.quantidade += current.quantidade;
         existing.subtotal = existing.unitPrice * existing.quantidade;
@@ -3513,7 +3972,10 @@
         row.innerHTML = `
           <div class="order-item-info">
             <span class="order-item-badge">${item.quantidade}x</span>
-            <span><strong>${NOMES_PRODUTOS[item.produto] || item.produto}</strong> ${item.tamanho !== '-' ? '(' + item.tamanho + ')' : ''}</span>
+            <span><strong>${escapeHtml(NOMES_PRODUTOS[item.produto] || item.produto)}</strong> ${item.tamanho !== '-' ? '(' + escapeHtml(item.tamanho) + ')' : ''}
+              ${getPersonalizationText(item) ? `<small class="item-personalization">${escapeHtml(getPersonalizationText(item))}</small>` : ''}
+              ${item.tipo === 'kit' ? renderKitItemDetails(item) + `<label class="kit-cart-quantity">Quantidade de kits<input type="number" min="1" max="50" value="${item.quantidade}" aria-label="Quantidade de ${escapeHtml(item.produto)}" onchange="changeKitQuantity(${idx}, this.value)"></label>` : ''}
+            </span>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="order-item-price">${priceStr}</span>
@@ -3855,6 +4317,8 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       applyAuthState();
+      refreshCatalogPrices();
+      renderKitCatalog();
       renderComissariosDropdown();
       saveAndRefresh();
       updateOrderTotals();
@@ -4037,7 +4501,7 @@
     function updateDeliveryCounters() {
       let baseOrders = orders;
       if (currentTab !== "todas" && currentTab !== "ranking") {
-        baseOrders = orders.filter(o => o.produto && (o.produto === currentTab || o.produto.includes(currentTab)));
+        baseOrders = orders.filter(o => orderHasProduct(o, currentTab));
       }
       const total = baseOrders.length;
       const delivered = baseOrders.filter(o => o.statusEntrega === "Entregue").length;
@@ -4055,66 +4519,23 @@
     // RESOLVE O TAMANHO CORRETO PARA A ABA ESPECÍFICA OU GERAL
     function getOrderSizeForTab(order, tab) {
       if (!order) return "-";
-
-      function extractSizeForProduct(text, prodName) {
-        if (!text) return null;
-        const escaped = prodName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const reg = new RegExp(escaped + "\\s*\\(([^)]+)\\)", "i");
-        const m = text.match(reg);
-        return m ? m[1].trim() : null;
-      }
-
-      // 1. ABA DE PRODUTO ESPECÍFICO (ex: Corta Vento, Oversize, Jersey...)
+      let items = getOrderItems(order);
       if (tab && tab !== "todas" && tab !== "ranking") {
-        if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
-          const matching = order.itens.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
-          if (matching.length > 0) {
-            const sizes = matching.map(i => i.tamanho).filter(t => t && t !== "-");
-            const unique = [...new Set(sizes)];
-            return unique.length > 0 ? unique.join(", ") : "-";
-          }
-        }
-        const extracted = extractSizeForProduct(order.produto, tab);
-        if (extracted) return extracted;
-        if (order.tamanho && order.tamanho !== "Múltiplos") return order.tamanho;
-        return "-";
+        items = items.filter(item => item.produto === tab);
       }
-
-      // 2. ABA GERAL ("todas")
-      if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
-        const sizes = order.itens.map(i => i.tamanho).filter(t => t && t !== "-");
-        const unique = [...new Set(sizes)];
-        if (unique.length === 1) return unique[0];
-        if (unique.length > 1) return unique.join(", ");
-        return "-";
+      if (items.length > 0) {
+        const sizes = items.map(item => item.tamanho).filter(size => size && size !== "-");
+        return [...new Set(sizes)].join(", ") || "-";
       }
-
-      if (order.tamanho === "Múltiplos" || !order.tamanho) {
-        const matches = [...(order.produto || "").matchAll(/\(([^)]+)\)/g)];
-        if (matches.length > 0) {
-          const extracted = [...new Set(matches.map(m => m[1].trim()))];
-          if (extracted.length === 1) return extracted[0];
-          return extracted.join(", ");
-        }
-      }
-
-      return order.tamanho || "-";
+      return order.tamanho && order.tamanho !== "Múltiplos" ? order.tamanho : "-";
     }
 
     // RESOLVE O PRODUTO CORRETO PARA A ABA ESPECÍFICA
     function getOrderProductForTab(order, tab) {
       if (!order) return "";
       if (tab && tab !== "todas" && tab !== "ranking") {
-        if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
-          const matching = order.itens.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
-          if (matching.length > 0) {
-            return matching.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}) x${i.quantidade}`).join(" + ");
-          }
-        }
-        const escaped = tab.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const reg = new RegExp(escaped + "[^\\+]*", "i");
-        const m = (order.produto || "").match(reg);
-        if (m) return m[0].trim();
+        const matching = getOrderItems(order).filter(item => item.produto === tab);
+        if (matching.length > 0) return matching.map(item => describeOrderItem(item) + (item.kitNome ? ` — ${item.kitNome}` : "")).join(" + ");
       }
       return order.produto || "";
     }
@@ -4150,9 +4571,9 @@
       const countCom = document.getElementById("count-comissarios");
       if (countCom) countCom.innerText = comissarios.length;
 
-      const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
+      const prods = Object.keys(PRECOS_PRODUTOS);
       prods.forEach(p => {
-        const c = orders.filter(o => o.produto && (o.produto === p || o.produto.includes(p))).length;
+        const c = orders.filter(o => orderHasProduct(o, p)).length;
         const el = document.getElementById("count-" + p);
         if (el) el.innerText = c;
       });
@@ -4165,7 +4586,7 @@
 
       let filtered = orders;
       if (currentTab !== "todas" && currentTab !== "ranking") {
-        filtered = orders.filter(o => o.produto && (o.produto === currentTab || o.produto.includes(currentTab)));
+        filtered = orders.filter(o => orderHasProduct(o, currentTab));
       }
 
       updateDeliveryCounters();
@@ -4227,8 +4648,8 @@
           <td><strong>${o.nome}</strong></td>
           <td><small style="color: var(--text-secondary);">${o.cpf}</small></td>
           <td>${o.comissario}</td>
-          <td><strong>${prodExibido}</strong></td>
-          <td><span class="size-badge-display">${tamExibido}</span></td>
+          <td><strong>${escapeHtml(prodExibido)}</strong></td>
+          <td><span class="size-badge-display">${escapeHtml(tamExibido)}</span></td>
           <td><span class="val-total-badge">${valExibido}</span></td>
           <td>
             <span class="status-badge ${o.statusPagamento === 'Confirmado' ? 'status-pago' : 'status-pendente'}" onclick="togglePagamento(${o.id})">
@@ -4455,20 +4876,29 @@
 
     // PRODUTO / TAMANHO
     function selectProduct(prod, el) {
+      const selectedProduct = document.getElementById("f_produto");
+      const sizeInput = document.getElementById("f_tamanho");
+      if (!PRODUTOS_SEM_TAMANHO.includes(selectedProduct.value)) {
+        TAMANHOS_PRODUTOS[selectedProduct.value] = sizeInput.value;
+      }
       document.querySelectorAll(".product-tile").forEach(c => c.classList.remove("selected"));
       el.classList.add("selected");
-      document.getElementById("f_produto").value = prod;
+      selectedProduct.value = prod;
 
       const sizeContainer = document.getElementById("sizeGroupContainer");
-      if (prod === "Caneca" || prod === "Eco Bag") {
+      if (PRODUTOS_SEM_TAMANHO.includes(prod)) {
         sizeContainer.style.display = "none";
-        document.getElementById("f_tamanho").value = "-";
+        sizeInput.value = "-";
       } else {
         sizeContainer.style.display = "flex";
-        if (document.getElementById("f_tamanho").value === "-") {
-          document.getElementById("f_tamanho").value = "M";
-        }
+        sizeInput.value = TAMANHOS_PRODUTOS[prod] || "M";
+        document.querySelectorAll(".size-btn").forEach(button => {
+          button.classList.toggle("selected", button.innerText.trim() === sizeInput.value);
+        });
       }
+      document.getElementById("jerseyCustomization").hidden = prod !== "Jersey";
+      document.getElementById("f_jersey_nome").disabled = prod !== "Jersey";
+      document.getElementById("f_jersey_numero").disabled = prod !== "Jersey";
       if (typeof updateOrderTotals === "function") {
         updateOrderTotals();
       }
@@ -4681,14 +5111,15 @@
 
       // Se houver produtos no carrinho, usa o carrinho. Se não, usa o produto atual selecionado no form.
       const currentItem = getCurrentFormItem();
-      const allItems = orderCart.length > 0 ? [...orderCart] : [currentItem];
+      if (orderCart.length === 0 && !validateJerseyCustomization(currentItem)) return;
+      const allItems = orderCart.length > 0 ? JSON.parse(JSON.stringify(orderCart)) : [currentItem];
 
       let totalQtd = 0;
       let totalValor = 0;
       let hasTbd = false;
 
       allItems.forEach(i => {
-        totalQtd += i.quantidade;
+        totalQtd += itemPieceCount(i);
         totalValor += i.subtotal;
         if (i.unitPrice === 0) hasTbd = true;
       });
@@ -4696,11 +5127,13 @@
       let produtoDescricao = "";
       let tamanhoDescricao = "";
       if (allItems.length === 1) {
-        produtoDescricao = allItems[0].produto;
+        // Preserve o formato antigo dos pedidos simples e use a descrição completa
+        // quando houver personalização, pois o backend não armazena o array itens.
+        produtoDescricao = allItems[0].tipo === "kit" || getPersonalizationText(allItems[0]) ? describeOrderItem(allItems[0]) : allItems[0].produto;
         tamanhoDescricao = allItems[0].tamanho;
       } else {
-        produtoDescricao = allItems.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}) x${i.quantidade}`).join(" + ");
-        const sizes = allItems.map(i => i.tamanho).filter(t => t && t !== "-");
+        produtoDescricao = allItems.map(describeOrderItem).join(" + ");
+        const sizes = getOrderItems({ itens: allItems }).map(i => i.tamanho).filter(t => t && t !== "-");
         const uniqueSizes = [...new Set(sizes)];
         if (uniqueSizes.length === 1) {
           tamanhoDescricao = uniqueSizes[0];
@@ -4754,14 +5187,16 @@
         const tr = document.createElement("tr");
         const priceTxt = item.unitPrice > 0 ? formatCurrency(item.subtotal) : '<span style="color: var(--text-muted); font-size: 0.8rem;">A definir</span>';
         tr.innerHTML = `
-          <td>
-            <strong style="color: #fff;">${NOMES_PRODUTOS[item.produto] || item.produto}</strong>
+          <td class="${item.tipo === 'kit' ? 'confirm-kit-item' : ''}">
+            <strong style="color: #fff;">${escapeHtml(NOMES_PRODUTOS[item.produto] || item.produto)}</strong>
+            ${getPersonalizationText(item) ? `<small class="item-personalization">${escapeHtml(getPersonalizationText(item))}</small>` : ''}
+            ${item.tipo === 'kit' ? renderKitItemDetails(item) : ''}
           </td>
           <td style="text-align: center;">
-            <span class="size-badge-display">${item.tamanho}</span>
+            <span class="size-badge-display">${escapeHtml(item.tamanho)}</span>
           </td>
           <td style="text-align: center; font-weight: 700; color: #fff;">
-            ${item.quantidade}x
+            ${item.quantidade}x${item.tipo === 'kit' ? ' kit' : ''}
           </td>
           <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #f69cb9;">
             ${priceTxt}
@@ -4927,6 +5362,26 @@
       if (fQtd) fQtd.value = "1";
       const fFile = document.getElementById("f_comprovante_file");
       if (fFile) fFile.value = "";
+      document.getElementById("f_jersey_nome").value = "";
+      document.getElementById("f_jersey_numero").value = "";
+      document.getElementById("f_jersey_nome").disabled = true;
+      document.getElementById("f_jersey_numero").disabled = true;
+      document.getElementById("f_jersey_nome").removeAttribute("aria-invalid");
+      document.getElementById("f_jersey_numero").removeAttribute("aria-invalid");
+      document.getElementById("jerseyCustomization").hidden = true;
+      document.getElementById("jerseyError").hidden = true;
+      document.getElementById("jerseyPreview").textContent = "";
+      Object.keys(TAMANHOS_PRODUTOS).forEach(product => delete TAMANHOS_PRODUTOS[product]);
+      Object.keys(kitDrafts).forEach(id => delete kitDrafts[id]);
+      selectedKitId = null;
+      document.getElementById("kitConfigurator").hidden = true;
+      document.getElementById("kitsSection").open = false;
+      document.getElementById("kitJerseyName").value = "";
+      document.getElementById("kitJerseyNumber").value = "";
+      document.getElementById("kitJerseyName").disabled = true;
+      document.getElementById("kitJerseyNumber").disabled = true;
+      document.getElementById("kitQuantity").value = 1;
+      document.getElementById("kitError").hidden = true;
 
       // Limpa dados de upload, carrinho e pedido pendente
       currentUploadedFile = null;
@@ -5014,12 +5469,12 @@
       const wsGeral = XLSX.utils.aoa_to_sheet(wsGeralData);
       XLSX.utils.book_append_sheet(wb, wsGeral, "Todas as Respostas");
 
-      const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
+      const prods = Object.keys(PRECOS_PRODUTOS);
       prods.forEach(p => {
         const prodData = [
           ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
         ];
-        orders.filter(o => o.produto && (o.produto === p || o.produto.includes(p))).forEach(o => {
+        orders.filter(o => orderHasProduct(o, p)).forEach(o => {
           const tam = getOrderSizeForTab(o, p);
           const prodDesc = getOrderProductForTab(o, p);
           prodData.push([

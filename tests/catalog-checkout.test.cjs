@@ -103,6 +103,7 @@ function createFrontend() {
       writeFile: (book, filename) => { exported = { book: clone(book), filename }; }
     }
   });
+  vm.runInContext(readFileSync(path.join(projectDir, 'assets/kits.js'), 'utf8'), context, { filename: 'assets/kits.js', timeout: 1000 });
   vm.runInContext(frontendSource, context, { filename: 'index.html:inline', timeout: 1000 });
   element('f_produto').value = 'Oversize';
   element('f_tamanho').value = 'M';
@@ -205,6 +206,19 @@ function createMemoryBackend() {
     get: () => JSON.parse(context.doGet({}).content),
     rows, appended: () => appended, files: () => files
   };
+}
+
+function addKit(app, id, options = {}) {
+  app.context.configureKit(id);
+  if (options.acessorio) app.element('kitAccessorySelect').value = options.acessorio;
+  for (const [product, size] of Object.entries(options.tamanhos || {})) {
+    app.element(app.context.kitSizeId(product)).value = size;
+  }
+  app.element('kitJerseyName').value = options.nomeCamisa || '';
+  app.element('kitJerseyNumber').value = options.numeroCamisa || '';
+  app.element('kitQuantity').value = String(options.quantidade ?? 1);
+  app.context.handleKitConfigChange();
+  app.context.addKitToOrder();
 }
 
 test('Cart prices remain consistent through checkout and the unchanged backend', async (t) => {
@@ -475,4 +489,225 @@ test('Final confirmation hands the personalized order to the existing sender and
   assert.equal(app.element('jerseyCustomization').hidden, true);
   assert.equal(app.element('f_jersey_nome').disabled, true);
   assert.equal(app.networkAttempts(), 0);
+});
+
+test('All kit options use their exact compositions and fixed discounts through the unchanged backend', async t => {
+  const scenarios = [
+    ['Campus / Ecobag', 'campus', 'Eco Bag', 95, 100, [['Oversize', 65], ['Eco Bag', 30]]],
+    ['Campus / Caneca', 'campus', 'Caneca individual', 95, 100, [['Oversize', 65], ['Caneca individual', 30]]],
+    ['Look Tube / Ecobag', 'look-tube', 'Eco Bag', 90, 100, [['Tube Top', 50], ['Eco Bag', 30], ['Tirante individual', 10]]],
+    ['Look Tube / Caneca', 'look-tube', 'Caneca individual', 90, 100, [['Tube Top', 50], ['Caneca individual', 30], ['Tirante individual', 10]]],
+    ['Look Tube / ambos', 'look-tube', 'ambos', 120, 135, [['Tube Top', 50], ['Eco Bag', 30], ['Caneca individual', 30], ['Tirante individual', 10]]],
+    ['Torcida', 'torcida', '', 140, 150, [['Jersey', 100], ['Caneca individual', 30], ['Tirante individual', 10]]],
+    ['Campus Completo', 'campus-completo', '', 280, 295, [['Oversize', 65], ['Corta Vento', 180], ['Caneca individual', 25], ['Tirante individual', 10]]],
+    ['Frio / Ecobag', 'frio-no-campus', 'Eco Bag', 220, 230, [['Corta Vento', 180], ['Eco Bag', 30], ['Tirante individual', 10]]],
+    ['Frio / Caneca', 'frio-no-campus', 'Caneca individual', 220, 230, [['Corta Vento', 180], ['Caneca individual', 30], ['Tirante individual', 10]]],
+    ['Frio / ambos', 'frio-no-campus', 'ambos', 250, 265, [['Corta Vento', 180], ['Eco Bag', 30], ['Caneca individual', 30], ['Tirante individual', 10]]],
+    ['Tudo Pesadelo', 'tudo-pesadelo', '', 455, 480, [['Tube Top', 50], ['Eco Bag', 30], ['Jersey', 95], ['Caneca individual', 30], ['Tirante individual', 10], ['Oversize', 60], ['Corta Vento', 180]]]
+  ];
+  for (const [name, id, acessorio, total, reference, composition] of scenarios) {
+    await t.test(name, () => {
+      const app = createFrontend();
+      addKit(app, id, { acessorio, nomeCamisa: 'ANA-MARIA', numeroCamisa: '07',
+        tamanhos: { 'Tube Top': 'PP', Jersey: 'P', Oversize: 'GG', 'Corta Vento': 'XGG' } });
+      const [kit] = app.read('orderCart');
+      assert.ok(kit, app.element('kitError').textContent);
+      assert.equal(kit.tipo, 'kit');
+      assert.equal(kit.unitPrice, total);
+      assert.equal(kit.valorAvulso, reference);
+      assert.equal(kit.economia, reference - total);
+      assert.deepEqual(kit.componentes.map(item => [item.produto, item.unitPrice]), composition);
+      const order = app.checkout();
+      assert.equal(order.valorTotal, total);
+      assert.equal(order.quantidade, composition.length);
+      assert.ok(order.produto.startsWith(kit.produto + ' {'));
+      assert.equal(app.element('pixTotalValueDisplay').innerText, `R$ ${total},00`);
+      const backend = createMemoryBackend();
+      backend.add(order);
+      const loaded = backend.get().orders.find(item => item.id === order.id);
+      assert.equal(loaded.produto, order.produto);
+      const products = clone(app.context.getOrderItems(loaded));
+      assert.deepEqual(products.map(item => [item.produto, item.unitPrice]), composition);
+      assert.equal(products.reduce((sum, item) => sum + item.unitPrice * item.quantidade, 0), total);
+      assert.ok(products.every(item => item.kitNome === kit.produto));
+      assert.equal(app.context.orderHasProduct(loaded, 'Caneca'), false, 'No kit substitutes the legacy mug+strap combo');
+      for (const product of products) {
+        if (product.produto === 'Jersey') {
+          assert.equal(product.nomeCamisa, 'ANA-MARIA');
+          assert.equal(product.numeroCamisa, '07');
+          assert.equal(product.tamanho, 'P');
+        }
+      }
+      assert.deepEqual(backend.rows[1], LEGACY_ROW);
+      assert.equal(backend.rows[2].length, 13);
+      assert.equal(app.networkAttempts(), 0);
+    });
+  }
+});
+
+test('Kit quantities, merging, removal and mixed-cart totals preserve the included piece count', () => {
+  const app = createFrontend();
+  addKit(app, 'campus', { quantidade: 2 });
+  assert.equal(app.read('orderCart[0].subtotal'), 190);
+  assert.equal(app.checkout().quantidade, 4);
+  app.context.changeKitQuantity(0, 3);
+  assert.equal(app.read('orderCart[0].subtotal'), 285);
+  app.context.changeKitQuantity(0, 0);
+  assert.equal(app.read('orderCart[0].quantidade'), 3);
+  app.context.changeKitQuantity(0, 1);
+  addKit(app, 'torcida', { nomeCamisa: 'ANA', numeroCamisa: '07' });
+  app.add('Caneca individual');
+  const order = app.checkout();
+  assert.equal(order.valorTotal, 270);
+  assert.equal(order.quantidade, 6);
+  const backend = createMemoryBackend();
+  backend.add(order);
+  const loaded = backend.get().orders.find(item => item.id === order.id);
+  assert.equal(app.context.getOrderRowPrice(loaded, 'Caneca individual'), 'R$ 65,00');
+  assert.equal(app.context.getOrderRowPrice(loaded, 'Oversize'), 'R$ 65,00');
+  assert.equal(app.context.getOrderRowPrice(loaded, 'Jersey'), 'R$ 100,00');
+  assert.match(app.context.getOrderProductForTab(loaded, 'Jersey'), /Nome: ANA; Número: 07.*Kit Torcida/);
+  app.context.removeItemFromCart(0);
+  assert.equal(app.read('orderCart').length, 2);
+  assert.equal(app.checkout().valorTotal, 175);
+});
+
+test('Kits with different accessories, sizes or Jersey personalizations remain independent', () => {
+  const app = createFrontend();
+  addKit(app, 'torcida', { nomeCamisa: 'ANA', numeroCamisa: '07', tamanhos: { Jersey: 'M' } });
+  addKit(app, 'torcida', { nomeCamisa: 'BIA', numeroCamisa: '00', tamanhos: { Jersey: 'G' } });
+  addKit(app, 'torcida', { nomeCamisa: 'ANA', numeroCamisa: '07', tamanhos: { Jersey: 'M' } });
+  addKit(app, 'campus', { acessorio: 'Eco Bag' });
+  addKit(app, 'campus', { acessorio: 'Caneca individual' });
+  const cart = app.read('orderCart');
+  assert.equal(cart.length, 4);
+  assert.equal(cart[0].quantidade, 2);
+  const order = app.checkout();
+  assert.equal(order.valorTotal, 610);
+  const backend = createMemoryBackend();
+  backend.add(order);
+  const loaded = backend.get().orders.find(item => item.id === order.id);
+  const jerseys = clone(app.context.getOrderItems(loaded)).filter(item => item.produto === 'Jersey');
+  assert.deepEqual(jerseys.map(item => [item.nomeCamisa, item.numeroCamisa, item.tamanho, item.quantidade]), [
+    ['ANA', '07', 'M', 2], ['BIA', '00', 'G', 1]
+  ]);
+});
+
+test('Kit configuration preserves drafts, rejects invalid options and does not apply arbitrary discounts', () => {
+  const app = createFrontend();
+  app.context.configureKit('tudo-pesadelo');
+  app.element('kitJerseyName').value = 'ANA';
+  app.element('kitJerseyNumber').value = '07';
+  app.element('kitSize-Jersey').value = 'GG';
+  app.context.configureKit('campus');
+  app.element('kitAccessorySelect').value = 'Caneca individual';
+  app.context.configureKit('tudo-pesadelo');
+  assert.equal(app.element('kitJerseyName').value, 'ANA');
+  assert.equal(app.element('kitJerseyNumber').value, '07');
+  assert.equal(app.element('kitSize-Jersey').value, 'GG');
+  const api = app.context.PesadeloKits;
+  const prices = app.read('PRECOS_PRODUTOS');
+  assert.throws(() => api.createItem('campus', { acessorio: 'ambos' }, prices));
+  assert.throws(() => api.createItem('torcida', { nomeCamisa: 'ANA', numeroCamisa: '' }, prices));
+  assert.throws(() => api.createItem('torcida', { numeroCamisa: '100', nomeCamisa: 'ANA' }, prices));
+  assert.throws(() => api.createItem('campus', { tamanhos: { Oversize: 'XXXL' } }, prices));
+  assert.throws(() => api.createItem('campus', { quantidade: 1.5 }, prices));
+  const fixed = api.createItem('tudo-pesadelo', { acessorio: 'ambos', unitPrice: 1, componentes: [] }, prices);
+  assert.equal(fixed.componentes.length, 7);
+  assert.equal(fixed.unitPrice, 455);
+  app.context.resetOrderForm();
+  app.add('Caneca');
+  app.add('Caneca individual');
+  app.add('Tirante individual');
+  assert.equal(app.checkout().valorTotal, 95);
+});
+
+test('Purchased kit prices survive catalog changes, and Excel keeps kit attribution and discounts', () => {
+  const app = createFrontend();
+  addKit(app, 'tudo-pesadelo', { nomeCamisa: "JOÃO D'ÁVILA", numeroCamisa: '07' });
+  const order = app.checkout();
+  const backend = createMemoryBackend();
+  backend.add(order);
+  const loaded = backend.get().orders.find(item => item.id === order.id);
+  const before = clone(loaded);
+  app.set('PRECOS_PRODUTOS.Jersey', 200);
+  app.set('PRECOS_PRODUTOS.Oversize', 120);
+  assert.equal(app.context.getOrderRowPrice(loaded, 'Jersey'), 'R$ 95,00');
+  assert.equal(app.context.getOrderRowPrice(loaded, 'Oversize'), 'R$ 60,00');
+  assert.equal(app.context.getOrderNumericValue(loaded), 455);
+  assert.equal(app.context.getOrderNumericValue({ ...loaded, valorTotal: '' }), 455);
+  app.set('orders', [loaded]);
+  app.context.exportToExcel();
+  const sheets = app.exported().book.sheets;
+  assert.match(sheets['Todas as Respostas'][1][4], /Kit Tudo Pesadelo/);
+  assert.match(sheets.Jersey[1][4], /Número: 07.*Kit Tudo Pesadelo/);
+  assert.equal(sheets.Jersey[1][6], 'R$ 95,00');
+  assert.equal(sheets.Caneca.length, 1, 'The old combo tab must not contain kit accessories');
+  assert.equal(sheets['Ranking Comissarios'].at(-1)[4], 7);
+  assert.deepEqual(loaded, before);
+});
+
+test('Mixed descriptions preserve plain products and the old combo before, between and after kits', () => {
+  const app = createFrontend();
+  const api = app.context.PesadeloKits;
+  const prices = app.read('PRECOS_PRODUTOS');
+  const campus = clone(api.createItem('campus', {}, prices));
+  const torcida = clone(api.createItem('torcida', { nomeCamisa: 'CANECA', numeroCamisa: '07' }, prices));
+  const combo = { produto: 'Caneca', tamanho: '-', quantidade: 2, unitPrice: 45, subtotal: 90 };
+  const mug = { produto: 'Caneca individual', tamanho: '-', quantidade: 1, unitPrice: 35, subtotal: 35 };
+  for (const items of [[combo, campus, mug, torcida], [campus, torcida, mug, combo], [campus, mug, torcida, combo]]) {
+    const text = items.map(app.context.describeOrderItem).join(' + ');
+    const loaded = { produto: text, quantidade: 8 };
+    const products = clone(app.context.getOrderItems(loaded));
+    assert.equal(products.length, 7);
+    assert.equal(app.context.getOrderNumericValue(loaded), 360);
+    assert.equal(app.context.getOrderRowPrice(loaded, 'Caneca'), 'R$ 90,00');
+    assert.equal(app.context.getOrderRowPrice(loaded, 'Caneca individual'), 'R$ 65,00');
+    assert.equal(products.find(item => item.produto === 'Jersey').numeroCamisa, '07');
+  }
+});
+
+test('Updated Campus Completo preserves independent clothing sizes and charges 560 for two kits', () => {
+  const app = createFrontend();
+  addKit(app, 'campus-completo', { quantidade: 2, tamanhos: { Oversize: 'PP', 'Corta Vento': 'XGG' } });
+  const [kit] = app.read('orderCart');
+  assert.equal(kit.kitId, 'campus-completo');
+  assert.equal(kit.valorAvulso, 295);
+  assert.equal(kit.economia, 15);
+  assert.equal(kit.unitPrice, 280);
+  assert.equal(kit.subtotal, 560);
+  assert.deepEqual(kit.componentes.map(item => [item.produto, item.tamanho, item.quantidade, item.unitPrice]), [
+    ['Oversize', 'PP', 1, 65], ['Corta Vento', 'XGG', 1, 180], ['Caneca individual', '-', 1, 25], ['Tirante individual', '-', 1, 10]
+  ]);
+  const order = app.checkout();
+  assert.equal(order.valorTotal, 560);
+  assert.equal(order.quantidade, 8);
+  assert.doesNotMatch(order.produto, /Ecobag|Eco Bag/);
+  const backend = createMemoryBackend();
+  backend.add(order);
+  const loaded = backend.get().orders.find(item => item.id === order.id);
+  assert.equal(loaded.valorTotal, 'R$ 560,00');
+  assert.equal(app.context.getOrderSizeForTab(loaded, 'Oversize'), 'PP');
+  assert.equal(app.context.getOrderSizeForTab(loaded, 'Corta Vento'), 'XGG');
+  assert.equal(app.context.getOrderRowPrice(loaded, 'Caneca individual'), 'R$ 50,00');
+  assert.equal(app.context.orderHasProduct(loaded, 'Eco Bag'), false);
+  assert.deepEqual(backend.rows[1], LEGACY_ROW);
+  assert.equal(app.read('PRECOS_PRODUTOS["Caneca individual"]'), 35);
+  assert.equal(app.networkAttempts(), 0);
+});
+
+test('Previously purchased Campus Completo retains the old Ecobag composition and its recorded prices', () => {
+  const app = createFrontend();
+  const oldOrder = {
+    produto: 'Kit Campus Completo {Oversize (G) x1 [Unitário: R$ 65,00] | Ecobag (-) x1 [Unitário: R$ 30,00] | Caneca individual (-) x1 [Unitário: R$ 30,00] | Tirante individual (-) x1 [Unitário: R$ 10,00]} x1',
+    tamanho: 'G', quantidade: 4, valorTotal: 'R$ 135,00'
+  };
+  const before = clone(oldOrder);
+  assert.deepEqual(clone(app.context.getOrderItems(oldOrder)).map(item => [item.produto, item.unitPrice]), [
+    ['Oversize', 65], ['Eco Bag', 30], ['Caneca individual', 30], ['Tirante individual', 10]
+  ]);
+  assert.equal(app.context.getOrderNumericValue(oldOrder), 135);
+  assert.equal(app.context.getOrderRowPrice(oldOrder, 'Caneca individual'), 'R$ 30,00');
+  assert.equal(app.context.orderHasProduct(oldOrder, 'Corta Vento'), false);
+  assert.deepEqual(oldOrder, before);
 });

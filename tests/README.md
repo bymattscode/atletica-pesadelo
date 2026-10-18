@@ -58,6 +58,18 @@ esquerda, validação, preservação dos tamanhos na navegação, confirmação,
 exportação e compatibilidade com pedidos antigos. O navegador verifica formulário
 e revisão em 360, 390 e 1440 pixels.
 
+Os kits são verificados nas oito opções promocionais, incluindo ambas as escolhas
+dos kits base, preços por componente, acréscimos exatos de R$ 30, quantidades,
+remoção, carrinho misto de R$ 270, tamanhos independentes e Jerseys personalizadas.
+O teste executa o Apps Script original com os mesmos mocks para conferir a leitura
+da descrição do kit depois que o array local de itens é descartado. Também confere
+que alterações futuras nos preços avulsos não mudam os preços já registrados nos
+componentes dos kits.
+
+O catálogo promocional é carregado de `assets/kits.js`, tanto na VM quanto na
+prévia local. Ele não executa nenhuma requisição de rede. A quantidade de kits é
+separada do total de peças registrado no pedido e no ranking.
+
 O projeto é HTML/CSS/JavaScript estático: não possui configuração de lint,
 TypeScript ou etapa de build. A validação complementar usa `node --check`,
 compilação do script inline com `vm.Script` e `git diff --check`.

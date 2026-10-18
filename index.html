@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- SheetJS para exportação real para Excel (.xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="assets/kits.js"></script>
 
   <style>
     :root {
@@ -386,6 +387,139 @@
       background: var(--bg-input);
       border: 1px solid var(--border-light);
       border-radius: var(--radius);
+    }
+
+    .kits-section {
+      margin-top: 1rem;
+      border-top: 1px solid var(--border-light);
+      padding-top: 1.5rem;
+    }
+
+    .kits-section h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.35rem;
+      display: inline;
+    }
+
+    .kits-section > summary {
+      cursor: pointer;
+      color: #f69cb9;
+      margin-bottom: 0.75rem;
+    }
+
+    .kit-catalog,
+    .kit-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .kit-card,
+    .kit-configurator {
+      min-width: 0;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      background: var(--bg-input);
+      padding: 1rem;
+    }
+
+    .kit-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .kit-card-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .kit-card-heading img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .kit-card h3,
+    .kit-configurator h3 {
+      font-size: 1rem;
+    }
+
+    .kit-card p,
+    .kit-composition,
+    .kit-item-details {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      overflow-wrap: anywhere;
+    }
+
+    .kit-promo-price {
+      color: #f69cb9;
+      font-size: 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+    }
+
+    .kit-saving {
+      color: var(--success);
+      font-size: 0.8rem;
+    }
+
+    .kit-card button {
+      margin-top: auto;
+      justify-content: center;
+    }
+
+    .kit-configurator {
+      margin-top: 1rem;
+      border-color: var(--pesadelo-pink);
+      scroll-margin-top: 10rem;
+    }
+
+    .kit-configurator[hidden],
+    .kit-configurator [hidden] {
+      display: none;
+    }
+
+    .kit-fields input,
+    .kit-fields select,
+    .kit-accessory-select {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .kit-composition {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1rem 0;
+    }
+
+    .kit-item-details {
+      display: block;
+      margin-top: 0.35rem;
+    }
+
+    .kit-cart-quantity {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .kit-cart-quantity input {
+      width: 5rem;
+      padding: 0.35rem;
+    }
+
+    @media (max-width: 600px) {
+      .kit-catalog,
+      .kit-fields {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
     .jersey-fields {
@@ -2352,6 +2486,18 @@
       border-bottom: none;
     }
 
+    .confirm-items-table .confirm-kit-item {
+      width: 52%;
+      min-width: 12rem;
+      white-space: normal;
+      text-align: left;
+    }
+
+    .confirm-kit-item .kit-item-details {
+      white-space: normal;
+      text-align: left;
+    }
+
     .confirm-total-box {
       background: linear-gradient(135deg, rgba(152, 24, 68, 0.2) 0%, rgba(200, 70, 118, 0.08) 100%);
       border: 1px solid rgba(200, 70, 118, 0.35);
@@ -2783,6 +2929,45 @@
                     Adicione os produtos ao carrinho para somar o pedido
                   </span>
                 </div>
+
+                <details class="kits-section" id="kitsSection" aria-labelledby="kitsTitle">
+                  <summary><h2 id="kitsTitle">Kits promocionais · ver opções</h2></summary>
+                  <p class="customization-hint">6 kits e 2 versões adicionais, com descontos próprios.</p>
+                  <p class="customization-hint">Escolha um kit, configure os tamanhos e adicione ao mesmo carrinho dos produtos avulsos.</p>
+                  <div class="kit-catalog" id="kitCatalog"></div>
+                  <div class="kit-configurator" id="kitConfigurator" hidden>
+                    <h3 id="kitConfigTitle"></h3>
+                    <div class="form-group" id="kitAccessoryGroup" style="margin-top: 1rem;">
+                      <label for="kitAccessorySelect">Acessórios do kit</label>
+                      <select class="kit-accessory-select" id="kitAccessorySelect" onchange="handleKitConfigChange()"></select>
+                    </div>
+                    <div class="kit-fields" id="kitSizeFields"></div>
+                    <div class="kit-fields" id="kitJerseyFields" hidden>
+                      <div class="form-group">
+                        <label for="kitJerseyName">Nome na Jersey do kit</label>
+                        <input type="text" id="kitJerseyName" maxlength="30" autocomplete="off" placeholder="Ex: ALESSANDRO"
+                          aria-describedby="kitJerseyHint kitError" oninput="handleKitConfigChange()" disabled>
+                      </div>
+                      <div class="form-group">
+                        <label for="kitJerseyNumber">Número na Jersey do kit</label>
+                        <input type="text" id="kitJerseyNumber" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="Ex: 07"
+                          aria-describedby="kitJerseyHint kitError" oninput="handleKitConfigChange()" disabled>
+                      </div>
+                      <p class="customization-hint" id="kitJerseyHint">Personalização opcional. Preencha nome e número juntos; zeros à esquerda são mantidos.</p>
+                    </div>
+                    <div class="kit-fields">
+                      <div class="form-group">
+                        <label for="kitQuantity">Quantidade de kits</label>
+                        <input type="number" id="kitQuantity" min="1" max="50" value="1" oninput="handleKitConfigChange()">
+                      </div>
+                      <div class="form-group" aria-live="polite" id="kitPriceSummary"></div>
+                    </div>
+                    <div class="kit-composition" id="kitComposition" aria-live="polite"></div>
+                    <p class="customization-error" id="kitError" role="alert" hidden></p>
+                    <button type="button" class="btn-add-item" onclick="addKitToOrder()">Adicionar kit ao carrinho</button>
+                    <p class="customization-hint" style="margin-top: 0.5rem;">Configure e adicione cada kit separadamente quando os tamanhos ou a personalização forem diferentes.</p>
+                  </div>
+                </details>
 
                 <!-- CARD DO CARRINHO DE COMPRAS -->
                 <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
@@ -3315,6 +3500,8 @@
 
     const PRODUTOS_SEM_TAMANHO = ["Caneca", "Caneca individual", "Tirante individual", "Eco Bag"];
     const TAMANHOS_PRODUTOS = {};
+    const kitDrafts = {};
+    let selectedKitId = null;
 
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -3328,6 +3515,7 @@
     }
 
     function describeOrderItem(item) {
+      if (item.tipo === "kit") return PesadeloKits.describeItem(item, describeOrderItem, formatCurrency);
       const customization = getPersonalizationText(item);
       return `${NOMES_PRODUTOS[item.produto] || item.produto} (${item.tamanho}) x${item.quantidade}${customization ? ` [${customization}]` : ""}`;
     }
@@ -3340,8 +3528,12 @@
       if (typeof items === "string") {
         try { items = JSON.parse(items); } catch (_) { items = null; }
       }
-      if (Array.isArray(items) && items.length > 0) return items;
+      if (Array.isArray(items) && items.length > 0) return PesadeloKits.expandItems(items);
+      const parsed = PesadeloKits.extractDescriptions(String(order.produto || "").trim(), parseOrderProducts);
+      return [...parsed.items, ...parseOrderProducts(parsed.remainder, order)];
+    }
 
+    function parseOrderProducts(text, order = {}) {
       const aliases = new Map();
       Object.keys(PRECOS_PRODUTOS).forEach(key => {
         aliases.set(key.toLowerCase(), key);
@@ -3354,7 +3546,7 @@
         "(?:\\s*\\(([^)]+)\\))?(?:\\s*x(\\d+))?" +
         "(?:\\s*\\[Nome: ([^;\\]]+); Número: (\\d{1,2})\\])?(?=\\s+\\+\\s+|$)", "gi"
       );
-      const matches = [...String(order.produto || "").trim().matchAll(pattern)];
+      const matches = [...text.trim().matchAll(pattern)];
       return matches.map(match => {
         const produto = aliases.get(match[1].toLowerCase());
         const quantity = Number.parseInt(match[3] || (matches.length === 1 ? order.quantidade : 1), 10);
@@ -3377,6 +3569,134 @@
       document.querySelectorAll(".product-tile[data-product]").forEach(tile => {
         tile.querySelector(".product-price").textContent = formatCurrency(PRECOS_PRODUTOS[tile.dataset.product]);
       });
+    }
+
+    function kitSizeId(product) {
+      return "kitSize-" + product.replace(/\s/g, "");
+    }
+
+    function renderKitCatalog() {
+      document.getElementById("kitCatalog").innerHTML = Object.entries(PesadeloKits.definitions).map(([id, definition]) => {
+        const base = PesadeloKits.createItem(id, {}, PRECOS_PRODUTOS);
+        const additional = definition.ambos ? PesadeloKits.createItem(id, { acessorio: "ambos" }, PRECOS_PRODUTOS) : null;
+        return `<article class="kit-card" data-kit="${id}">
+          <div class="kit-card-heading"><img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" loading="lazy"><h3>${definition.nome}</h3></div>
+          <p>${escapeHtml(definition.descricao)}</p>
+          <p>Avulsos: <s>${formatCurrency(base.valorAvulso)}</s></p>
+          <div class="kit-promo-price">${formatCurrency(base.unitPrice)}</div>
+          <div class="kit-saving">Economize ${formatCurrency(base.economia)}</div>
+          ${additional ? `<p>Com Ecobag + Caneca: <strong>${formatCurrency(additional.unitPrice)}</strong> (+ R$ 30,00). Avulsos: ${formatCurrency(additional.valorAvulso)} · Economia: ${formatCurrency(additional.economia)}.</p>` : ""}
+          <button type="button" class="btn-add-item" onclick="configureKit('${id}')">Configurar ${definition.nome}</button>
+        </article>`;
+      }).join("");
+    }
+
+    function readKitOptions() {
+      const definition = PesadeloKits.definitions[selectedKitId];
+      const tamanhos = {};
+      definition.roupas.forEach(product => { tamanhos[product] = document.getElementById(kitSizeId(product)).value; });
+      return {
+        acessorio: definition.escolha ? document.getElementById("kitAccessorySelect").value : "",
+        tamanhos, quantidade: document.getElementById("kitQuantity").value,
+        nomeCamisa: definition.roupas.includes("Jersey") ? document.getElementById("kitJerseyName").value : "",
+        numeroCamisa: definition.roupas.includes("Jersey") ? document.getElementById("kitJerseyNumber").value : ""
+      };
+    }
+
+    function configureKit(id) {
+      if (selectedKitId) kitDrafts[selectedKitId] = readKitOptions();
+      const definition = PesadeloKits.definitions[id];
+      if (!definition) return;
+      selectedKitId = id;
+      const draft = kitDrafts[id] || {};
+      document.getElementById("kitsSection").open = true;
+      document.getElementById("kitConfigurator").hidden = false;
+      document.getElementById("kitConfigTitle").textContent = definition.nome;
+      document.getElementById("kitAccessoryGroup").hidden = !definition.escolha;
+      document.getElementById("kitAccessorySelect").innerHTML = '<option value="Eco Bag">Ecobag</option><option value="Caneca individual">Caneca</option>' +
+        (definition.ambos ? '<option value="ambos">Ecobag + Caneca (+ R$ 30,00)</option>' : "");
+      document.getElementById("kitAccessorySelect").value = draft.acessorio || "Eco Bag";
+      document.getElementById("kitSizeFields").innerHTML = definition.roupas.map(product => `
+        <div class="form-group"><label for="${kitSizeId(product)}">Tamanho · ${escapeHtml(NOMES_PRODUTOS[product])}</label>
+          <select id="${kitSizeId(product)}" onchange="handleKitConfigChange()">${PesadeloKits.sizes.map(size => `<option value="${size}">${size}</option>`).join("")}</select>
+        </div>`).join("");
+      definition.roupas.forEach(product => { document.getElementById(kitSizeId(product)).value = draft.tamanhos?.[product] || "M"; });
+      const hasJersey = definition.roupas.includes("Jersey");
+      document.getElementById("kitJerseyFields").hidden = !hasJersey;
+      document.getElementById("kitJerseyName").disabled = !hasJersey;
+      document.getElementById("kitJerseyNumber").disabled = !hasJersey;
+      document.getElementById("kitJerseyName").value = draft.nomeCamisa || "";
+      document.getElementById("kitJerseyNumber").value = draft.numeroCamisa || "";
+      document.getElementById("kitQuantity").value = draft.quantidade || 1;
+      handleKitConfigChange();
+      document.getElementById("kitConfigurator").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function renderKitItemDetails(item) {
+      return item.componentes.map(component => `<span class="kit-item-details">${escapeHtml(describeOrderItem(component))} · ${formatCurrency(component.unitPrice)} por kit</span>`).join("");
+    }
+
+    function handleKitConfigChange() {
+      if (!selectedKitId) return;
+      const options = readKitOptions();
+      kitDrafts[selectedKitId] = options;
+      const error = document.getElementById("kitError");
+      error.hidden = true;
+      // O preço independe do texto da personalização: o rascunho é validado ao adicionar.
+      try {
+        const item = PesadeloKits.createItem(selectedKitId, { ...options, nomeCamisa: "", numeroCamisa: "" }, PRECOS_PRODUTOS);
+        document.getElementById("kitPriceSummary").innerHTML = `<span>Avulsos por kit: <s>${formatCurrency(item.valorAvulso)}</s></span>
+          <strong class="kit-promo-price">${formatCurrency(item.unitPrice)} por kit</strong>
+          <span class="kit-saving">Economize ${formatCurrency(item.economia)} por kit</span><strong>Subtotal: ${formatCurrency(item.subtotal)}</strong>`;
+        const jersey = item.componentes.find(component => component.produto === "Jersey");
+        if (jersey) Object.assign(jersey, { nomeCamisa: options.nomeCamisa, numeroCamisa: options.numeroCamisa });
+        document.getElementById("kitComposition").innerHTML = renderKitItemDetails(item);
+      } catch (err) {
+        document.getElementById("kitPriceSummary").textContent = "Confira as opções do kit.";
+        error.textContent = err.message;
+        error.hidden = false;
+      }
+    }
+
+    function addKitToOrder() {
+      if (!selectedKitId) return;
+      try {
+        const item = PesadeloKits.createItem(selectedKitId, readKitOptions(), PRECOS_PRODUTOS);
+        const signature = value => JSON.stringify([value.kitId, value.acessorio, value.componentes]);
+        const existing = orderCart.find(other => other.tipo === "kit" && signature(other) === signature(item));
+        if (existing) {
+          if (existing.quantidade + item.quantidade > 50) throw new Error("O limite é de 50 kits por configuração.");
+          existing.quantidade += item.quantidade;
+          existing.subtotal = Math.round(existing.unitPrice * 100) * existing.quantidade / 100;
+        } else {
+          orderCart.push(item);
+        }
+        updateOrderTotals();
+        showToast(`${item.produto} adicionado ao carrinho!`);
+      } catch (err) {
+        const error = document.getElementById("kitError");
+        error.textContent = err.message;
+        error.hidden = false;
+        error.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+
+    function changeKitQuantity(index, value) {
+      const item = orderCart[index];
+      if (!item || item.tipo !== "kit") return;
+      const quantity = Number(value);
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 50) {
+        showToast("Informe de 1 a 50 kits.");
+        renderCartSummary();
+        return;
+      }
+      item.quantidade = quantity;
+      item.subtotal = Math.round(item.unitPrice * 100) * quantity / 100;
+      updateOrderTotals();
+    }
+
+    function itemPieceCount(item) {
+      return getOrderItems({ itens: [item] }).reduce((sum, component) => sum + Number(component.quantidade || 1), 0);
     }
 
     // CARRINHO MULTI-PRODUTOS
@@ -3501,24 +3821,12 @@
       if (item.produto !== "Jersey") return true;
       const name = item.nomeCamisa || "";
       const number = item.numeroCamisa || "";
-      if (!name && !number) return true;
-
-      let message = "";
-      let field = "f_jersey_nome";
-      if (!name || !number) {
-        message = "Para personalizar a Jersey, preencha o nome e o número da camisa.";
-        field = name ? "f_jersey_numero" : "f_jersey_nome";
-      } else if (name.length > 30 || !/^[\p{L}\p{M} '\u2019-]+$/u.test(name) || !/\p{L}/u.test(name)) {
-        message = "Use até 30 letras no nome, com espaços, apóstrofos ou hífens.";
-      } else if (!/^\d{1,2}$/.test(number)) {
-        message = "Informe um número com um ou dois dígitos, como 7, 07 ou 10.";
-        field = "f_jersey_numero";
-      }
-      if (!message) return true;
+      const validation = PesadeloKits.jerseyError(name, number);
+      if (!validation) return true;
       const error = document.getElementById("jerseyError");
-      error.textContent = message;
+      error.textContent = validation.message;
       error.hidden = false;
-      const input = document.getElementById(field);
+      const input = document.getElementById("f_jersey_" + validation.field);
       input.setAttribute("aria-invalid", "true");
       input.focus();
       return false;
@@ -3558,7 +3866,7 @@
 
       if (orderCart.length > 0) {
         orderCart.forEach(item => {
-          totalPieces += item.quantidade;
+          totalPieces += itemPieceCount(item);
           totalMoney += item.subtotal;
           if (item.unitPrice === 0) hasTbd = true;
         });
@@ -3666,6 +3974,7 @@
             <span class="order-item-badge">${item.quantidade}x</span>
             <span><strong>${escapeHtml(NOMES_PRODUTOS[item.produto] || item.produto)}</strong> ${item.tamanho !== '-' ? '(' + escapeHtml(item.tamanho) + ')' : ''}
               ${getPersonalizationText(item) ? `<small class="item-personalization">${escapeHtml(getPersonalizationText(item))}</small>` : ''}
+              ${item.tipo === 'kit' ? renderKitItemDetails(item) + `<label class="kit-cart-quantity">Quantidade de kits<input type="number" min="1" max="50" value="${item.quantidade}" aria-label="Quantidade de ${escapeHtml(item.produto)}" onchange="changeKitQuantity(${idx}, this.value)"></label>` : ''}
             </span>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -4009,6 +4318,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       applyAuthState();
       refreshCatalogPrices();
+      renderKitCatalog();
       renderComissariosDropdown();
       saveAndRefresh();
       updateOrderTotals();
@@ -4225,7 +4535,7 @@
       if (!order) return "";
       if (tab && tab !== "todas" && tab !== "ranking") {
         const matching = getOrderItems(order).filter(item => item.produto === tab);
-        if (matching.length > 0) return matching.map(describeOrderItem).join(" + ");
+        if (matching.length > 0) return matching.map(item => describeOrderItem(item) + (item.kitNome ? ` — ${item.kitNome}` : "")).join(" + ");
       }
       return order.produto || "";
     }
@@ -4802,14 +5112,14 @@
       // Se houver produtos no carrinho, usa o carrinho. Se não, usa o produto atual selecionado no form.
       const currentItem = getCurrentFormItem();
       if (orderCart.length === 0 && !validateJerseyCustomization(currentItem)) return;
-      const allItems = orderCart.length > 0 ? orderCart.map(item => ({ ...item })) : [currentItem];
+      const allItems = orderCart.length > 0 ? JSON.parse(JSON.stringify(orderCart)) : [currentItem];
 
       let totalQtd = 0;
       let totalValor = 0;
       let hasTbd = false;
 
       allItems.forEach(i => {
-        totalQtd += i.quantidade;
+        totalQtd += itemPieceCount(i);
         totalValor += i.subtotal;
         if (i.unitPrice === 0) hasTbd = true;
       });
@@ -4819,11 +5129,11 @@
       if (allItems.length === 1) {
         // Preserve o formato antigo dos pedidos simples e use a descrição completa
         // quando houver personalização, pois o backend não armazena o array itens.
-        produtoDescricao = getPersonalizationText(allItems[0]) ? describeOrderItem(allItems[0]) : allItems[0].produto;
+        produtoDescricao = allItems[0].tipo === "kit" || getPersonalizationText(allItems[0]) ? describeOrderItem(allItems[0]) : allItems[0].produto;
         tamanhoDescricao = allItems[0].tamanho;
       } else {
         produtoDescricao = allItems.map(describeOrderItem).join(" + ");
-        const sizes = allItems.map(i => i.tamanho).filter(t => t && t !== "-");
+        const sizes = getOrderItems({ itens: allItems }).map(i => i.tamanho).filter(t => t && t !== "-");
         const uniqueSizes = [...new Set(sizes)];
         if (uniqueSizes.length === 1) {
           tamanhoDescricao = uniqueSizes[0];
@@ -4877,15 +5187,16 @@
         const tr = document.createElement("tr");
         const priceTxt = item.unitPrice > 0 ? formatCurrency(item.subtotal) : '<span style="color: var(--text-muted); font-size: 0.8rem;">A definir</span>';
         tr.innerHTML = `
-          <td>
+          <td class="${item.tipo === 'kit' ? 'confirm-kit-item' : ''}">
             <strong style="color: #fff;">${escapeHtml(NOMES_PRODUTOS[item.produto] || item.produto)}</strong>
             ${getPersonalizationText(item) ? `<small class="item-personalization">${escapeHtml(getPersonalizationText(item))}</small>` : ''}
+            ${item.tipo === 'kit' ? renderKitItemDetails(item) : ''}
           </td>
           <td style="text-align: center;">
             <span class="size-badge-display">${escapeHtml(item.tamanho)}</span>
           </td>
           <td style="text-align: center; font-weight: 700; color: #fff;">
-            ${item.quantidade}x
+            ${item.quantidade}x${item.tipo === 'kit' ? ' kit' : ''}
           </td>
           <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #f69cb9;">
             ${priceTxt}
@@ -5061,6 +5372,16 @@
       document.getElementById("jerseyError").hidden = true;
       document.getElementById("jerseyPreview").textContent = "";
       Object.keys(TAMANHOS_PRODUTOS).forEach(product => delete TAMANHOS_PRODUTOS[product]);
+      Object.keys(kitDrafts).forEach(id => delete kitDrafts[id]);
+      selectedKitId = null;
+      document.getElementById("kitConfigurator").hidden = true;
+      document.getElementById("kitsSection").open = false;
+      document.getElementById("kitJerseyName").value = "";
+      document.getElementById("kitJerseyNumber").value = "";
+      document.getElementById("kitJerseyName").disabled = true;
+      document.getElementById("kitJerseyNumber").disabled = true;
+      document.getElementById("kitQuantity").value = 1;
+      document.getElementById("kitError").hidden = true;
 
       // Limpa dados de upload, carrinho e pedido pendente
       currentUploadedFile = null;

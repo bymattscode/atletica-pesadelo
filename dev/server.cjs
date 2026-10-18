@@ -42,6 +42,11 @@ async function handleRequest(req, res) {
       res.writeHead(200, { ...headers, 'Content-Type': 'text/javascript; charset=utf-8' }).end(script);
       return;
     }
+    if (pathname === '/assets/kits.js') {
+      const script = await fs.readFile(path.join(project, 'assets/kits.js'));
+      res.writeHead(200, { ...headers, 'Content-Type': 'text/javascript; charset=utf-8' }).end(script);
+      return;
+    }
     if (/^\/assets\/logo_(pesadelo|unb)\.png$/.test(pathname)) {
       const asset = await fs.readFile(path.join(project, pathname.slice(1)));
       res.writeHead(200, { ...headers, 'Content-Type': 'image/png' }).end(asset);

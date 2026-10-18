@@ -28,7 +28,7 @@ async function main() {
     }
     try {
       const data = await fs.readFile(resolved);
-      const type = resolved.endsWith('.png') ? 'image/png' : 'text/html; charset=utf-8';
+      const type = resolved.endsWith('.png') ? 'image/png' : resolved.endsWith('.js') ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8';
       res.writeHead(200, { 'Content-Type': type }).end(data);
     } catch {
       res.writeHead(404).end();
@@ -205,6 +205,91 @@ async function main() {
       qaInput('f_jersey_nome', ''); qaInput('f_jersey_numero', ''); addItemToOrder();
       qaAssert(orderCart.length === 1, 'Unpersonalized legacy jersey was rejected');
     `);
+    await check('Kit catalog and accessory choices use all eight promotional prices', `
+      resetOrderForm();
+      qaAssert(document.querySelectorAll('.kit-card').length === 6, 'Six kit cards must exist');
+      qaAssert([...document.querySelectorAll('.size-btn')].map(button => button.textContent.trim()).join(',') === PesadeloKits.sizes.join(','), 'Kits must use the existing size range');
+      for (const [id, price] of [['campus', 95], ['look-tube', 90], ['torcida', 140], ['campus-completo', 280], ['frio-no-campus', 220], ['tudo-pesadelo', 455]]) {
+        configureKit(id);
+        qaAssert(document.getElementById('kitPriceSummary').textContent.includes(price + ',00'), 'Incorrect base price: ' + id);
+      }
+      for (const [id, base, complete] of [['campus', 95, null], ['look-tube', 90, 120], ['frio-no-campus', 220, 250]]) {
+        configureKit(id);
+        for (const accessory of ['Eco Bag', 'Caneca individual']) {
+          document.getElementById('kitAccessorySelect').value = accessory; handleKitConfigChange();
+          qaAssert(PesadeloKits.createItem(id, readKitOptions(), PRECOS_PRODUTOS).unitPrice === base, 'Accessory changed base price');
+        }
+        if (complete) {
+          document.getElementById('kitAccessorySelect').value = 'ambos'; handleKitConfigChange();
+          qaAssert(PesadeloKits.createItem(id, readKitOptions(), PRECOS_PRODUTOS).unitPrice === complete && complete - base === 30, 'Upgrade must cost exactly 30');
+        } else {
+          qaAssert(![...document.getElementById('kitAccessorySelect').options].some(option => option.value === 'ambos'), 'Campus must allow only one accessory');
+        }
+      }
+      configureKit('campus-completo'); qaAssert(document.getElementById('kitAccessoryGroup').hidden, 'Fixed composition must not offer an accessory choice');
+    `);
+    await check('Updated Campus Completo uses two independent sizes and charges 280 per kit', `
+      resetOrderForm(); configureKit('campus-completo');
+      qaAssert(document.querySelectorAll('#kitSizeFields select').length === 2, 'Campus Completo must offer two clothing sizes');
+      qaInput('kitSize-Oversize', 'PP'); qaInput('kitSize-CortaVento', 'XGG'); qaInput('kitQuantity', '2');
+      const kit = PesadeloKits.createItem('campus-completo', readKitOptions(), PRECOS_PRODUTOS);
+      qaAssert(kit.unitPrice === 280 && kit.valorAvulso === 295 && kit.economia === 15, 'Incorrect new prices');
+      qaAssert(kit.componentes.length === 4 && !kit.componentes.some(item => item.produto === 'Eco Bag'), 'Old accessory must not remain in the kit');
+      addKitToOrder(); qaTotal('560,00');
+      qaInput('f_nome', 'Comprador Campus Completo QA'); qaInput('f_telefone', '61999998888'); qaInput('f_cpf', '12345678900');
+      document.getElementById('f_comissario').selectedIndex = 1;
+      currentUploadedFile = { nome: 'comprovante-qa.pdf', type: 'application/pdf', base64: 'data:application/pdf;base64,JVBERi0xLjQ=' };
+      document.getElementById('orderForm').requestSubmit();
+      qaAssert(pendingOrderData.valorTotal === 560 && pendingOrderData.quantidade === 8, 'Two kits must cost 560 and contain eight pieces');
+      qaAssert(pendingOrderData.produto.includes('Oversize (PP)') && pendingOrderData.produto.includes('Corta Vento (XGG)') && !pendingOrderData.produto.includes('Ecobag'), 'Review lost the selected clothing sizes');
+      backToOrderForm();
+    `);
+    await check('Two Campus kits cost 190 and can change quantity or be removed', `
+      resetOrderForm(); configureKit('campus'); qaInput('kitQuantity', '2'); addKitToOrder(); qaTotal('190,00');
+      qaAssert(orderCart[0].quantidade === 2 && itemPieceCount(orderCart[0]) === 4, 'Kit and piece quantities must differ');
+      const quantity = document.querySelector('.kit-cart-quantity input'); quantity.value = '3'; quantity.dispatchEvent(new Event('change', { bubbles: true }));
+      qaTotal('285,00'); changeKitQuantity(0, 2); qaTotal('190,00'); removeItemFromCart(0);
+      qaAssert(orderCart.length === 0, 'Removing a kit must remove its entire composition');
+    `);
+    await check('All clothing sizes and independent kit Jersey customizations survive navigation', `
+      resetOrderForm(); configureKit('tudo-pesadelo');
+      qaAssert(document.querySelectorAll('#kitSizeFields select').length === 4, 'Tudo Pesadelo requires four independent sizes');
+      qaInput('kitSize-TubeTop', 'PP'); qaInput('kitSize-Jersey', 'G'); qaInput('kitSize-Oversize', 'GG'); qaInput('kitSize-CortaVento', 'XGG');
+      qaInput('kitJerseyName', 'ALESSANDRO'); qaInput('kitJerseyNumber', '07');
+      configureKit('campus'); configureKit('tudo-pesadelo');
+      qaAssert(document.getElementById('kitJerseyNumber').value === '07' && document.getElementById('kitSize-Jersey').value === 'G', 'Kit draft must survive navigation');
+      addKitToOrder(); qaInput('kitJerseyName', 'BEATRIZ'); qaInput('kitJerseyNumber', '00'); addKitToOrder();
+      qaAssert(orderCart.length === 2, 'Personalized kits must stay separate'); qaTotal('910,00');
+      qaInput('f_nome', 'Comprador QA local'); qaInput('f_telefone', '61999998888'); qaInput('f_cpf', '12345678900');
+      document.getElementById('f_comissario').selectedIndex = 1;
+      currentUploadedFile = { nome: 'comprovante-qa.pdf', type: 'application/pdf', base64: 'data:application/pdf;base64,JVBERi0xLjQ=' };
+      document.getElementById('orderForm').requestSubmit();
+      qaAssert(pendingOrderData.quantidade === 14, 'Two complete kits must count 14 pieces');
+      const review = document.getElementById('revItemsList').textContent;
+      qaAssert(review.includes('ALESSANDRO') && review.includes('BEATRIZ') && review.includes('07') && review.includes('00'), 'Kit review lost customization');
+      backToOrderForm();
+    `);
+    for (const width of [360, 390, 1440]) {
+      await command('Emulation.setDeviceMetricsOverride', { width, height: width < 500 ? 844 : 1000, deviceScaleFactor: 1, mobile: false });
+      for (const view of ['kit-form', 'kit-review']) {
+        await evaluate(view === 'kit-form' ? 'backToOrderForm()' : `document.getElementById('orderForm').requestSubmit()`);
+        await evaluate(`document.getElementById('toast').classList.remove('show'); window.scrollTo(0,0);`);
+        const widthCheck = await evaluate('document.documentElement.scrollWidth <= innerWidth && document.body.scrollWidth <= innerWidth');
+        assert.equal(widthCheck, true, 'Kit view must not overflow horizontally at ' + width);
+        if (view === 'kit-review') {
+          assert.equal(await evaluate(`[...document.querySelectorAll('.confirm-kit-item .kit-item-details')].every(element => element.scrollWidth <= element.clientWidth + 1)`), true,
+            'Kit composition must wrap inside its review column');
+        }
+        const { data } = await command('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true });
+        await fs.writeFile(path.join(screenshots, view + '-' + width + '.png'), Buffer.from(data, 'base64'));
+        if (view === 'kit-form') {
+          await evaluate(`document.getElementById('kitConfigurator').scrollIntoView({ behavior: 'instant', block: 'start' })`);
+          const focused = await command('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+          await fs.writeFile(path.join(screenshots, 'kit-config-' + width + '.png'), Buffer.from(focused.data, 'base64'));
+        }
+      }
+    }
+    passed.push('Kit configuration and review remain responsive at 360px, 390px and 1440px');
     await check('Final confirmation submits only to the mock and retains personalization', `
       resetOrderForm(); qaSelect('Jersey'); qaSize('P');
       qaInput('f_jersey_nome', 'ANA-MARIA'); qaInput('f_jersey_numero', '07'); addItemToOrder();
@@ -224,12 +309,27 @@ async function main() {
       qaAssert(document.getElementById('successProductsSummary').textContent.includes('Número: 07'), 'Success summary lost leading zero');
       qaAssert(orderCart.length === 0 && document.getElementById('f_jersey_nome').value === '', 'New-order draft was not reset');
     `);
+    await check('Mixed kit checkout sends 270 to the mock and preserves purchased composition', `
+      startNewOrder(); configureKit('campus'); addKitToOrder();
+      configureKit('torcida'); qaInput('kitJerseyName', 'ANA'); qaInput('kitJerseyNumber', '07'); addKitToOrder();
+      qaSelect('Caneca individual'); addItemToOrder(); qaTotal('270,00');
+      qaInput('f_nome', 'Comprador de kits QA'); qaInput('f_telefone', '61999998888'); qaInput('f_cpf', '12345678900');
+      document.getElementById('f_comissario').selectedIndex = 1;
+      currentUploadedFile = { nome: 'comprovante-qa.pdf', type: 'application/pdf', base64: 'data:application/pdf;base64,JVBERi0xLjQ=' };
+      document.getElementById('orderForm').requestSubmit();
+      qaAssert(pendingOrderData.valorTotal === 270 && pendingOrderData.quantidade === 6, 'Mixed kit order has incorrect totals');
+      document.getElementById('btnConfirmFinalize').click();
+      const payload = JSON.parse(window.__mockRequests.filter(request => request.method === 'POST').at(-1).body);
+      const products = getOrderItems({ produto: payload.order.produto, quantidade: payload.order.quantidade });
+      qaAssert(products.length === 6 && products.reduce((sum, item) => sum + item.subtotal, 0) === 270, 'Serialized kit composition lost its discounts');
+      qaAssert(payload.order.produto.includes('Kit Campus') && payload.order.produto.includes('Kit Torcida') && payload.order.produto.includes('Número: 07'), 'Submitted order lost kit identity');
+    `);
     const requests = await evaluate('window.__mockRequests');
-    assert.equal(requests.filter(request => request.method === 'POST').length, 1, 'The only submission must be mocked');
+    assert.equal(requests.filter(request => request.method === 'POST').length, 2, 'Both submissions must be mocked');
     if (previewMode) {
       assert.ok(requests.every(request => request.url === origin + '/__preview__/api'), 'Preview must use only its local endpoint');
       await evaluate(`syncWithGoogleSheets(false)`);
-      assert.equal(await evaluate(`orders.length === 1 && !orders[0].itens && getOrderItems(orders[0])[0].numeroCamisa === '07'`), true,
+      assert.equal(await evaluate(`orders.length === 2 && orders.every(order => !order.itens) && orders.some(order => order.valorTotal === 'R$ 270,00' && getOrderItems(order).some(item => item.numeroCamisa === '07' && item.kitNome === 'Kit Torcida'))`), true,
         'The preview must preserve the personalized order through its simulated backend');
       passed.push('Manual preview server uses only its local endpoint and reloads saved personalization');
     }

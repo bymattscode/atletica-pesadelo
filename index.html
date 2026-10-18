@@ -377,6 +377,67 @@
       color: rgba(255, 255, 255, 0.75);
     }
 
+    .jersey-customization[hidden] {
+      display: none;
+    }
+
+    .jersey-customization {
+      padding: 1rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+    }
+
+    .jersey-fields {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .jersey-fields input {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .customization-hint,
+    .item-personalization {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      overflow-wrap: anywhere;
+    }
+
+    .customization-error {
+      color: #fda4af;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 520px) {
+      .jersey-fields {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .order-summary-header,
+      .order-item-row {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .order-summary-total,
+      .order-item-price {
+        white-space: nowrap;
+      }
+
+      .order-item-info {
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+
+      .order-item-row > :last-child {
+        margin-left: auto;
+      }
+    }
+
     /* BOTÃO ADICIONAR MAIS PRODUTOS */
     .btn-add-item {
       background: rgba(152, 24, 68, 0.12);
@@ -2631,28 +2692,36 @@
               <div class="form-group full">
                 <label>Produto Selecionado <span class="req">*</span></label>
                 <div class="product-tiles-grid">
-                  <div class="product-tile selected" onclick="selectProduct('Oversize', this)">
+                  <div class="product-tile selected" data-product="Oversize" onclick="selectProduct('Oversize', this)">
                     <span class="product-name">Oversize</span>
                     <span class="product-price">R$ 65,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Jersey', this)">
+                  <div class="product-tile" data-product="Jersey" onclick="selectProduct('Jersey', this)">
                     <span class="product-name">Jersey</span>
                     <span class="product-price">R$ 100,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Tube Top', this)">
+                  <div class="product-tile" data-product="Tube Top" onclick="selectProduct('Tube Top', this)">
                     <span class="product-name">Tube Top</span>
                     <span class="product-price">R$ 50,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Caneca', this)">
+                  <div class="product-tile" data-product="Caneca" onclick="selectProduct('Caneca', this)">
                     <span class="product-name">Caneca + Tirante</span>
                     <span class="product-price">R$ 45,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Corta Vento', this)">
-                    <span class="product-name">Corta Vento</span>
-                    <span class="product-price">R$ 165,00</span>
+                  <div class="product-tile" data-product="Caneca individual" onclick="selectProduct('Caneca individual', this)">
+                    <span class="product-name">Caneca individual</span>
+                    <span class="product-price">R$ 35,00</span>
                   </div>
-                  <div class="product-tile" onclick="selectProduct('Eco Bag', this)">
-                    <span class="product-name">Eco Bag</span>
+                  <div class="product-tile" data-product="Tirante individual" onclick="selectProduct('Tirante individual', this)">
+                    <span class="product-name">Tirante individual</span>
+                    <span class="product-price">R$ 15,00</span>
+                  </div>
+                  <div class="product-tile" data-product="Corta Vento" onclick="selectProduct('Corta Vento', this)">
+                    <span class="product-name">Corta Vento</span>
+                    <span class="product-price">R$ 180,00</span>
+                  </div>
+                  <div class="product-tile" data-product="Eco Bag" onclick="selectProduct('Eco Bag', this)">
+                    <span class="product-name">Ecobag</span>
                     <span class="product-price">R$ 35,00</span>
                   </div>
                 </div>
@@ -2685,6 +2754,24 @@
                 </div>
               </div>
 
+              <div class="form-group full jersey-customization" id="jerseyCustomization" hidden>
+                <div class="jersey-fields">
+                  <div class="form-group">
+                    <label for="f_jersey_nome">Nome na camisa</label>
+                    <input type="text" id="f_jersey_nome" maxlength="30" placeholder="Ex: ALESSANDRO"
+                      autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                  </div>
+                  <div class="form-group">
+                    <label for="f_jersey_numero">Número na camisa</label>
+                    <input type="text" id="f_jersey_numero" inputmode="numeric" maxlength="2" placeholder="Ex: 07"
+                      autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                  </div>
+                </div>
+                <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros à esquerda são mantidos.</p>
+                <p class="customization-hint" id="jerseyPreview" aria-live="polite"></p>
+                <p class="customization-error" id="jerseyError" role="alert" hidden></p>
+              </div>
+
               <!-- BOTÃO ADICIONAR AO CARRINHO E CARRINHO DE COMPRAS -->
               <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem;">
                 <div
@@ -2701,8 +2788,8 @@
                 <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
                   <div class="order-summary-header">
                     <div class="order-summary-title">
-                      <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i> Carrinho de Compras
-                      (<span id="cartItemsCount">0</span>)
+                      <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i>
+                      <span>Carrinho de Compras (<span id="cartItemsCount">0</span>)</span>
                     </div>
                     <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
                   </div>
@@ -2970,13 +3057,19 @@
           Tube Top <span class="sub-tab-count" id="count-Tube Top">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Caneca', this)">
-          Canecas <span class="sub-tab-count" id="count-Caneca">0</span>
+          Caneca + Tirante <span class="sub-tab-count" id="count-Caneca">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Caneca individual', this)">
+          Canecas individuais <span class="sub-tab-count" id="count-Caneca individual">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Tirante individual', this)">
+          Tirantes individuais <span class="sub-tab-count" id="count-Tirante individual">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Corta Vento', this)">
           Corta Vento <span class="sub-tab-count" id="count-Corta Vento">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Eco Bag', this)">
-          Eco Bag <span class="sub-tab-count" id="count-Eco Bag">0</span>
+          Ecobag <span class="sub-tab-count" id="count-Eco Bag">0</span>
         </button>
         <button class="sub-tab-btn active" id="btnTabTodas" onclick="switchSubTab('todas', this)">
           Todas as Respostas <span class="sub-tab-count" id="count-todas">0</span>
@@ -3201,8 +3294,11 @@
       "Jersey": 100,
       "Tube Top": 50,
       "Oversize": 65,
+      // Identificador histórico do combo: não reutilizar para a caneca avulsa.
       "Caneca": 45,
-      "Corta Vento": 165,
+      "Caneca individual": 35,
+      "Tirante individual": 15,
+      "Corta Vento": 180,
       "Eco Bag": 35
     };
 
@@ -3211,9 +3307,77 @@
       "Tube Top": "Tube Top",
       "Oversize": "Oversize",
       "Caneca": "Caneca + Tirante",
+      "Caneca individual": "Caneca individual",
+      "Tirante individual": "Tirante individual",
       "Corta Vento": "Corta Vento",
-      "Eco Bag": "Eco Bag"
+      "Eco Bag": "Ecobag"
     };
+
+    const PRODUTOS_SEM_TAMANHO = ["Caneca", "Caneca individual", "Tirante individual", "Eco Bag"];
+    const TAMANHOS_PRODUTOS = {};
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function getPersonalizationText(item) {
+      if (item.produto !== "Jersey" || (!item.nomeCamisa && !item.numeroCamisa)) return "";
+      return `Nome: ${item.nomeCamisa}; Número: ${item.numeroCamisa}`;
+    }
+
+    function describeOrderItem(item) {
+      const customization = getPersonalizationText(item);
+      return `${NOMES_PRODUTOS[item.produto] || item.produto} (${item.tamanho}) x${item.quantidade}${customization ? ` [${customization}]` : ""}`;
+    }
+
+    // O backend existente guarda a descrição integral em Produto, mas não devolve itens.
+    // Leia essa descrição sem alterar pedidos antigos nem a estrutura da planilha.
+    function getOrderItems(order) {
+      if (!order) return [];
+      let items = order.itens;
+      if (typeof items === "string") {
+        try { items = JSON.parse(items); } catch (_) { items = null; }
+      }
+      if (Array.isArray(items) && items.length > 0) return items;
+
+      const aliases = new Map();
+      Object.keys(PRECOS_PRODUTOS).forEach(key => {
+        aliases.set(key.toLowerCase(), key);
+        aliases.set(NOMES_PRODUTOS[key].toLowerCase(), key);
+      });
+      const names = [...aliases.keys()].sort((a, b) => b.length - a.length)
+        .map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      const pattern = new RegExp(
+        "(?:^|\\s+\\+\\s+)(?:Camisa\\s+)?(" + names.join("|") + ")" +
+        "(?:\\s*\\(([^)]+)\\))?(?:\\s*x(\\d+))?" +
+        "(?:\\s*\\[Nome: ([^;\\]]+); Número: (\\d{1,2})\\])?(?=\\s+\\+\\s+|$)", "gi"
+      );
+      const matches = [...String(order.produto || "").trim().matchAll(pattern)];
+      return matches.map(match => {
+        const produto = aliases.get(match[1].toLowerCase());
+        const quantity = Number.parseInt(match[3] || (matches.length === 1 ? order.quantidade : 1), 10);
+        const quantidade = Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
+        const unitPrice = PRECOS_PRODUTOS[produto];
+        return {
+          produto,
+          tamanho: match[2] || (PRODUTOS_SEM_TAMANHO.includes(produto) ? "-" : order.tamanho || "-"),
+          quantidade, unitPrice, subtotal: unitPrice * quantidade,
+          ...(match[4] ? { nomeCamisa: match[4], numeroCamisa: match[5] } : {})
+        };
+      });
+    }
+
+    function orderHasProduct(order, product) {
+      return getOrderItems(order).some(item => item.produto === product);
+    }
+
+    function refreshCatalogPrices() {
+      document.querySelectorAll(".product-tile[data-product]").forEach(tile => {
+        tile.querySelector(".product-price").textContent = formatCurrency(PRECOS_PRODUTOS[tile.dataset.product]);
+      });
+    }
 
     // CARRINHO MULTI-PRODUTOS
     let orderCart = [];
@@ -3249,51 +3413,13 @@
         if (!isNaN(parsed) && parsed > 0) return parsed;
       }
 
-      // 4. Se tiver array de itens no carrinho
-      let itemsList = order.itens;
-      if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
-        try { itemsList = JSON.parse(itemsList); } catch (e) { }
-      }
-      if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
-        let sum = 0;
-        itemsList.forEach(item => {
-          const unitP = (item.unitPrice !== undefined && item.unitPrice > 0) ? item.unitPrice : (PRECOS_PRODUTOS[item.produto] || 0);
-          const q = parseInt(item.quantidade || 1, 10);
-          sum += unitP * (isNaN(q) || q < 1 ? 1 : q);
-        });
-        if (sum > 0) return sum;
-      }
-
-      // 5. Se o produto bate direto com a tabela oficial de preços
-      if (order.produto && typeof order.produto === "string") {
-        const pTrim = order.produto.trim();
-        if (PRECOS_PRODUTOS[pTrim] !== undefined && PRECOS_PRODUTOS[pTrim] > 0) {
-          const q = parseInt(order.quantidade || 1, 10);
-          return PRECOS_PRODUTOS[pTrim] * (isNaN(q) || q < 1 ? 1 : q);
-        }
-
-        // 6. Varre todos os produtos conhecidos dentro da string do produto (ex: "Corta Vento (M) x1 + Oversize (M) x1" ou "Camisa Oversize (G)")
-        let sum = 0;
-        let matchedAny = false;
-        Object.keys(PRECOS_PRODUTOS).forEach(prodName => {
-          const price = PRECOS_PRODUTOS[prodName];
-          if (price > 0 && order.produto.toLowerCase().includes(prodName.toLowerCase())) {
-            matchedAny = true;
-            const reg = new RegExp(prodName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "[^\\+]*x(\\d+)", "i");
-            const match = order.produto.match(reg);
-            let q = 1;
-            if (match) {
-              q = parseInt(match[1], 10);
-            } else if (!order.produto.includes("+")) {
-              q = parseInt(order.quantidade || 1, 10);
-            }
-            sum += price * (isNaN(q) || q < 1 ? 1 : q);
-          }
-        });
-        if (matchedAny && sum > 0) return sum;
-      }
-
-      return 0;
+      // Fallback apenas quando não há total registrado. A identificação exata
+      // distingue o combo histórico dos avulsos e soma produtos repetidos.
+      return getOrderItems(order).reduce((sum, item) => {
+        const unitPrice = item.unitPrice > 0 ? item.unitPrice : (PRECOS_PRODUTOS[item.produto] || 0);
+        const quantity = parseInt(item.quantidade || 1, 10);
+        return sum + unitPrice * (isNaN(quantity) || quantity < 1 ? 1 : quantity);
+      }, 0);
     }
 
     // RESOLVE O VALOR A EXIBIR PARA O PEDIDO EM QUALQUER ABA
@@ -3302,34 +3428,16 @@
 
       // 1. Se estiver numa aba de produto específico (ex: "Oversize", "Jersey", "Corta Vento", etc.)
       if (tab && tab !== "todas" && tab !== "ranking") {
-        const prodPrice = PRECOS_PRODUTOS[tab] !== undefined ? PRECOS_PRODUTOS[tab] : 0;
-
-        // Verifica itens do carrinho
-        let itemsList = order.itens;
-        if (typeof itemsList === "string" && itemsList.trim().startsWith("[")) {
-          try { itemsList = JSON.parse(itemsList); } catch (e) { }
-        }
-        if (itemsList && Array.isArray(itemsList) && itemsList.length > 0) {
-          const matching = itemsList.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
-          if (matching.length > 0) {
-            let sumTab = 0;
-            matching.forEach(m => {
-              const q = parseInt(m.quantidade || 1, 10);
-              sumTab += (m.unitPrice !== undefined && m.unitPrice > 0 ? m.unitPrice : prodPrice) * (isNaN(q) || q < 1 ? 1 : q);
-            });
-            if (sumTab > 0) return formatCurrency(sumTab);
-          }
-        }
-
-        // Se o produto geral contém o nome da aba
-        if (order.produto && order.produto.includes(tab)) {
-          if (prodPrice > 0) {
-            const reg = new RegExp(tab.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "[^\\+]*x(\\d+)", "i");
-            const match = order.produto.match(reg);
-            const q = match ? parseInt(match[1], 10) : (order.produto.includes("+") ? 1 : parseInt(order.quantidade || 1, 10));
-            return formatCurrency(prodPrice * (isNaN(q) || q < 1 ? 1 : q));
-          }
-        }
+        const items = getOrderItems(order);
+        const matching = items.filter(item => item.produto === tab);
+        if (matching.length === 0) return "A definir";
+        // Um pedido inteiro desse produto mantém o total histórico registrado.
+        if (matching.length === items.length) return formatCurrency(getOrderNumericValue(order));
+        const sumTab = matching.reduce((sum, item) => {
+          const quantity = parseInt(item.quantidade || 1, 10);
+          return sum + (item.unitPrice > 0 ? item.unitPrice : PRECOS_PRODUTOS[tab] || 0) * (isNaN(quantity) || quantity < 1 ? 1 : quantity);
+        }, 0);
+        return sumTab > 0 ? formatCurrency(sumTab) : "A definir";
       }
 
       // 2. Aba "Todas as Respostas" (Geral)
@@ -3375,11 +3483,52 @@
       if (isNaN(qtd) || qtd < 1) qtd = 1;
       const unitPrice = PRECOS_PRODUTOS[prod] !== undefined ? PRECOS_PRODUTOS[prod] : 0;
       const subtotal = unitPrice * qtd;
-      return { produto: prod, tamanho: tam, quantidade: qtd, unitPrice: unitPrice, subtotal: subtotal };
+      const personalization = prod === "Jersey" ? {
+        nomeCamisa: document.getElementById("f_jersey_nome").value.normalize("NFC").trim().replace(/\s+/g, " "),
+        numeroCamisa: document.getElementById("f_jersey_numero").value.trim()
+      } : {};
+      return { produto: prod, tamanho: tam, quantidade: qtd, unitPrice: unitPrice, subtotal: subtotal, ...personalization };
+    }
+
+    function handleJerseyCustomizationChange() {
+      document.getElementById("jerseyError").hidden = true;
+      document.getElementById("f_jersey_nome").removeAttribute("aria-invalid");
+      document.getElementById("f_jersey_numero").removeAttribute("aria-invalid");
+      updateOrderTotals();
+    }
+
+    function validateJerseyCustomization(item) {
+      if (item.produto !== "Jersey") return true;
+      const name = item.nomeCamisa || "";
+      const number = item.numeroCamisa || "";
+      if (!name && !number) return true;
+
+      let message = "";
+      let field = "f_jersey_nome";
+      if (!name || !number) {
+        message = "Para personalizar a Jersey, preencha o nome e o número da camisa.";
+        field = name ? "f_jersey_numero" : "f_jersey_nome";
+      } else if (name.length > 30 || !/^[\p{L}\p{M} '\u2019-]+$/u.test(name) || !/\p{L}/u.test(name)) {
+        message = "Use até 30 letras no nome, com espaços, apóstrofos ou hífens.";
+      } else if (!/^\d{1,2}$/.test(number)) {
+        message = "Informe um número com um ou dois dígitos, como 7, 07 ou 10.";
+        field = "f_jersey_numero";
+      }
+      if (!message) return true;
+      const error = document.getElementById("jerseyError");
+      error.textContent = message;
+      error.hidden = false;
+      const input = document.getElementById(field);
+      input.setAttribute("aria-invalid", "true");
+      input.focus();
+      return false;
     }
 
     function updateOrderTotals() {
       const current = getCurrentFormItem();
+      if (current.produto === "Jersey") {
+        document.getElementById("jerseyPreview").textContent = `Jersey • Tamanho ${current.tamanho} • ${getPersonalizationText(current) || "Sem personalização"}`;
+      }
 
       // Atualiza badge de subtotal do item atualmente sendo configurado
       const subBadge = document.getElementById("currentItemSubtotalBadge");
@@ -3453,9 +3602,11 @@
 
     function addItemToOrder() {
       const current = getCurrentFormItem();
+      if (!validateJerseyCustomization(current)) return;
 
-      // Verifica se o mesmo produto e tamanho já está no carrinho
-      const existing = orderCart.find(i => i.produto === current.produto && i.tamanho === current.tamanho);
+      // Jerseys diferentes não podem compartilhar a mesma linha do carrinho.
+      const existing = orderCart.find(i => i.produto === current.produto && i.tamanho === current.tamanho &&
+        (i.nomeCamisa || "") === (current.nomeCamisa || "") && (i.numeroCamisa || "") === (current.numeroCamisa || ""));
       if (existing) {
         existing.quantidade += current.quantidade;
         existing.subtotal = existing.unitPrice * existing.quantidade;
@@ -3513,7 +3664,9 @@
         row.innerHTML = `
           <div class="order-item-info">
             <span class="order-item-badge">${item.quantidade}x</span>
-            <span><strong>${NOMES_PRODUTOS[item.produto] || item.produto}</strong> ${item.tamanho !== '-' ? '(' + item.tamanho + ')' : ''}</span>
+            <span><strong>${escapeHtml(NOMES_PRODUTOS[item.produto] || item.produto)}</strong> ${item.tamanho !== '-' ? '(' + escapeHtml(item.tamanho) + ')' : ''}
+              ${getPersonalizationText(item) ? `<small class="item-personalization">${escapeHtml(getPersonalizationText(item))}</small>` : ''}
+            </span>
           </div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="order-item-price">${priceStr}</span>
@@ -3855,6 +4008,7 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       applyAuthState();
+      refreshCatalogPrices();
       renderComissariosDropdown();
       saveAndRefresh();
       updateOrderTotals();
@@ -4037,7 +4191,7 @@
     function updateDeliveryCounters() {
       let baseOrders = orders;
       if (currentTab !== "todas" && currentTab !== "ranking") {
-        baseOrders = orders.filter(o => o.produto && (o.produto === currentTab || o.produto.includes(currentTab)));
+        baseOrders = orders.filter(o => orderHasProduct(o, currentTab));
       }
       const total = baseOrders.length;
       const delivered = baseOrders.filter(o => o.statusEntrega === "Entregue").length;
@@ -4055,66 +4209,23 @@
     // RESOLVE O TAMANHO CORRETO PARA A ABA ESPECÍFICA OU GERAL
     function getOrderSizeForTab(order, tab) {
       if (!order) return "-";
-
-      function extractSizeForProduct(text, prodName) {
-        if (!text) return null;
-        const escaped = prodName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const reg = new RegExp(escaped + "\\s*\\(([^)]+)\\)", "i");
-        const m = text.match(reg);
-        return m ? m[1].trim() : null;
-      }
-
-      // 1. ABA DE PRODUTO ESPECÍFICO (ex: Corta Vento, Oversize, Jersey...)
+      let items = getOrderItems(order);
       if (tab && tab !== "todas" && tab !== "ranking") {
-        if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
-          const matching = order.itens.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
-          if (matching.length > 0) {
-            const sizes = matching.map(i => i.tamanho).filter(t => t && t !== "-");
-            const unique = [...new Set(sizes)];
-            return unique.length > 0 ? unique.join(", ") : "-";
-          }
-        }
-        const extracted = extractSizeForProduct(order.produto, tab);
-        if (extracted) return extracted;
-        if (order.tamanho && order.tamanho !== "Múltiplos") return order.tamanho;
-        return "-";
+        items = items.filter(item => item.produto === tab);
       }
-
-      // 2. ABA GERAL ("todas")
-      if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
-        const sizes = order.itens.map(i => i.tamanho).filter(t => t && t !== "-");
-        const unique = [...new Set(sizes)];
-        if (unique.length === 1) return unique[0];
-        if (unique.length > 1) return unique.join(", ");
-        return "-";
+      if (items.length > 0) {
+        const sizes = items.map(item => item.tamanho).filter(size => size && size !== "-");
+        return [...new Set(sizes)].join(", ") || "-";
       }
-
-      if (order.tamanho === "Múltiplos" || !order.tamanho) {
-        const matches = [...(order.produto || "").matchAll(/\(([^)]+)\)/g)];
-        if (matches.length > 0) {
-          const extracted = [...new Set(matches.map(m => m[1].trim()))];
-          if (extracted.length === 1) return extracted[0];
-          return extracted.join(", ");
-        }
-      }
-
-      return order.tamanho || "-";
+      return order.tamanho && order.tamanho !== "Múltiplos" ? order.tamanho : "-";
     }
 
     // RESOLVE O PRODUTO CORRETO PARA A ABA ESPECÍFICA
     function getOrderProductForTab(order, tab) {
       if (!order) return "";
       if (tab && tab !== "todas" && tab !== "ranking") {
-        if (order.itens && Array.isArray(order.itens) && order.itens.length > 0) {
-          const matching = order.itens.filter(i => i.produto === tab || (i.produto && i.produto.includes(tab)));
-          if (matching.length > 0) {
-            return matching.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}) x${i.quantidade}`).join(" + ");
-          }
-        }
-        const escaped = tab.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const reg = new RegExp(escaped + "[^\\+]*", "i");
-        const m = (order.produto || "").match(reg);
-        if (m) return m[0].trim();
+        const matching = getOrderItems(order).filter(item => item.produto === tab);
+        if (matching.length > 0) return matching.map(describeOrderItem).join(" + ");
       }
       return order.produto || "";
     }
@@ -4150,9 +4261,9 @@
       const countCom = document.getElementById("count-comissarios");
       if (countCom) countCom.innerText = comissarios.length;
 
-      const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
+      const prods = Object.keys(PRECOS_PRODUTOS);
       prods.forEach(p => {
-        const c = orders.filter(o => o.produto && (o.produto === p || o.produto.includes(p))).length;
+        const c = orders.filter(o => orderHasProduct(o, p)).length;
         const el = document.getElementById("count-" + p);
         if (el) el.innerText = c;
       });
@@ -4165,7 +4276,7 @@
 
       let filtered = orders;
       if (currentTab !== "todas" && currentTab !== "ranking") {
-        filtered = orders.filter(o => o.produto && (o.produto === currentTab || o.produto.includes(currentTab)));
+        filtered = orders.filter(o => orderHasProduct(o, currentTab));
       }
 
       updateDeliveryCounters();
@@ -4227,8 +4338,8 @@
           <td><strong>${o.nome}</strong></td>
           <td><small style="color: var(--text-secondary);">${o.cpf}</small></td>
           <td>${o.comissario}</td>
-          <td><strong>${prodExibido}</strong></td>
-          <td><span class="size-badge-display">${tamExibido}</span></td>
+          <td><strong>${escapeHtml(prodExibido)}</strong></td>
+          <td><span class="size-badge-display">${escapeHtml(tamExibido)}</span></td>
           <td><span class="val-total-badge">${valExibido}</span></td>
           <td>
             <span class="status-badge ${o.statusPagamento === 'Confirmado' ? 'status-pago' : 'status-pendente'}" onclick="togglePagamento(${o.id})">
@@ -4455,20 +4566,29 @@
 
     // PRODUTO / TAMANHO
     function selectProduct(prod, el) {
+      const selectedProduct = document.getElementById("f_produto");
+      const sizeInput = document.getElementById("f_tamanho");
+      if (!PRODUTOS_SEM_TAMANHO.includes(selectedProduct.value)) {
+        TAMANHOS_PRODUTOS[selectedProduct.value] = sizeInput.value;
+      }
       document.querySelectorAll(".product-tile").forEach(c => c.classList.remove("selected"));
       el.classList.add("selected");
-      document.getElementById("f_produto").value = prod;
+      selectedProduct.value = prod;
 
       const sizeContainer = document.getElementById("sizeGroupContainer");
-      if (prod === "Caneca" || prod === "Eco Bag") {
+      if (PRODUTOS_SEM_TAMANHO.includes(prod)) {
         sizeContainer.style.display = "none";
-        document.getElementById("f_tamanho").value = "-";
+        sizeInput.value = "-";
       } else {
         sizeContainer.style.display = "flex";
-        if (document.getElementById("f_tamanho").value === "-") {
-          document.getElementById("f_tamanho").value = "M";
-        }
+        sizeInput.value = TAMANHOS_PRODUTOS[prod] || "M";
+        document.querySelectorAll(".size-btn").forEach(button => {
+          button.classList.toggle("selected", button.innerText.trim() === sizeInput.value);
+        });
       }
+      document.getElementById("jerseyCustomization").hidden = prod !== "Jersey";
+      document.getElementById("f_jersey_nome").disabled = prod !== "Jersey";
+      document.getElementById("f_jersey_numero").disabled = prod !== "Jersey";
       if (typeof updateOrderTotals === "function") {
         updateOrderTotals();
       }
@@ -4681,7 +4801,8 @@
 
       // Se houver produtos no carrinho, usa o carrinho. Se não, usa o produto atual selecionado no form.
       const currentItem = getCurrentFormItem();
-      const allItems = orderCart.length > 0 ? [...orderCart] : [currentItem];
+      if (orderCart.length === 0 && !validateJerseyCustomization(currentItem)) return;
+      const allItems = orderCart.length > 0 ? orderCart.map(item => ({ ...item })) : [currentItem];
 
       let totalQtd = 0;
       let totalValor = 0;
@@ -4696,10 +4817,12 @@
       let produtoDescricao = "";
       let tamanhoDescricao = "";
       if (allItems.length === 1) {
-        produtoDescricao = allItems[0].produto;
+        // Preserve o formato antigo dos pedidos simples e use a descrição completa
+        // quando houver personalização, pois o backend não armazena o array itens.
+        produtoDescricao = getPersonalizationText(allItems[0]) ? describeOrderItem(allItems[0]) : allItems[0].produto;
         tamanhoDescricao = allItems[0].tamanho;
       } else {
-        produtoDescricao = allItems.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}) x${i.quantidade}`).join(" + ");
+        produtoDescricao = allItems.map(describeOrderItem).join(" + ");
         const sizes = allItems.map(i => i.tamanho).filter(t => t && t !== "-");
         const uniqueSizes = [...new Set(sizes)];
         if (uniqueSizes.length === 1) {
@@ -4755,10 +4878,11 @@
         const priceTxt = item.unitPrice > 0 ? formatCurrency(item.subtotal) : '<span style="color: var(--text-muted); font-size: 0.8rem;">A definir</span>';
         tr.innerHTML = `
           <td>
-            <strong style="color: #fff;">${NOMES_PRODUTOS[item.produto] || item.produto}</strong>
+            <strong style="color: #fff;">${escapeHtml(NOMES_PRODUTOS[item.produto] || item.produto)}</strong>
+            ${getPersonalizationText(item) ? `<small class="item-personalization">${escapeHtml(getPersonalizationText(item))}</small>` : ''}
           </td>
           <td style="text-align: center;">
-            <span class="size-badge-display">${item.tamanho}</span>
+            <span class="size-badge-display">${escapeHtml(item.tamanho)}</span>
           </td>
           <td style="text-align: center; font-weight: 700; color: #fff;">
             ${item.quantidade}x
@@ -4927,6 +5051,16 @@
       if (fQtd) fQtd.value = "1";
       const fFile = document.getElementById("f_comprovante_file");
       if (fFile) fFile.value = "";
+      document.getElementById("f_jersey_nome").value = "";
+      document.getElementById("f_jersey_numero").value = "";
+      document.getElementById("f_jersey_nome").disabled = true;
+      document.getElementById("f_jersey_numero").disabled = true;
+      document.getElementById("f_jersey_nome").removeAttribute("aria-invalid");
+      document.getElementById("f_jersey_numero").removeAttribute("aria-invalid");
+      document.getElementById("jerseyCustomization").hidden = true;
+      document.getElementById("jerseyError").hidden = true;
+      document.getElementById("jerseyPreview").textContent = "";
+      Object.keys(TAMANHOS_PRODUTOS).forEach(product => delete TAMANHOS_PRODUTOS[product]);
 
       // Limpa dados de upload, carrinho e pedido pendente
       currentUploadedFile = null;
@@ -5014,12 +5148,12 @@
       const wsGeral = XLSX.utils.aoa_to_sheet(wsGeralData);
       XLSX.utils.book_append_sheet(wb, wsGeral, "Todas as Respostas");
 
-      const prods = ["Oversize", "Jersey", "Tube Top", "Caneca", "Corta Vento", "Eco Bag"];
+      const prods = Object.keys(PRECOS_PRODUTOS);
       prods.forEach(p => {
         const prodData = [
           ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
         ];
-        orders.filter(o => o.produto && (o.produto === p || o.produto.includes(p))).forEach(o => {
+        orders.filter(o => orderHasProduct(o, p)).forEach(o => {
           const tam = getOrderSizeForTab(o, p);
           const prodDesc = getOrderProductForTab(o, p);
           prodData.push([

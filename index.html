@@ -1197,6 +1197,21 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
+    /* BADGE DE PERSONALIZAÇÃO */
+    .badge-perso-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      background: rgba(200, 70, 118, 0.14);
+      border: 1px solid rgba(200, 70, 118, 0.35);
+      border-radius: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #f69cb9;
+      margin-top: 0.25rem;
+    }
+
     /* SISTEMA VISUAL DE DIFERENCIAÇÃO DE ENTREGA */
     tr.row-entregue {
       background: rgba(16, 185, 129, 0.05) !important;
@@ -3514,6 +3529,19 @@
       return `Nome: ${item.nomeCamisa}; Número: ${item.numeroCamisa}`;
     }
 
+    function getOrderPersonalization(order) {
+      if (!order) return "-";
+      if (order.personalizacao && order.personalizacao !== "-") return order.personalizacao;
+      const items = getOrderItems(order);
+      const custom = items.filter(i => getPersonalizationText(i)).map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}): ${getPersonalizationText(i)}`);
+      if (custom.length > 0) return custom.join("; ");
+      const match = (order.produto || "").match(/\[(?:Nome:\s*([^;\]]+);\s*Número:\s*(\d{1,2})|([^\]]+))\]/i);
+      if (match) {
+        return match[1] && match[2] ? `Nome: ${match[1].trim()}; Número: ${match[2].trim()}` : match[0].replace(/^\[|\]$/g, "").trim();
+      }
+      return "-";
+    }
+
     function describeOrderItem(item) {
       if (item.tipo === "kit") return PesadeloKits.describeItem(item, describeOrderItem, formatCurrency);
       const customization = getPersonalizationText(item);
@@ -4627,7 +4655,9 @@
 
         const clienteNome = (o.nome || "Cliente").toString().trim();
         const primeiroNome = clienteNome.split(/\s+/)[0] || "Cliente";
-        const zapMsg = encodeURIComponent(`Olá ${primeiroNome}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${prodExibido} (${tamExibido}).`);
+        const persoTexto = getOrderPersonalization(o);
+        const persoTxt = (persoTexto && persoTexto !== "-") ? ` com personalização [${persoTexto}]` : "";
+        const zapMsg = encodeURIComponent(`Olá ${primeiroNome}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${prodExibido} (${tamExibido})${persoTxt}.`);
         const zapUrl = `https://wa.me/55${rawPhone}?text=${zapMsg}`;
 
         let compHtml = `<span style="color: var(--text-muted); font-size: 0.75rem;">Sem anexo</span>`;
@@ -4640,6 +4670,9 @@
         }
 
         const valExibido = getOrderRowPrice(o, currentTab);
+        const persoBadge = (persoTexto && persoTexto !== "-")
+          ? `<div class="badge-perso-display" title="Personalização Jersey"><i class="fa-solid fa-shirt"></i> ${escapeHtml(persoTexto)}</div>`
+          : "";
 
         const tr = document.createElement("tr");
         tr.className = isEntregue ? "row-entregue" : "row-pendente";
@@ -4648,7 +4681,10 @@
           <td><strong>${o.nome}</strong></td>
           <td><small style="color: var(--text-secondary);">${o.cpf}</small></td>
           <td>${o.comissario}</td>
-          <td><strong>${escapeHtml(prodExibido)}</strong></td>
+          <td>
+            <strong>${escapeHtml(prodExibido)}</strong>
+            ${persoBadge}
+          </td>
           <td><span class="size-badge-display">${escapeHtml(tamExibido)}</span></td>
           <td><span class="val-total-badge">${valExibido}</span></td>
           <td>
@@ -5008,8 +5044,10 @@
       title.innerText = `Comprovante • ${o.nome}`;
       const prodDesc = o.produto || "Pedido";
       const tamDesc = o.tamanho ? `(${o.tamanho})` : "";
+      const persoTexto = getOrderPersonalization(o);
+      const persoDesc = (persoTexto && persoTexto !== "-") ? ` • ${persoTexto}` : "";
       const valDesc = getOrderRowPrice(o, "todas");
-      sub.innerText = `${prodDesc} ${tamDesc} • ${valDesc} • ${formatOrderDate(o.data)}`;
+      sub.innerText = `${prodDesc} ${tamDesc}${persoDesc} • ${valDesc} • ${formatOrderDate(o.data)}`;
 
       const fileData = o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:") ? o.comprovante : "");
       const fileUrl = (o.comprovanteUrl || "").toString();
@@ -5151,6 +5189,8 @@
         valorFormatado = "A definir";
       }
 
+      const personalizacaoGeral = getOrderPersonalization({ itens: allItems, produto: produtoDescricao });
+
       pendingOrderData = {
         id: Date.now(),
         data: new Date().toLocaleDateString("pt-BR") + " " + new Date().toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }),
@@ -5160,6 +5200,7 @@
         comissario: comissario,
         produto: produtoDescricao,
         tamanho: tamanhoDescricao,
+        personalizacao: personalizacaoGeral,
         quantidade: totalQtd,
         valorTotal: totalValor,
         valorFormatado: valorFormatado,
@@ -5449,7 +5490,7 @@
       const wb = XLSX.utils.book_new();
 
       const wsGeralData = [
-        ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
+        ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Personalização", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
       ];
       orders.forEach(o => {
         const tam = getOrderSizeForTab(o, "todas");
@@ -5460,6 +5501,7 @@
           o.comissario,
           o.produto,
           tam,
+          getOrderPersonalization(o),
           getOrderRowPrice(o, "todas"),
           o.statusPagamento,
           o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
@@ -5472,7 +5514,7 @@
       const prods = Object.keys(PRECOS_PRODUTOS);
       prods.forEach(p => {
         const prodData = [
-          ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
+          ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Personalização", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
         ];
         orders.filter(o => orderHasProduct(o, p)).forEach(o => {
           const tam = getOrderSizeForTab(o, p);
@@ -5484,6 +5526,7 @@
             o.comissario,
             prodDesc,
             tam,
+            getOrderPersonalization(o),
             getOrderRowPrice(o, p),
             o.statusPagamento,
             o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),

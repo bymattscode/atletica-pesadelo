@@ -30,18 +30,22 @@ function setupDatabase() {
     sheetPedidos.appendRow([
       "ID", "Data", "Nome", "Telefone", "CPF",
       "Comissário", "Produto", "Tamanho", "Quantidade",
-      "Status Pagamento", "Status Entrega", "Comprovante", "Valor Total"
+      "Status Pagamento", "Status Entrega", "Comprovante", "Valor Total", "Personalização"
     ]);
-    sheetPedidos.getRange(1, 1, 1, 13).setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
+    sheetPedidos.getRange(1, 1, 1, 14).setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
     sheetPedidos.setFrozenRows(1);
   } else {
-    // Se a aba ja existir com 11 ou 12 colunas, adiciona as colunas faltantes
+    // Se a aba ja existir com 11, 12 ou 13 colunas, adiciona as colunas faltantes
     if (sheetPedidos.getLastColumn() < 12) {
       sheetPedidos.getRange(1, 12).setValue("Comprovante")
         .setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
     }
     if (sheetPedidos.getLastColumn() < 13) {
       sheetPedidos.getRange(1, 13).setValue("Valor Total")
+        .setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
+    }
+    if (sheetPedidos.getLastColumn() < 14) {
+      sheetPedidos.getRange(1, 14).setValue("Personalização")
         .setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
     }
   }
@@ -152,6 +156,18 @@ function doGet(e) {
         }
       }
 
+      // Se personalizacao nao estiver na coluna 14, tenta extrair da descricao do produto (ex: [Nome: ...; Número: ...])
+      let personalizacaoFinal = (row[13] !== undefined && row[13] !== null && row[13].toString().trim() !== "") ? row[13].toString().trim() : "";
+      if (!personalizacaoFinal || personalizacaoFinal === "") {
+        const prodStr = (row[6] || "").toString();
+        const mPerso = prodStr.match(/\[(?:Nome:\s*([^;\]]+);\s*Número:\s*(\d{1,2})|([^\]]+))\]/i);
+        if (mPerso) {
+          personalizacaoFinal = mPerso[1] && mPerso[2] ? ("Nome: " + mPerso[1].trim() + "; Número: " + mPerso[2].trim()) : mPerso[0].replace(/^\[|\]$/g, "").trim();
+        } else {
+          personalizacaoFinal = "-";
+        }
+      }
+
       orders.push({
         id: row[0],
         data: dataFormatada,
@@ -165,7 +181,8 @@ function doGet(e) {
         statusPagamento: row[9] || "Confirmado",
         statusEntrega: row[10] || "Pendente",
         comprovanteUrl: row[11] || "",
-        valorTotal: valorFinal
+        valorTotal: valorFinal,
+        personalizacao: personalizacaoFinal
       });
     }
   }
@@ -251,6 +268,18 @@ function doPost(e) {
         }
       }
 
+      // Personalizacao da Jersey ou kit
+      let personalizacaoGravada = (o.personalizacao || "").toString().trim();
+      if (!personalizacaoGravada || personalizacaoGravada === "") {
+        const prodStr = (o.produto || "").toString();
+        const mPerso = prodStr.match(/\[(?:Nome:\s*([^;\]]+);\s*Número:\s*(\d{1,2})|([^\]]+))\]/i);
+        if (mPerso) {
+          personalizacaoGravada = mPerso[1] && mPerso[2] ? ("Nome: " + mPerso[1].trim() + "; Número: " + mPerso[2].trim()) : mPerso[0].replace(/^\[|\]$/g, "").trim();
+        } else {
+          personalizacaoGravada = "-";
+        }
+      }
+
       sheet.appendRow([
         o.id,
         o.data,
@@ -264,7 +293,8 @@ function doPost(e) {
         o.statusPagamento || "Confirmado",
         o.statusEntrega || "Pendente",
         comprovanteLink,
-        valorGravado
+        valorGravado,
+        personalizacaoGravada
       ]);
 
       return ContentService.createTextOutput(JSON.stringify({

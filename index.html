@@ -899,22 +899,32 @@
     /* PAINEL DE ABAS */
     .sub-tabs-container {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       gap: 0.45rem;
       background: var(--bg-card);
-      padding: 0.45rem 0.75rem;
+      padding: 0.45rem 0.65rem;
       border-radius: 8px;
       border: 1px solid var(--border);
       overflow-x: auto;
       margin-bottom: 1.5rem;
-      text-align: center;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+
+    .sub-tabs-container::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .sub-tabs-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
     }
 
     .sub-tab-btn {
-      padding: 0.55rem 1rem;
+      padding: 0.5rem 0.85rem;
       border-radius: 6px;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--text-secondary);
       background: transparent;
@@ -926,6 +936,7 @@
       white-space: nowrap;
       transition: 0.15s;
       font-family: inherit;
+      flex-shrink: 0;
     }
 
     .sub-tab-btn:hover {
@@ -1020,13 +1031,24 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+
+    .table-container::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: center;
-      font-size: 0.86rem;
+      font-size: 0.83rem;
     }
 
     thead {
@@ -1035,8 +1057,8 @@
     }
 
     th {
-      padding: 0.85rem 1rem;
-      font-size: 0.74rem;
+      padding: 0.75rem 0.65rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--text-secondary);
@@ -1046,7 +1068,7 @@
     }
 
     td {
-      padding: 0.85rem 1rem;
+      padding: 0.7rem 0.65rem;
       border-bottom: 1px solid var(--border);
       vertical-align: middle;
       white-space: nowrap;
@@ -1058,24 +1080,48 @@
     }
 
     .status-badge {
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
+      padding: 0.28rem 0.65rem;
+      border-radius: 6px;
       font-size: 0.75rem;
       font-weight: 700;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
       cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      white-space: nowrap;
     }
 
     .status-pago {
-      background: rgba(16, 185, 129, 0.12);
+      background: rgba(16, 185, 129, 0.14);
       color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .status-pago:hover {
+      background: rgba(16, 185, 129, 0.25);
+      transform: translateY(-1px);
     }
 
     .status-pendente {
-      background: rgba(245, 158, 11, 0.12);
+      background: rgba(245, 158, 11, 0.14);
       color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.25);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .status-pendente:hover {
+      background: rgba(245, 158, 11, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .status-reprovado {
+      background: rgba(239, 68, 68, 0.14);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .status-reprovado:hover {
+      background: rgba(239, 68, 68, 0.25);
+      transform: translateY(-1px);
     }
 
     .row-actions {
@@ -1201,25 +1247,28 @@
     .table-prod-cell {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 0.3rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      min-width: 175px;
+      white-space: nowrap;
     }
 
     .badge-perso-display {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.35rem;
-      padding: 0.2rem 0.55rem;
+      padding: 0.22rem 0.65rem;
       background: rgba(200, 70, 118, 0.16);
       border: 1px solid rgba(200, 70, 118, 0.4);
-      border-radius: 5px;
-      font-size: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.74rem;
       font-weight: 700;
       color: #f69cb9;
-      margin-top: 0.15rem;
-      white-space: normal;
-      word-break: break-word;
+      white-space: nowrap;
       line-height: 1.25;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
     /* SISTEMA VISUAL DE DIFERENCIAÇÃO DE ENTREGA */
@@ -3254,14 +3303,14 @@
 
       <!-- NAVEGAÇÃO DE ABAS -->
       <div class="sub-tabs-container">
-        <button class="sub-tab-btn" id="btnTabComissarios" onclick="switchSubTab('ranking', this)">
-          Comissários <span class="sub-tab-count" id="count-comissarios">0</span>
-        </button>
-        <button class="sub-tab-btn" onclick="switchSubTab('Oversize', this)">
-          Oversizes <span class="sub-tab-count" id="count-Oversize">0</span>
+        <button class="sub-tab-btn active" id="btnTabTodas" onclick="switchSubTab('todas', this)">
+          Todas as Respostas <span class="sub-tab-count" id="count-todas">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Jersey', this)">
           Jerseys <span class="sub-tab-count" id="count-Jersey">0</span>
+        </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('Oversize', this)">
+          Oversizes <span class="sub-tab-count" id="count-Oversize">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('Tube Top', this)">
           Tube Top <span class="sub-tab-count" id="count-Tube Top">0</span>
@@ -3281,8 +3330,8 @@
         <button class="sub-tab-btn" onclick="switchSubTab('Eco Bag', this)">
           Ecobag <span class="sub-tab-count" id="count-Eco Bag">0</span>
         </button>
-        <button class="sub-tab-btn active" id="btnTabTodas" onclick="switchSubTab('todas', this)">
-          Todas as Respostas <span class="sub-tab-count" id="count-todas">0</span>
+        <button class="sub-tab-btn" id="btnTabComissarios" onclick="switchSubTab('ranking', this)">
+          Comissários <span class="sub-tab-count" id="count-comissarios">0</span>
         </button>
       </div>
 
@@ -3469,14 +3518,26 @@
       <div class="receipt-preview-body" id="receiptPreviewContent">
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
-        <a id="btnReceiptExternal" href="#" target="_blank" class="btn-cadastrar-comissario"
-          style="display: none; text-decoration: none; align-items: center; gap: 0.5rem;">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir no Google Drive
-        </a>
-        <button type="button" class="btn-confirm-cancel" onclick="closeReceiptModal()">
-          Fechar
-        </button>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border);">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 0.82rem; color: var(--text-secondary); font-weight: 600;">Status:</span>
+          <span id="receiptModalStatusBadge" class="status-badge status-pendente">Pendente</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <button type="button" id="btnReceiptApprove" onclick="setPaymentStatusFromModal('Confirmado')" style="background: rgba(16, 185, 129, 0.16); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: 0.15s;">
+            <i class="fa-solid fa-circle-check"></i> Aprovar Pagamento
+          </button>
+          <button type="button" id="btnReceiptReject" onclick="setPaymentStatusFromModal('Reprovado')" style="background: rgba(239, 68, 68, 0.16); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: 0.15s;">
+            <i class="fa-solid fa-circle-xmark"></i> Reprovar
+          </button>
+          <a id="btnReceiptExternal" href="#" target="_blank" class="btn-cadastrar-comissario"
+            style="display: none; text-decoration: none; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Anexo
+          </a>
+          <button type="button" class="btn-confirm-cancel" onclick="closeReceiptModal()">
+            Fechar
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -3549,7 +3610,11 @@
 
     function cleanProductDisplay(prod) {
       if (!prod) return "";
-      return String(prod).replace(/\s*\[(?:Nome:[^\]]+|[^\]]+)\]/gi, "").trim();
+      let p = String(prod).replace(/\s*\[(?:Nome:[^\]]+|[^\]]+)\]/gi, "").trim();
+      // Se for apenas "Caneca" (combo histórico de R$ 45), exibe como "Caneca + Tirante"
+      // Evita alterar "Caneca individual" ou se já estiver "Caneca + Tirante"
+      p = p.replace(/\bCaneca\b(?!\s*\+\s*Tirante|\s+individual)/gi, "Caneca + Tirante");
+      return p;
     }
 
     function getOrderPersonalization(order) {
@@ -4706,6 +4771,17 @@
           ? `<div class="badge-perso-display" title="Personalização Jersey"><i class="fa-solid fa-shirt"></i> ${escapeHtml(persoTexto)}</div>`
           : "";
 
+        let statusCls = "status-pendente";
+        let statusIcon = '<i class="fa-solid fa-clock"></i>';
+        const stLower = (o.statusPagamento || "Pendente").toLowerCase();
+        if (stLower.includes("confirmado") || stLower.includes("aprovado") || stLower.includes("pago")) {
+          statusCls = "status-pago";
+          statusIcon = '<i class="fa-solid fa-circle-check"></i>';
+        } else if (stLower.includes("reprovado") || stLower.includes("cancelado")) {
+          statusCls = "status-reprovado";
+          statusIcon = '<i class="fa-solid fa-circle-xmark"></i>';
+        }
+
         const tr = document.createElement("tr");
         tr.className = isEntregue ? "row-entregue" : "row-pendente";
         tr.innerHTML = `
@@ -4722,8 +4798,8 @@
           <td><span class="size-badge-display">${escapeHtml(tamExibido)}</span></td>
           <td><span class="val-total-badge">${valExibido}</span></td>
           <td>
-            <span class="status-badge ${o.statusPagamento === 'Confirmado' ? 'status-pago' : 'status-pendente'}" onclick="togglePagamento(${o.id})">
-              ${o.statusPagamento}
+            <span class="status-badge ${statusCls}" onclick="togglePagamento(${o.id})" title="Clique para alternar: Pendente ➔ Confirmado ➔ Reprovado">
+              ${statusIcon} ${escapeHtml(o.statusPagamento || 'Pendente')}
             </span>
           </td>
           <td>
@@ -4761,15 +4837,32 @@
       showToast(`Pedido de ${primeiroNome} marcado como ${novoStatus}.`);
     }
 
+    function setPaymentStatus(id, status) {
+      const ord = orders.find(x => x.id === id);
+      if (!ord) return;
+      ord.statusPagamento = status;
+      saveAndRefresh();
+      sendToGoogleSheets({ action: "updateOrder", id: id, statusPagamento: status });
+      const primeiroNome = (ord.nome || "Cliente").trim().split(" ")[0];
+      showToast(`Pagamento de ${primeiroNome}: ${status}.`);
+      if (typeof currentReceiptOrderId !== "undefined" && currentReceiptOrderId === id) {
+        updateReceiptModalStatusBadge(ord);
+      }
+    }
+
     function togglePagamento(id) {
       const ord = orders.find(x => x.id === id);
-      if (ord) {
-        ord.statusPagamento = ord.statusPagamento === "Confirmado" ? "Pendente" : "Confirmado";
-        saveAndRefresh();
-        sendToGoogleSheets({ action: "updateOrder", id: id, statusPagamento: ord.statusPagamento });
-        const primeiroNome = (ord.nome || "Cliente").trim().split(" ")[0];
-        showToast(`Pagamento de ${primeiroNome} marcado como ${ord.statusPagamento}.`);
+      if (!ord) return;
+      const current = (ord.statusPagamento || "Pendente").toLowerCase();
+      let nextStatus = "Confirmado";
+      if (current.includes("confirmado") || current.includes("aprovado") || current.includes("pago")) {
+        nextStatus = "Reprovado";
+      } else if (current.includes("reprovado") || current.includes("cancelado")) {
+        nextStatus = "Pendente";
+      } else {
+        nextStatus = "Confirmado";
       }
+      setPaymentStatus(id, nextStatus);
     }
 
     function changeEntrega(id, val) {
@@ -5143,12 +5236,40 @@
         `;
       }
 
+      currentReceiptOrderId = orderId;
+      updateReceiptModalStatusBadge(o);
       modal.classList.add("active");
+    }
+
+    let currentReceiptOrderId = null;
+
+    function updateReceiptModalStatusBadge(order) {
+      const badge = document.getElementById("receiptModalStatusBadge");
+      if (!badge || !order) return;
+      const st = order.statusPagamento || "Pendente";
+      const stLower = st.toLowerCase();
+      let cls = "status-pendente";
+      let icon = '<i class="fa-solid fa-clock"></i>';
+      if (stLower.includes("confirmado") || stLower.includes("aprovado") || stLower.includes("pago")) {
+        cls = "status-pago";
+        icon = '<i class="fa-solid fa-circle-check"></i>';
+      } else if (stLower.includes("reprovado") || stLower.includes("cancelado")) {
+        cls = "status-reprovado";
+        icon = '<i class="fa-solid fa-circle-xmark"></i>';
+      }
+      badge.className = `status-badge ${cls}`;
+      badge.innerHTML = `${icon} ${escapeHtml(st)}`;
+    }
+
+    function setPaymentStatusFromModal(newStatus) {
+      if (!currentReceiptOrderId) return;
+      setPaymentStatus(currentReceiptOrderId, newStatus);
     }
 
     function closeReceiptModal() {
       const modal = document.getElementById("receiptModal");
       if (modal) modal.classList.remove("active");
+      currentReceiptOrderId = null;
     }
 
     function handleReceiptOverlayClick(e) {
@@ -5243,7 +5364,7 @@
         comprovanteType: currentUploadedFile ? currentUploadedFile.type : "",
         comprovanteBase64: currentUploadedFile ? currentUploadedFile.base64 : "",
         comprovanteUrl: "",
-        statusPagamento: "Confirmado",
+        statusPagamento: "Pendente",
         statusEntrega: "Pendente"
       };
 

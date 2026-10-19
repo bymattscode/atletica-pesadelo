@@ -167,6 +167,9 @@ function doGet(e) {
           personalizacaoFinal = "-";
         }
       }
+      if (personalizacaoFinal && personalizacaoFinal !== "-") {
+        personalizacaoFinal = personalizacaoFinal.replace(/^Jersey(?:\s*\([^)]*\))?:\s*(Nome:\s*)/i, "$1");
+      }
 
       orders.push({
         id: row[0],
@@ -278,6 +281,9 @@ function doPost(e) {
         } else {
           personalizacaoGravada = "-";
         }
+      }
+      if (personalizacaoGravada && personalizacaoGravada !== "-") {
+        personalizacaoGravada = personalizacaoGravada.replace(/^Jersey(?:\s*\([^)]*\))?:\s*(Nome:\s*)/i, "$1");
       }
 
       sheet.appendRow([

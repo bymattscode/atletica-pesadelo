@@ -1197,19 +1197,29 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* BADGE DE PERSONALIZAÇÃO */
+    /* PRODUTO & PERSONALIZAÇÃO NA TABELA */
+    .table-prod-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
+    }
+
     .badge-perso-display {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
       padding: 0.2rem 0.55rem;
-      background: rgba(200, 70, 118, 0.14);
-      border: 1px solid rgba(200, 70, 118, 0.35);
+      background: rgba(200, 70, 118, 0.16);
+      border: 1px solid rgba(200, 70, 118, 0.4);
       border-radius: 5px;
       font-size: 0.75rem;
       font-weight: 700;
       color: #f69cb9;
-      margin-top: 0.25rem;
+      margin-top: 0.15rem;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.25;
     }
 
     /* SISTEMA VISUAL DE DIFERENCIAÇÃO DE ENTREGA */
@@ -3529,15 +3539,36 @@
       return `Nome: ${item.nomeCamisa}; Número: ${item.numeroCamisa}`;
     }
 
+    function formatPersonalizationDisplay(text) {
+      if (!text || text === "-" || String(text).trim() === "") return "-";
+      let clean = String(text).trim();
+      // Remove prefixos redundantes de Jersey única como "Jersey (M): " ou "Jersey: "
+      clean = clean.replace(/^Jersey(?:\s*\([^)]*\))?:\s*(Nome:\s*)/i, "$1");
+      return clean;
+    }
+
+    function cleanProductDisplay(prod) {
+      if (!prod) return "";
+      return String(prod).replace(/\s*\[(?:Nome:[^\]]+|[^\]]+)\]/gi, "").trim();
+    }
+
     function getOrderPersonalization(order) {
       if (!order) return "-";
-      if (order.personalizacao && order.personalizacao !== "-") return order.personalizacao;
+      if (order.personalizacao && order.personalizacao !== "-") {
+        return formatPersonalizationDisplay(order.personalizacao);
+      }
       const items = getOrderItems(order);
-      const custom = items.filter(i => getPersonalizationText(i)).map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}): ${getPersonalizationText(i)}`);
-      if (custom.length > 0) return custom.join("; ");
+      const customItems = items.filter(i => getPersonalizationText(i));
+      if (customItems.length > 0) {
+        if (customItems.length === 1) {
+          return getPersonalizationText(customItems[0]);
+        }
+        return customItems.map(i => `${NOMES_PRODUTOS[i.produto] || i.produto} (${i.tamanho}): ${getPersonalizationText(i)}`).join("; ");
+      }
       const match = (order.produto || "").match(/\[(?:Nome:\s*([^;\]]+);\s*Número:\s*(\d{1,2})|([^\]]+))\]/i);
       if (match) {
-        return match[1] && match[2] ? `Nome: ${match[1].trim()}; Número: ${match[2].trim()}` : match[0].replace(/^\[|\]$/g, "").trim();
+        const extracted = match[1] && match[2] ? `Nome: ${match[1].trim()}; Número: ${match[2].trim()}` : match[0].replace(/^\[|\]$/g, "").trim();
+        return formatPersonalizationDisplay(extracted);
       }
       return "-";
     }
@@ -4650,14 +4681,15 @@
       filtered.forEach(o => {
         const rawPhone = (o.telefone || "").replace(/\D/g, "");
         const prodExibido = getOrderProductForTab(o, currentTab);
+        const prodNomeLimpo = cleanProductDisplay(prodExibido);
         const tamExibido = getOrderSizeForTab(o, currentTab);
         const isEntregue = o.statusEntrega === "Entregue";
 
         const clienteNome = (o.nome || "Cliente").toString().trim();
         const primeiroNome = clienteNome.split(/\s+/)[0] || "Cliente";
         const persoTexto = getOrderPersonalization(o);
-        const persoTxt = (persoTexto && persoTexto !== "-") ? ` com personalização [${persoTexto}]` : "";
-        const zapMsg = encodeURIComponent(`Olá ${primeiroNome}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${prodExibido} (${tamExibido})${persoTxt}.`);
+        const persoTxt = (persoTexto && persoTexto !== "-") ? ` (Personalização: ${persoTexto})` : "";
+        const zapMsg = encodeURIComponent(`Olá ${primeiroNome}, aqui é da Atlética Pesadelo AAAEFGA. Passando para avisar sobre o seu pedido de ${prodNomeLimpo}${persoTxt}.`);
         const zapUrl = `https://wa.me/55${rawPhone}?text=${zapMsg}`;
 
         let compHtml = `<span style="color: var(--text-muted); font-size: 0.75rem;">Sem anexo</span>`;
@@ -4682,8 +4714,10 @@
           <td><small style="color: var(--text-secondary);">${o.cpf}</small></td>
           <td>${o.comissario}</td>
           <td>
-            <strong>${escapeHtml(prodExibido)}</strong>
-            ${persoBadge}
+            <div class="table-prod-cell">
+              <strong>${escapeHtml(prodNomeLimpo)}</strong>
+              ${persoBadge}
+            </div>
           </td>
           <td><span class="size-badge-display">${escapeHtml(tamExibido)}</span></td>
           <td><span class="val-total-badge">${valExibido}</span></td>
@@ -5042,12 +5076,12 @@
       const btnExt = document.getElementById("btnReceiptExternal");
 
       title.innerText = `Comprovante • ${o.nome}`;
-      const prodDesc = o.produto || "Pedido";
-      const tamDesc = o.tamanho ? `(${o.tamanho})` : "";
+      const prodDesc = cleanProductDisplay(o.produto || "Pedido");
+      const tamDesc = o.tamanho ? ` (${o.tamanho})` : "";
       const persoTexto = getOrderPersonalization(o);
-      const persoDesc = (persoTexto && persoTexto !== "-") ? ` • ${persoTexto}` : "";
+      const persoDesc = (persoTexto && persoTexto !== "-") ? ` • Personalização: ${persoTexto}` : "";
       const valDesc = getOrderRowPrice(o, "todas");
-      sub.innerText = `${prodDesc} ${tamDesc}${persoDesc} • ${valDesc} • ${formatOrderDate(o.data)}`;
+      sub.innerText = `${prodDesc}${tamDesc}${persoDesc} • ${valDesc} • ${formatOrderDate(o.data)}`;
 
       const fileData = o.comprovanteBase64 || (o.comprovante && o.comprovante.toString().startsWith("data:") ? o.comprovante : "");
       const fileUrl = (o.comprovanteUrl || "").toString();
@@ -5499,7 +5533,7 @@
           o.nome,
           o.cpf,
           o.comissario,
-          o.produto,
+          cleanProductDisplay(o.produto),
           tam,
           getOrderPersonalization(o),
           getOrderRowPrice(o, "todas"),
@@ -5524,7 +5558,7 @@
             o.nome,
             o.cpf,
             o.comissario,
-            prodDesc,
+            cleanProductDisplay(prodDesc),
             tam,
             getOrderPersonalization(o),
             getOrderRowPrice(o, p),

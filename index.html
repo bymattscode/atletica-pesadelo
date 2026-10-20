@@ -2464,7 +2464,7 @@
     }
 
     .modal-overlay.active {
-      display: flex;
+      display: flex !important;
     }
 
     .login-modal-box {
@@ -4475,8 +4475,10 @@
         </button>
       </div>
     </div>
+  </div>
+
   <!-- MODAL DE VISUALIZAÇÃO DE FLYER DO KIT -->
-  <div class="modal-overlay" id="flyerPreviewModal" onclick="handleFlyerOverlayClick(event)" style="z-index: 1250; display: none;">
+  <div class="modal-overlay" id="flyerPreviewModal" onclick="handleFlyerOverlayClick(event)" style="z-index: 1350;">
     <div class="flyer-preview-dialog" onclick="event.stopPropagation()">
       <div class="flyer-preview-header">
         <div style="display: flex; align-items: center; gap: 0.6rem;">
@@ -4496,7 +4498,7 @@
   </div>
 
   <!-- MODAL DE VISUALIZAÇÃO DE COMPROVANTE -->
-  <div class="modal-overlay" id="receiptModal" onclick="handleReceiptOverlayClick(event)" style="z-index: 1200;">
+  <div class="modal-overlay" id="receiptModal" onclick="handleReceiptOverlayClick(event)" style="z-index: 1320;">
     <div class="receipt-modal-box">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
         <div>
@@ -4839,6 +4841,8 @@
 
     function closeFlyerModal() {
       const modal = document.getElementById("flyerPreviewModal");
+      const img = document.getElementById("flyerModalImage");
+      if (img) img.src = "";
       if (modal) {
         modal.style.display = "none";
         modal.classList.remove("active");
@@ -5585,12 +5589,18 @@
       if (actBtn) actBtn.innerText = confirmBtnText;
 
       confirmActionCallback = onConfirm;
-      if (modal) modal.classList.add("active");
+      if (modal) {
+        modal.classList.add("active");
+        modal.style.display = "flex";
+      }
     }
 
     function closeConfirmModal() {
       const modal = document.getElementById("confirmModal");
-      if (modal) modal.classList.remove("active");
+      if (modal) {
+        modal.classList.remove("active");
+        modal.style.display = "none";
+      }
       confirmActionCallback = null;
     }
 
@@ -5687,7 +5697,10 @@
       const eyeIcon = document.getElementById("eyeIcon");
       if (eyeIcon) eyeIcon.className = "fa-regular fa-eye";
 
-      modal.classList.add("active");
+      if (modal) {
+        modal.classList.add("active");
+        modal.style.display = "flex";
+      }
       setTimeout(() => {
         document.getElementById("loginUser").focus();
       }, 80);
@@ -5708,7 +5721,11 @@
     }
 
     function closeLoginModal() {
-      document.getElementById("loginModal").classList.remove("active");
+      const modal = document.getElementById("loginModal");
+      if (modal) {
+        modal.classList.remove("active");
+        modal.style.display = "none";
+      }
     }
 
     function handleOverlayClick(e) {
@@ -6630,7 +6647,10 @@
 
     function closeReceiptModal() {
       const modal = document.getElementById("receiptModal");
-      if (modal) modal.classList.remove("active");
+      if (modal) {
+        modal.classList.remove("active");
+        modal.style.display = "none";
+      }
       currentReceiptOrderId = null;
     }
 

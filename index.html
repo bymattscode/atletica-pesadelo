@@ -415,6 +415,198 @@
       margin-top: 1rem;
     }
 
+    /* SELETOR DE MODALIDADE DE VENDA (AVULSO vs KITS) */
+    .sale-mode-nav-box {
+      background: linear-gradient(135deg, rgba(20, 20, 24, 0.98), rgba(28, 20, 25, 0.98));
+      border: 1px solid rgba(225, 29, 72, 0.35);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+      margin-bottom: 0.85rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .sale-mode-header {
+      margin-bottom: 0.85rem;
+    }
+
+    .sale-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f69cb9;
+      background: rgba(225, 29, 72, 0.15);
+      border: 1px solid rgba(246, 156, 185, 0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      margin-bottom: 0.35rem;
+    }
+
+    .sale-mode-heading {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0.15rem 0;
+    }
+
+    .sale-mode-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .sale-type-pills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .sale-type-pills-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sale-type-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.9rem 1rem;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.22s ease-in-out;
+      position: relative;
+    }
+
+    .sale-type-pill:hover {
+      border-color: rgba(246, 156, 185, 0.4);
+      background: rgba(255, 255, 255, 0.04);
+      transform: translateY(-1px);
+    }
+
+    .sale-type-pill.active {
+      border-color: var(--pesadelo-pink);
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.18), rgba(15, 15, 18, 0.85));
+      box-shadow: 0 0 18px rgba(225, 29, 72, 0.25);
+    }
+
+    .pill-left-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--pesadelo-pink);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .sale-type-pill.active .pill-left-icon {
+      background: var(--pesadelo-pink);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(225, 29, 72, 0.5);
+    }
+
+    .fire-pill-icon {
+      color: #ff3366;
+    }
+
+    .pill-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pill-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.2rem;
+    }
+
+    .pill-main-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .pill-tag-neutral {
+      font-size: 0.68rem;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+    }
+
+    .pill-tag-discount {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pill-description {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .pill-check-indicator {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      opacity: 0.25;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .sale-type-pill.active .pill-check-indicator {
+      color: var(--pesadelo-pink);
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* KITS SECTION & CARDS ENHANCEMENTS */
+    .kits-section-header {
+      margin-bottom: 1.1rem;
+      text-align: left;
+    }
+
+    .kits-section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #f69cb9;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .kits-section-header h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+    }
+
     .kit-card,
     .kit-configurator {
       min-width: 0;
@@ -427,7 +619,118 @@
     .kit-card {
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(26, 26, 32, 0.95), rgba(18, 18, 22, 0.95));
+      overflow: hidden;
+      transition: all 0.25s ease;
+      padding: 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      gap: 0;
+    }
+
+    .kit-card:hover {
+      border-color: rgba(246, 156, 185, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(225, 29, 72, 0.25);
+    }
+
+    .kit-card-banner {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: #0d0d11;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .kit-flyer-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.35s ease;
+      display: block;
+    }
+
+    .kit-card:hover .kit-flyer-img {
+      transform: scale(1.04);
+    }
+
+    .kit-zoom-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .kit-zoom-btn:hover {
+      background: var(--pesadelo-pink);
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .kit-badge-pill {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(225, 29, 72, 0.92);
+      backdrop-filter: blur(4px);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .kit-banner-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: radial-gradient(circle at center, rgba(225, 29, 72, 0.25), #0f0f13);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .kit-fallback-logo {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 12px rgba(225, 29, 72, 0.5));
+    }
+
+    .kit-fallback-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+
+    .kit-card-body {
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex: 1;
     }
 
     .kit-card-heading {
@@ -437,14 +740,25 @@
     }
 
     .kit-card-heading img {
-      width: 48px;
-      height: 48px;
+      width: 38px;
+      height: 38px;
       object-fit: contain;
+      flex-shrink: 0;
     }
 
     .kit-card h3,
     .kit-configurator h3 {
-      font-size: 1rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+    }
+
+    .kit-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 0.15rem;
     }
 
     .kit-card p,
@@ -455,11 +769,91 @@
       overflow-wrap: anywhere;
     }
 
+    .kit-items-composition {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .kit-comp-tag {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .kit-comp-tag i {
+      color: var(--pesadelo-pink);
+      font-size: 0.65rem;
+    }
+
+    .kit-price-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .kit-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .kit-price-original {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .kit-price-promo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.15rem;
+    }
+
+    .kit-price-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .kit-strike {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
     .kit-promo-price {
       color: #f69cb9;
-      font-size: 1.2rem;
+      font-size: 1.35rem;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 800;
+      line-height: 1;
+    }
+
+    .kit-saving-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+      width: fit-content;
     }
 
     .kit-saving {
@@ -467,9 +861,53 @@
       font-size: 0.8rem;
     }
 
+    .kit-additional-box {
+      background: rgba(225, 29, 72, 0.08);
+      border: 1px dashed rgba(246, 156, 185, 0.3);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.75rem;
+      color: #e5e7eb;
+    }
+
+    .kit-add-title {
+      font-weight: 700;
+      color: #f69cb9;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-config-kit {
+      width: 100%;
+      margin-top: auto;
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
     .kit-card button {
       margin-top: auto;
       justify-content: center;
+    }
+
+    .badge-kit-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg, #e11d48, #ff3366);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      box-shadow: 0 0 8px rgba(225, 29, 72, 0.4);
     }
 
     .kit-configurator {
@@ -2908,110 +3346,165 @@
                 </select>
               </div>
 
-              <!-- SELEÇÃO DE PRODUTO -->
-              <div class="form-group full">
-                <label>Produto Selecionado <span class="req">*</span></label>
-                <div class="product-tiles-grid">
-                  <div class="product-tile selected" data-product="Oversize" onclick="selectProduct('Oversize', this)">
-                    <span class="product-name">Oversize</span>
-                    <span class="product-price">R$ 65,00</span>
+              <!-- SELETOR DE MODALIDADE DE VENDA (AVULSO vs KITS) -->
+              <div class="form-group full sale-mode-selector-wrapper">
+                <div class="sale-mode-nav-box">
+                  <div class="sale-mode-header">
+                    <span class="sale-mode-badge"><i class="fa-solid fa-layer-group"></i> MODALIDADE DE PEDIDO</span>
+                    <h3 class="sale-mode-heading">Como deseja realizar a venda?</h3>
+                    <p class="sale-mode-sub">Selecione entre compras avulsas de peças individuais ou escolha nossos kits promocionais oficiais com desconto.</p>
                   </div>
-                  <div class="product-tile" data-product="Jersey" onclick="selectProduct('Jersey', this)">
-                    <span class="product-name">Jersey</span>
-                    <span class="product-price">R$ 100,00</span>
-                  </div>
-                  <div class="product-tile" data-product="Tube Top" onclick="selectProduct('Tube Top', this)">
-                    <span class="product-name">Tube Top</span>
-                    <span class="product-price">R$ 50,00</span>
-                  </div>
-                  <div class="product-tile" data-product="Caneca" onclick="selectProduct('Caneca', this)">
-                    <span class="product-name">Caneca + Tirante</span>
-                    <span class="product-price">R$ 45,00</span>
-                  </div>
-                  <div class="product-tile" data-product="Caneca individual" onclick="selectProduct('Caneca individual', this)">
-                    <span class="product-name">Caneca individual</span>
-                    <span class="product-price">R$ 35,00</span>
-                  </div>
-                  <div class="product-tile" data-product="Tirante individual" onclick="selectProduct('Tirante individual', this)">
-                    <span class="product-name">Tirante individual</span>
-                    <span class="product-price">R$ 15,00</span>
-                  </div>
-                  <div class="product-tile" data-product="Corta Vento" onclick="selectProduct('Corta Vento', this)">
-                    <span class="product-name">Corta Vento</span>
-                    <span class="product-price">R$ 180,00</span>
-                  </div>
-                  <div class="product-tile" data-product="Eco Bag" onclick="selectProduct('Eco Bag', this)">
-                    <span class="product-name">Ecobag</span>
-                    <span class="product-price">R$ 35,00</span>
-                  </div>
-                </div>
-                <input type="hidden" id="f_produto" value="Oversize">
-              </div>
+                  <div class="sale-type-pills-grid" role="tablist" aria-label="Modalidade de Venda">
+                    <button type="button" class="sale-type-pill active" id="pillSaleAvulso" onclick="switchSaleMode('avulso')" role="tab" aria-selected="true">
+                      <div class="pill-left-icon">
+                        <i class="fa-solid fa-shirt"></i>
+                      </div>
+                      <div class="pill-body">
+                        <div class="pill-title-row">
+                          <span class="pill-main-title">1. Vendas Avulsas</span>
+                          <span class="pill-tag-neutral">Peças Individuais</span>
+                        </div>
+                        <span class="pill-description">Compre qualquer produto individualmente: Oversize, Jersey, Corta Vento, Caneca, Tirante, etc.</span>
+                      </div>
+                      <div class="pill-check-indicator"><i class="fa-solid fa-circle-check"></i></div>
+                    </button>
 
-              <!-- TAMANHOS -->
-              <div class="form-group" id="sizeGroupContainer">
-                <label>Tamanho <span class="req">*</span></label>
-                <div class="sizes-container">
-                  <div class="size-btn" onclick="selectSize('PP', this)">PP</div>
-                  <div class="size-btn" onclick="selectSize('P', this)">P</div>
-                  <div class="size-btn selected" onclick="selectSize('M', this)">M</div>
-                  <div class="size-btn" onclick="selectSize('G', this)">G</div>
-                  <div class="size-btn" onclick="selectSize('GG', this)">GG</div>
-                  <div class="size-btn" onclick="selectSize('XGG', this)">XGG</div>
-                </div>
-                <input type="hidden" id="f_tamanho" value="M">
-              </div>
-
-              <!-- QUANTIDADE E SUBTOTAL -->
-              <div class="form-group">
-                <label>Quantidade de Peças <span class="req">*</span></label>
-                <div style="display: flex; gap: 0.65rem; align-items: center;">
-                  <input type="number" id="f_quantidade" min="1" max="50" value="1" oninput="handleQuantityChange()"
-                    style="flex: 1;" required>
-                  <div class="item-subtotal-badge" id="currentItemSubtotalBadge">
-                    Subtotal: <strong>R$ 65,00</strong>
+                    <button type="button" class="sale-type-pill" id="pillSaleKit" onclick="switchSaleMode('kit')" role="tab" aria-selected="false">
+                      <div class="pill-left-icon fire-pill-icon">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                      </div>
+                      <div class="pill-body">
+                        <div class="pill-title-row">
+                          <span class="pill-main-title">2. Kits Promocionais</span>
+                          <span class="pill-tag-discount"><i class="fa-solid fa-bolt"></i> Super Descontos</span>
+                        </div>
+                        <span class="pill-description">Combos oficiais com fotos reais e até R$ 25 de economia: Kit Campus, Campus Completo, Look Tube...</span>
+                      </div>
+                      <div class="pill-check-indicator"><i class="fa-solid fa-circle-check"></i></div>
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <div class="form-group full jersey-customization" id="jerseyCustomization" hidden>
-                <div class="jersey-fields">
-                  <div class="form-group">
-                    <label for="f_jersey_nome">Nome na camisa</label>
-                    <input type="text" id="f_jersey_nome" maxlength="30" placeholder="Ex: ALESSANDRO"
-                      autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+              <!-- CONTAINER 1: VENDAS AVULSAS -->
+              <div id="avulsoSelectionSection" class="sale-section-container" style="display: block;">
+                <!-- SELEÇÃO DE PRODUTO -->
+                <div class="form-group full">
+                  <label>Produto Selecionado <span class="req">*</span></label>
+                  <div class="product-tiles-grid">
+                    <div class="product-tile selected" data-product="Oversize" onclick="selectProduct('Oversize', this)">
+                      <span class="product-name">Oversize</span>
+                      <span class="product-price">R$ 65,00</span>
+                    </div>
+                    <div class="product-tile" data-product="Jersey" onclick="selectProduct('Jersey', this)">
+                      <span class="product-name">Jersey</span>
+                      <span class="product-price">R$ 100,00</span>
+                    </div>
+                    <div class="product-tile" data-product="Tube Top" onclick="selectProduct('Tube Top', this)">
+                      <span class="product-name">Tube Top</span>
+                      <span class="product-price">R$ 50,00</span>
+                    </div>
+                    <div class="product-tile" data-product="Caneca" onclick="selectProduct('Caneca', this)">
+                      <span class="product-name">Caneca + Tirante</span>
+                      <span class="product-price">R$ 45,00</span>
+                    </div>
+                    <div class="product-tile" data-product="Caneca individual" onclick="selectProduct('Caneca individual', this)">
+                      <span class="product-name">Caneca individual</span>
+                      <span class="product-price">R$ 35,00</span>
+                    </div>
+                    <div class="product-tile" data-product="Tirante individual" onclick="selectProduct('Tirante individual', this)">
+                      <span class="product-name">Tirante individual</span>
+                      <span class="product-price">R$ 15,00</span>
+                    </div>
+                    <div class="product-tile" data-product="Corta Vento" onclick="selectProduct('Corta Vento', this)">
+                      <span class="product-name">Corta Vento</span>
+                      <span class="product-price">R$ 180,00</span>
+                    </div>
+                    <div class="product-tile" data-product="Eco Bag" onclick="selectProduct('Eco Bag', this)">
+                      <span class="product-name">Ecobag</span>
+                      <span class="product-price">R$ 35,00</span>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label for="f_jersey_numero">Número na camisa</label>
-                    <input type="text" id="f_jersey_numero" inputmode="numeric" maxlength="2" placeholder="Ex: 07"
-                      autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                  <input type="hidden" id="f_produto" value="Oversize">
+                </div>
+
+                <!-- TAMANHOS -->
+                <div class="form-group" id="sizeGroupContainer">
+                  <label>Tamanho <span class="req">*</span></label>
+                  <div class="sizes-container">
+                    <div class="size-btn" onclick="selectSize('PP', this)">PP</div>
+                    <div class="size-btn" onclick="selectSize('P', this)">P</div>
+                    <div class="size-btn selected" onclick="selectSize('M', this)">M</div>
+                    <div class="size-btn" onclick="selectSize('G', this)">G</div>
+                    <div class="size-btn" onclick="selectSize('GG', this)">GG</div>
+                    <div class="size-btn" onclick="selectSize('XGG', this)">XGG</div>
+                  </div>
+                  <input type="hidden" id="f_tamanho" value="M">
+                </div>
+
+                <!-- QUANTIDADE E SUBTOTAL -->
+                <div class="form-group">
+                  <label>Quantidade de Peças <span class="req">*</span></label>
+                  <div style="display: flex; gap: 0.65rem; align-items: center;">
+                    <input type="number" id="f_quantidade" min="1" max="50" value="1" oninput="handleQuantityChange()"
+                      style="flex: 1;" required>
+                    <div class="item-subtotal-badge" id="currentItemSubtotalBadge">
+                      Subtotal: <strong>R$ 65,00</strong>
+                    </div>
                   </div>
                 </div>
-                <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros à esquerda são mantidos.</p>
-                <p class="customization-hint" id="jerseyPreview" aria-live="polite"></p>
-                <p class="customization-error" id="jerseyError" role="alert" hidden></p>
+
+                <div class="form-group full jersey-customization" id="jerseyCustomization" hidden>
+                  <div class="jersey-fields">
+                    <div class="form-group">
+                      <label for="f_jersey_nome">Nome na camisa</label>
+                      <input type="text" id="f_jersey_nome" maxlength="30" placeholder="Ex: ALESSANDRO"
+                        autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                    </div>
+                    <div class="form-group">
+                      <label for="f_jersey_numero">Número na camisa</label>
+                      <input type="text" id="f_jersey_numero" inputmode="numeric" maxlength="2" placeholder="Ex: 07"
+                        autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                    </div>
+                  </div>
+                  <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros à esquerda são mantidos.</p>
+                  <p class="customization-hint" id="jerseyPreview" aria-live="polite"></p>
+                  <p class="customization-error" id="jerseyError" role="alert" hidden></p>
+                </div>
+
+                <!-- BOTÃO ADICIONAR PRODUTO AO CARRINHO -->
+                <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
+                  <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
+                      <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
+                    </button>
+                    <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
+                      Adicione os produtos ao carrinho para somar o pedido
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <!-- BOTÃO ADICIONAR AO CARRINHO E CARRINHO DE COMPRAS -->
-              <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem;">
-                <div
-                  style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                  <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
-                    <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
-                  </button>
-                  <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
-                    Adicione os produtos ao carrinho para somar o pedido
-                  </span>
-                </div>
-
-                <details class="kits-section" id="kitsSection" aria-labelledby="kitsTitle">
-                  <summary><h2 id="kitsTitle">Kits promocionais · ver opções</h2></summary>
-                  <p class="customization-hint">6 kits e 2 versões adicionais, com descontos próprios.</p>
-                  <p class="customization-hint">Escolha um kit, configure os tamanhos e adicione ao mesmo carrinho dos produtos avulsos.</p>
+              <!-- CONTAINER 2: KITS PROMOCIONAIS -->
+              <div id="kitsSelectionSection" class="sale-section-container" style="display: none;">
+                <details class="kits-section" id="kitsSection" aria-labelledby="kitsTitle" open>
+                  <summary style="display: none;"><h2 id="kitsTitle">Kits promocionais · ver opções</h2></summary>
+                  <div class="kits-section-header">
+                    <div class="kits-section-tag"><i class="fa-solid fa-fire-flame-curved"></i> COMBOS PROMOCIONAIS OFICIAIS</div>
+                    <h3>Escolha o seu Kit da Atlética Pesadelo</h3>
+                    <p class="customization-hint" style="margin-top: 0.25rem;">Clique no flyer para ampliar a imagem. Selecione <strong>Configurar</strong> para escolher os tamanhos e personalizar sua peça!</p>
+                  </div>
                   <div class="kit-catalog" id="kitCatalog"></div>
                   <div class="kit-configurator" id="kitConfigurator" hidden>
-                    <h3 id="kitConfigTitle"></h3>
-                    <div class="form-group" id="kitAccessoryGroup" style="margin-top: 1rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); padding-bottom: 0.65rem; margin-bottom: 0.85rem;">
+                      <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-sliders" style="color: var(--pesadelo-pink); font-size: 1.1rem;"></i>
+                        <h3 id="kitConfigTitle" style="margin: 0;"></h3>
+                      </div>
+                      <span class="kit-badge-pill" style="position: static;">Configurador</span>
+                    </div>
+                    <div class="form-group" id="kitAccessoryGroup" style="margin-top: 0.5rem;">
                       <label for="kitAccessorySelect">Acessórios do kit</label>
                       <select class="kit-accessory-select" id="kitAccessorySelect" onchange="handleKitConfigChange()"></select>
                     </div>
@@ -3038,10 +3531,13 @@
                     </div>
                     <div class="kit-composition" id="kitComposition" aria-live="polite"></div>
                     <p class="customization-error" id="kitError" role="alert" hidden></p>
-                    <button type="button" class="btn-add-item" onclick="addKitToOrder()">Adicionar kit ao carrinho</button>
+                    <button type="button" class="btn-add-item" onclick="addKitToOrder()">
+                      <i class="fa-solid fa-cart-plus"></i> Adicionar kit ao carrinho
+                    </button>
                     <p class="customization-hint" style="margin-top: 0.5rem;">Configure e adicione cada kit separadamente quando os tamanhos ou a personalização forem diferentes.</p>
                   </div>
                 </details>
+              </div>
 
                 <!-- CARD DO CARRINHO DE COMPRAS -->
                 <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
@@ -3330,6 +3826,9 @@
         <button class="sub-tab-btn" onclick="switchSubTab('Eco Bag', this)">
           Ecobag <span class="sub-tab-count" id="count-Eco Bag">0</span>
         </button>
+        <button class="sub-tab-btn" onclick="switchSubTab('kits', this)">
+          <i class="fa-solid fa-fire-flame-curved" style="color: #ff3366; margin-right: 0.25rem;"></i> Kits <span class="sub-tab-count" id="count-kits">0</span>
+        </button>
         <button class="sub-tab-btn" id="btnTabComissarios" onclick="switchSubTab('ranking', this)">
           Comissários <span class="sub-tab-count" id="count-comissarios">0</span>
         </button>
@@ -3497,6 +3996,20 @@
         <button type="button" class="btn-confirm-danger" id="btnConfirmAction" onclick="executeConfirmAction()">
           Remover
         </button>
+      </div>
+    </div>
+  <!-- MODAL DE VISUALIZAÇÃO DE FLYER DO KIT -->
+  <div class="modal-overlay" id="flyerPreviewModal" onclick="handleFlyerOverlayClick(event)" style="z-index: 1250; display: none;">
+    <div class="flyer-preview-dialog">
+      <div class="flyer-preview-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-fire-flame-curved" style="color: var(--pesadelo-pink);"></i>
+          <h3 id="flyerModalTitle" style="font-size: 1.05rem; font-weight: 800; color: #fff; margin: 0;">Flyer Oficial do Kit</h3>
+        </div>
+        <button type="button" class="login-close-btn" onclick="closeFlyerModal()" title="Fechar" style="position: static; margin-left: auto;">&times;</button>
+      </div>
+      <div class="flyer-preview-body">
+        <img id="flyerModalImage" src="" alt="Flyer do Kit" class="flyer-full-img">
       </div>
     </div>
   </div>
@@ -3699,18 +4212,133 @@
       return "kitSize-" + product.replace(/\s/g, "");
     }
 
+    const KIT_MEDIA = {
+      "campus": { image: "assets/kits/kit-campus.jpg", badge: "Mais Popular", tagline: "Oversized + Ecobag ou Caneca" },
+      "campus-completo": { image: "assets/kits/kit-campus-completo.jpg", badge: "Combo Completo", tagline: "Oversized + Corta Vento + Caneca + Tirante" },
+      "look-tube": { image: "assets/kits/kit-look-tube.jpg", badge: "Look Universitário", tagline: "Tube Top + Tirante + Ecobag ou Caneca" },
+      "frio-no-campus": { image: "assets/kits/kit-frio-no-campus.jpg", badge: "Inverno & Estilo", tagline: "Corta Vento + Ecobag ou Caneca + Tirante" },
+      "torcida": { image: null, badge: "Dia de Jogos", tagline: "Jersey + Caneca + Tirante" },
+      "tudo-pesadelo": { image: null, badge: "Coleção Completa", tagline: "Coleção Completa da Atlética" }
+    };
+
+    let currentSaleMode = "avulso";
+
+    function switchSaleMode(mode) {
+      currentSaleMode = mode;
+      const pillAvulso = document.getElementById("pillSaleAvulso");
+      const pillKit = document.getElementById("pillSaleKit");
+      const secAvulso = document.getElementById("avulsoSelectionSection");
+      const secKit = document.getElementById("kitsSelectionSection");
+
+      if (mode === "kit") {
+        if (pillAvulso) {
+          pillAvulso.classList.remove("active");
+          pillAvulso.setAttribute("aria-selected", "false");
+        }
+        if (pillKit) {
+          pillKit.classList.add("active");
+          pillKit.setAttribute("aria-selected", "true");
+        }
+        if (secAvulso) secAvulso.style.display = "none";
+        if (secKit) secKit.style.display = "block";
+        const kitsSection = document.getElementById("kitsSection");
+        if (kitsSection) kitsSection.open = true;
+      } else {
+        if (pillKit) {
+          pillKit.classList.remove("active");
+          pillKit.setAttribute("aria-selected", "false");
+        }
+        if (pillAvulso) {
+          pillAvulso.classList.add("active");
+          pillAvulso.setAttribute("aria-selected", "true");
+        }
+        if (secAvulso) secAvulso.style.display = "block";
+        if (secKit) secKit.style.display = "none";
+      }
+    }
+
+    function openFlyerPreview(src, title) {
+      const modal = document.getElementById("flyerPreviewModal");
+      const img = document.getElementById("flyerModalImage");
+      const titleEl = document.getElementById("flyerModalTitle");
+      if (img) img.src = src;
+      if (titleEl) titleEl.innerText = title;
+      if (modal) modal.style.display = "flex";
+    }
+
+    function closeFlyerModal() {
+      const modal = document.getElementById("flyerPreviewModal");
+      if (modal) modal.style.display = "none";
+    }
+
+    function handleFlyerOverlayClick(e) {
+      if (e.target && e.target.id === "flyerPreviewModal") {
+        closeFlyerModal();
+      }
+    }
+
+    function orderHasKit(order) {
+      if (!order) return false;
+      if (Array.isArray(order.itens)) {
+        return order.itens.some(item => item.tipo === "kit" || Boolean(item.kitId));
+      }
+      return String(order.produto || "").includes("Kit ");
+    }
+
     function renderKitCatalog() {
       document.getElementById("kitCatalog").innerHTML = Object.entries(PesadeloKits.definitions).map(([id, definition]) => {
         const base = PesadeloKits.createItem(id, {}, PRECOS_PRODUTOS);
         const additional = definition.ambos ? PesadeloKits.createItem(id, { acessorio: "ambos" }, PRECOS_PRODUTOS) : null;
+        const media = KIT_MEDIA[id] || { image: null, badge: "Kit Oficial", tagline: definition.descricao };
         return `<article class="kit-card" data-kit="${id}">
-          <div class="kit-card-heading"><img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" loading="lazy"><h3>${definition.nome}</h3></div>
-          <p>${escapeHtml(definition.descricao)}</p>
-          <p>Avulsos: <s>${formatCurrency(base.valorAvulso)}</s></p>
-          <div class="kit-promo-price">${formatCurrency(base.unitPrice)}</div>
-          <div class="kit-saving">Economize ${formatCurrency(base.economia)}</div>
-          ${additional ? `<p>Com Ecobag + Caneca: <strong>${formatCurrency(additional.unitPrice)}</strong> (+ R$ 30,00). Avulsos: ${formatCurrency(additional.valorAvulso)} · Economia: ${formatCurrency(additional.economia)}.</p>` : ""}
-          <button type="button" class="btn-add-item" onclick="configureKit('${id}')">Configurar ${definition.nome}</button>
+          <div class="kit-card-banner" ${media.image ? `onclick="openFlyerPreview('${media.image}', '${escapeHtml(definition.nome)}')"` : ""}>
+            ${media.image ? `
+              <img src="${media.image}" alt="${escapeHtml(definition.nome)}" class="kit-flyer-img" loading="lazy">
+              <button type="button" class="kit-zoom-btn" onclick="event.stopPropagation(); openFlyerPreview('${media.image}', '${escapeHtml(definition.nome)}')" title="Ampliar flyer oficial">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+              </button>
+            ` : `
+              <div class="kit-banner-fallback">
+                <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" class="kit-fallback-logo" loading="lazy">
+                <span class="kit-fallback-title">${escapeHtml(definition.nome)}</span>
+              </div>
+            `}
+            <span class="kit-badge-pill">${media.badge}</span>
+          </div>
+          <div class="kit-card-body">
+            <div class="kit-card-heading">
+              <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" loading="lazy">
+              <div>
+                <h3>${definition.nome}</h3>
+                <span class="kit-subtitle">${escapeHtml(media.tagline)}</span>
+              </div>
+            </div>
+            <p>${escapeHtml(definition.descricao)}</p>
+            <div class="kit-items-composition">
+              ${definition.descricao.split('+').map(item => `<span class="kit-comp-tag"><i class="fa-solid fa-check"></i> ${escapeHtml(item.trim())}</span>`).join('')}
+            </div>
+            <div class="kit-price-box">
+              <div class="kit-price-row">
+                <div class="kit-price-original">
+                  <span class="kit-price-label">Avulsos somados:</span>
+                  <s class="kit-strike">${formatCurrency(base.valorAvulso)}</s>
+                </div>
+                <div class="kit-price-promo">
+                  <span class="kit-price-label">Preço do Kit:</span>
+                  <div class="kit-promo-price">${formatCurrency(base.unitPrice)}</div>
+                </div>
+              </div>
+              <div class="kit-saving-pill"><i class="fa-solid fa-tag"></i> Economize ${formatCurrency(base.economia)}</div>
+              <div class="kit-saving" style="display: none;">Economize ${formatCurrency(base.economia)}</div>
+            </div>
+            ${additional ? `<div class="kit-additional-box">
+              <div class="kit-add-title"><i class="fa-solid fa-circle-plus"></i> Opção com Ecobag + Caneca:</div>
+              <p style="margin: 0;"><strong>${formatCurrency(additional.unitPrice)}</strong> (+ R$ 30,00). Avulsos: ${formatCurrency(additional.valorAvulso)} · Economia: ${formatCurrency(additional.economia)}.</p>
+            </div>` : ""}
+            <button type="button" class="btn-add-item btn-config-kit" onclick="configureKit('${id}')">
+              <i class="fa-solid fa-sliders"></i> Configurar ${definition.nome}
+            </button>
+          </div>
         </article>`;
       }).join("");
     }
@@ -3728,13 +4356,16 @@
     }
 
     function configureKit(id) {
+      switchSaleMode("kit");
       if (selectedKitId) kitDrafts[selectedKitId] = readKitOptions();
       const definition = PesadeloKits.definitions[id];
       if (!definition) return;
       selectedKitId = id;
       const draft = kitDrafts[id] || {};
-      document.getElementById("kitsSection").open = true;
-      document.getElementById("kitConfigurator").hidden = false;
+      const secKits = document.getElementById("kitsSection");
+      if (secKits) secKits.open = true;
+      const config = document.getElementById("kitConfigurator");
+      if (config) config.hidden = false;
       document.getElementById("kitConfigTitle").textContent = definition.nome;
       document.getElementById("kitAccessoryGroup").hidden = !definition.escolha;
       document.getElementById("kitAccessorySelect").innerHTML = '<option value="Eco Bag">Ecobag</option><option value="Caneca individual">Caneca</option>' +
@@ -3753,7 +4384,7 @@
       document.getElementById("kitJerseyNumber").value = draft.numeroCamisa || "";
       document.getElementById("kitQuantity").value = draft.quantidade || 1;
       handleKitConfigChange();
-      document.getElementById("kitConfigurator").scrollIntoView({ behavior: "smooth", block: "center" });
+      config.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
     function renderKitItemDetails(item) {
@@ -4644,6 +5275,11 @@
     function getOrderSizeForTab(order, tab) {
       if (!order) return "-";
       let items = getOrderItems(order);
+      if (tab === "kits") {
+        const kitItems = items.filter(item => item.tipo === "kit" || item.kitNome);
+        const sizes = (kitItems.length > 0 ? kitItems : items).map(item => item.tamanho).filter(size => size && size !== "-");
+        return [...new Set(sizes)].join(", ") || "-";
+      }
       if (tab && tab !== "todas" && tab !== "ranking") {
         items = items.filter(item => item.produto === tab);
       }
@@ -4657,6 +5293,12 @@
     // RESOLVE O PRODUTO CORRETO PARA A ABA ESPECÍFICA
     function getOrderProductForTab(order, tab) {
       if (!order) return "";
+      if (tab === "kits") {
+        const items = getOrderItems(order);
+        const kitItems = items.filter(item => item.tipo === "kit" || item.kitNome);
+        if (kitItems.length > 0) return kitItems.map(item => describeOrderItem(item)).join(" + ");
+        return order.produto || "";
+      }
       if (tab && tab !== "todas" && tab !== "ranking") {
         const matching = getOrderItems(order).filter(item => item.produto === tab);
         if (matching.length > 0) return matching.map(item => describeOrderItem(item) + (item.kitNome ? ` — ${item.kitNome}` : "")).join(" + ");
@@ -4695,6 +5337,9 @@
       const countCom = document.getElementById("count-comissarios");
       if (countCom) countCom.innerText = comissarios.length;
 
+      const countKits = document.getElementById("count-kits");
+      if (countKits) countKits.innerText = orders.filter(o => orderHasKit(o)).length;
+
       const prods = Object.keys(PRECOS_PRODUTOS);
       prods.forEach(p => {
         const c = orders.filter(o => orderHasProduct(o, p)).length;
@@ -4709,7 +5354,9 @@
       tbody.innerHTML = "";
 
       let filtered = orders;
-      if (currentTab !== "todas" && currentTab !== "ranking") {
+      if (currentTab === "kits") {
+        filtered = orders.filter(o => orderHasKit(o));
+      } else if (currentTab !== "todas" && currentTab !== "ranking") {
         filtered = orders.filter(o => orderHasProduct(o, currentTab));
       }
 
@@ -4791,7 +5438,10 @@
           <td>${o.comissario}</td>
           <td>
             <div class="table-prod-cell">
-              <strong>${escapeHtml(prodNomeLimpo)}</strong>
+              <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+                <strong>${escapeHtml(prodNomeLimpo)}</strong>
+                ${orderHasKit(o) ? '<span class="badge-kit-pill"><i class="fa-solid fa-fire-flame-curved"></i> KIT</span>' : ''}
+              </div>
               ${persoBadge}
             </div>
           </td>
@@ -5572,6 +6222,7 @@
       selectedKitId = null;
       document.getElementById("kitConfigurator").hidden = true;
       document.getElementById("kitsSection").open = false;
+      switchSaleMode("avulso");
       document.getElementById("kitJerseyName").value = "";
       document.getElementById("kitJerseyNumber").value = "";
       document.getElementById("kitJerseyName").disabled = true;

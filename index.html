@@ -4350,10 +4350,8 @@
               <img src="assets/logo_pesadelo.png" alt="Atlética Pesadelo" loading="lazy">
               <div>
                 <h3>${definition.nome}</h3>
-                <span class="kit-subtitle">${escapeHtml(media.tagline)}</span>
               </div>
             </div>
-            <p>${escapeHtml(definition.descricao)}</p>
             <div class="kit-items-composition">
               ${definition.descricao.split('+').map(item => `<span class="kit-comp-tag"><i class="fa-solid fa-check"></i> ${escapeHtml(item.trim())}</span>`).join('')}
             </div>

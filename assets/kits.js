@@ -13,11 +13,7 @@
       componentes: [['Oversize', 6500], ['Corta Vento', 18000], ['Caneca individual', 2500], ['Tirante individual', 1000]],
       descricao: 'Oversize + Corta Vento + Caneca + Tirante' },
     'frio-no-campus': { nome: 'Kit Frio no Campus', roupas: ['Corta Vento'], escolha: true, ambos: true, tirante: true,
-      componentes: [['Corta Vento', 18000]], descricao: 'Corta Vento + Ecobag ou Caneca + Tirante' },
-    'tudo-pesadelo': { nome: 'Kit Tudo Pesadelo', roupas: ['Tube Top', 'Jersey', 'Oversize', 'Corta Vento'],
-      componentes: [['Tube Top', 5000], ['Eco Bag', 3000], ['Jersey', 9500], ['Caneca individual', 3000],
-        ['Tirante individual', 1000], ['Oversize', 6000], ['Corta Vento', 18000]],
-      descricao: 'Tube Top + Ecobag + Jersey + Caneca + Tirante + Oversize + Corta Vento' }
+      componentes: [['Corta Vento', 18000]], descricao: 'Corta Vento + Ecobag ou Caneca + Tirante' }
   });
 
   function jerseyError(name = '', number = '') {

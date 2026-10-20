@@ -209,8 +209,9 @@
     }
 
     .form-narrow-wrap {
-      max-width: 920px;
+      max-width: 1260px;
       margin: 0 auto;
+      width: 100%;
     }
 
     /* VIEWS */
@@ -315,9 +316,22 @@
     /* SELEÇÃO DE PRODUTOS */
     .product-tiles-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 0.75rem;
       margin-top: 0.2rem;
+      width: 100%;
+    }
+
+    @media (max-width: 900px) {
+      .product-tiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .product-tiles-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .product-tile {
@@ -407,12 +421,43 @@
       margin-bottom: 0.75rem;
     }
 
-    .kit-catalog,
+    .kit-catalog {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
     .kit-fields {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
       margin-top: 1rem;
+    }
+
+    .sale-section-container {
+      grid-column: span 2;
+      width: 100%;
+    }
+
+    .avulso-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+      width: 100%;
+    }
+
+    .avulso-grid .form-group.full {
+      grid-column: span 2;
+    }
+
+    .order-items-summary-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      width: 100%;
     }
 
     /* SELETOR DE MODALIDADE DE VENDA (AVULSO vs KITS) */
@@ -3388,100 +3433,102 @@
 
               <!-- CONTAINER 1: VENDAS AVULSAS -->
               <div id="avulsoSelectionSection" class="sale-section-container" style="display: block;">
-                <!-- SELEÇÃO DE PRODUTO -->
-                <div class="form-group full">
-                  <label>Produto Selecionado <span class="req">*</span></label>
-                  <div class="product-tiles-grid">
-                    <div class="product-tile selected" data-product="Oversize" onclick="selectProduct('Oversize', this)">
-                      <span class="product-name">Oversize</span>
-                      <span class="product-price">R$ 65,00</span>
+                <div class="avulso-grid">
+                  <!-- SELEÇÃO DE PRODUTO -->
+                  <div class="form-group full">
+                    <label>Produto Selecionado <span class="req">*</span></label>
+                    <div class="product-tiles-grid">
+                      <div class="product-tile selected" data-product="Oversize" onclick="selectProduct('Oversize', this)">
+                        <span class="product-name">Oversize</span>
+                        <span class="product-price">R$ 65,00</span>
+                      </div>
+                      <div class="product-tile" data-product="Jersey" onclick="selectProduct('Jersey', this)">
+                        <span class="product-name">Jersey</span>
+                        <span class="product-price">R$ 100,00</span>
+                      </div>
+                      <div class="product-tile" data-product="Tube Top" onclick="selectProduct('Tube Top', this)">
+                        <span class="product-name">Tube Top</span>
+                        <span class="product-price">R$ 50,00</span>
+                      </div>
+                      <div class="product-tile" data-product="Caneca" onclick="selectProduct('Caneca', this)">
+                        <span class="product-name">Caneca + Tirante</span>
+                        <span class="product-price">R$ 45,00</span>
+                      </div>
+                      <div class="product-tile" data-product="Caneca individual" onclick="selectProduct('Caneca individual', this)">
+                        <span class="product-name">Caneca individual</span>
+                        <span class="product-price">R$ 35,00</span>
+                      </div>
+                      <div class="product-tile" data-product="Tirante individual" onclick="selectProduct('Tirante individual', this)">
+                        <span class="product-name">Tirante individual</span>
+                        <span class="product-price">R$ 15,00</span>
+                      </div>
+                      <div class="product-tile" data-product="Corta Vento" onclick="selectProduct('Corta Vento', this)">
+                        <span class="product-name">Corta Vento</span>
+                        <span class="product-price">R$ 180,00</span>
+                      </div>
+                      <div class="product-tile" data-product="Eco Bag" onclick="selectProduct('Eco Bag', this)">
+                        <span class="product-name">Ecobag</span>
+                        <span class="product-price">R$ 35,00</span>
+                      </div>
                     </div>
-                    <div class="product-tile" data-product="Jersey" onclick="selectProduct('Jersey', this)">
-                      <span class="product-name">Jersey</span>
-                      <span class="product-price">R$ 100,00</span>
+                    <input type="hidden" id="f_produto" value="Oversize">
+                  </div>
+
+                  <!-- TAMANHOS -->
+                  <div class="form-group" id="sizeGroupContainer">
+                    <label>Tamanho <span class="req">*</span></label>
+                    <div class="sizes-container">
+                      <div class="size-btn" onclick="selectSize('PP', this)">PP</div>
+                      <div class="size-btn" onclick="selectSize('P', this)">P</div>
+                      <div class="size-btn selected" onclick="selectSize('M', this)">M</div>
+                      <div class="size-btn" onclick="selectSize('G', this)">G</div>
+                      <div class="size-btn" onclick="selectSize('GG', this)">GG</div>
+                      <div class="size-btn" onclick="selectSize('XGG', this)">XGG</div>
                     </div>
-                    <div class="product-tile" data-product="Tube Top" onclick="selectProduct('Tube Top', this)">
-                      <span class="product-name">Tube Top</span>
-                      <span class="product-price">R$ 50,00</span>
-                    </div>
-                    <div class="product-tile" data-product="Caneca" onclick="selectProduct('Caneca', this)">
-                      <span class="product-name">Caneca + Tirante</span>
-                      <span class="product-price">R$ 45,00</span>
-                    </div>
-                    <div class="product-tile" data-product="Caneca individual" onclick="selectProduct('Caneca individual', this)">
-                      <span class="product-name">Caneca individual</span>
-                      <span class="product-price">R$ 35,00</span>
-                    </div>
-                    <div class="product-tile" data-product="Tirante individual" onclick="selectProduct('Tirante individual', this)">
-                      <span class="product-name">Tirante individual</span>
-                      <span class="product-price">R$ 15,00</span>
-                    </div>
-                    <div class="product-tile" data-product="Corta Vento" onclick="selectProduct('Corta Vento', this)">
-                      <span class="product-name">Corta Vento</span>
-                      <span class="product-price">R$ 180,00</span>
-                    </div>
-                    <div class="product-tile" data-product="Eco Bag" onclick="selectProduct('Eco Bag', this)">
-                      <span class="product-name">Ecobag</span>
-                      <span class="product-price">R$ 35,00</span>
+                    <input type="hidden" id="f_tamanho" value="M">
+                  </div>
+
+                  <!-- QUANTIDADE E SUBTOTAL -->
+                  <div class="form-group">
+                    <label>Quantidade de Peças <span class="req">*</span></label>
+                    <div style="display: flex; gap: 0.65rem; align-items: center;">
+                      <input type="number" id="f_quantidade" min="1" max="50" value="1" oninput="handleQuantityChange()"
+                        style="flex: 1;" required>
+                      <div class="item-subtotal-badge" id="currentItemSubtotalBadge">
+                        Subtotal: <strong>R$ 65,00</strong>
+                      </div>
                     </div>
                   </div>
-                  <input type="hidden" id="f_produto" value="Oversize">
-                </div>
 
-                <!-- TAMANHOS -->
-                <div class="form-group" id="sizeGroupContainer">
-                  <label>Tamanho <span class="req">*</span></label>
-                  <div class="sizes-container">
-                    <div class="size-btn" onclick="selectSize('PP', this)">PP</div>
-                    <div class="size-btn" onclick="selectSize('P', this)">P</div>
-                    <div class="size-btn selected" onclick="selectSize('M', this)">M</div>
-                    <div class="size-btn" onclick="selectSize('G', this)">G</div>
-                    <div class="size-btn" onclick="selectSize('GG', this)">GG</div>
-                    <div class="size-btn" onclick="selectSize('XGG', this)">XGG</div>
-                  </div>
-                  <input type="hidden" id="f_tamanho" value="M">
-                </div>
-
-                <!-- QUANTIDADE E SUBTOTAL -->
-                <div class="form-group">
-                  <label>Quantidade de Peças <span class="req">*</span></label>
-                  <div style="display: flex; gap: 0.65rem; align-items: center;">
-                    <input type="number" id="f_quantidade" min="1" max="50" value="1" oninput="handleQuantityChange()"
-                      style="flex: 1;" required>
-                    <div class="item-subtotal-badge" id="currentItemSubtotalBadge">
-                      Subtotal: <strong>R$ 65,00</strong>
+                  <div class="form-group full jersey-customization" id="jerseyCustomization" hidden>
+                    <div class="jersey-fields">
+                      <div class="form-group">
+                        <label for="f_jersey_nome">Nome na camisa</label>
+                        <input type="text" id="f_jersey_nome" maxlength="30" placeholder="Ex: ALESSANDRO"
+                          autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                      </div>
+                      <div class="form-group">
+                        <label for="f_jersey_numero">Número na camisa</label>
+                        <input type="text" id="f_jersey_numero" inputmode="numeric" maxlength="2" placeholder="Ex: 07"
+                          autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                      </div>
                     </div>
+                    <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros à esquerda são mantidos.</p>
+                    <p class="customization-hint" id="jerseyPreview" aria-live="polite"></p>
+                    <p class="customization-error" id="jerseyError" role="alert" hidden></p>
                   </div>
-                </div>
 
-                <div class="form-group full jersey-customization" id="jerseyCustomization" hidden>
-                  <div class="jersey-fields">
-                    <div class="form-group">
-                      <label for="f_jersey_nome">Nome na camisa</label>
-                      <input type="text" id="f_jersey_nome" maxlength="30" placeholder="Ex: ALESSANDRO"
-                        autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                  <!-- BOTÃO ADICIONAR PRODUTO AO CARRINHO -->
+                  <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
+                    <div
+                      style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                      <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
+                        <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
+                      </button>
+                      <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
+                        Adicione os produtos ao carrinho para somar o pedido
+                      </span>
                     </div>
-                    <div class="form-group">
-                      <label for="f_jersey_numero">Número na camisa</label>
-                      <input type="text" id="f_jersey_numero" inputmode="numeric" maxlength="2" placeholder="Ex: 07"
-                        autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
-                    </div>
-                  </div>
-                  <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros à esquerda são mantidos.</p>
-                  <p class="customization-hint" id="jerseyPreview" aria-live="polite"></p>
-                  <p class="customization-error" id="jerseyError" role="alert" hidden></p>
-                </div>
-
-                <!-- BOTÃO ADICIONAR PRODUTO AO CARRINHO -->
-                <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
-                  <div
-                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                    <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
-                      <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
-                    </button>
-                    <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
-                      Adicione os produtos ao carrinho para somar o pedido
-                    </span>
                   </div>
                 </div>
               </div>
@@ -3539,17 +3586,16 @@
                 </details>
               </div>
 
-                <!-- CARD DO CARRINHO DE COMPRAS -->
-                <div id="orderItemsSummaryBox" class="order-items-summary-card" style="display: none;">
-                  <div class="order-summary-header">
-                    <div class="order-summary-title">
-                      <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i>
-                      <span>Carrinho de Compras (<span id="cartItemsCount">0</span>)</span>
-                    </div>
-                    <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
+              <!-- CARD DO CARRINHO DE COMPRAS -->
+              <div id="orderItemsSummaryBox" class="form-group full order-items-summary-card" style="display: none;">
+                <div class="order-summary-header">
+                  <div class="order-summary-title">
+                    <i class="fa-solid fa-cart-shopping" style="color: var(--pesadelo-pink);"></i>
+                    <span>Carrinho de Compras (<span id="cartItemsCount">0</span>)</span>
                   </div>
-                  <div class="order-items-list" id="orderItemsList">
-                  </div>
+                  <div class="order-summary-total" id="cartTotalHeader">R$ 0,00</div>
+                </div>
+                <div class="order-items-list" id="orderItemsList">
                 </div>
               </div>
 
@@ -4217,8 +4263,7 @@
       "campus-completo": { image: "assets/kits/kit-campus-completo.jpg", badge: "Combo Completo", tagline: "Oversized + Corta Vento + Caneca + Tirante" },
       "look-tube": { image: "assets/kits/kit-look-tube.jpg", badge: "Look Universitário", tagline: "Tube Top + Tirante + Ecobag ou Caneca" },
       "frio-no-campus": { image: "assets/kits/kit-frio-no-campus.jpg", badge: "Inverno & Estilo", tagline: "Corta Vento + Ecobag ou Caneca + Tirante" },
-      "torcida": { image: null, badge: "Dia de Jogos", tagline: "Jersey + Caneca + Tirante" },
-      "tudo-pesadelo": { image: null, badge: "Coleção Completa", tagline: "Coleção Completa da Atlética" }
+      "torcida": { image: "assets/kits/kit-torcida.jpg", badge: "Dia de Jogos", tagline: "Jersey + Caneca + Tirante" }
     };
 
     let currentSaleMode = "avulso";
@@ -4286,14 +4331,16 @@
     }
 
     function renderKitCatalog() {
-      document.getElementById("kitCatalog").innerHTML = Object.entries(PesadeloKits.definitions).map(([id, definition]) => {
-        const base = PesadeloKits.createItem(id, {}, PRECOS_PRODUTOS);
-        const additional = definition.ambos ? PesadeloKits.createItem(id, { acessorio: "ambos" }, PRECOS_PRODUTOS) : null;
-        const media = KIT_MEDIA[id] || { image: null, badge: "Kit Oficial", tagline: definition.descricao };
-        return `<article class="kit-card" data-kit="${id}">
+      document.getElementById("kitCatalog").innerHTML = Object.entries(PesadeloKits.definitions)
+        .filter(([id]) => id !== "tudo-pesadelo")
+        .map(([id, definition]) => {
+          const base = PesadeloKits.createItem(id, {}, PRECOS_PRODUTOS);
+          const additional = definition.ambos ? PesadeloKits.createItem(id, { acessorio: "ambos" }, PRECOS_PRODUTOS) : null;
+          const media = KIT_MEDIA[id] || { image: null, badge: "Kit Oficial", tagline: definition.descricao };
+          return `<article class="kit-card" data-kit="${id}">
           <div class="kit-card-banner" ${media.image ? `onclick="openFlyerPreview('${media.image}', '${escapeHtml(definition.nome)}')"` : ""}>
             ${media.image ? `
-              <img src="${media.image}" alt="${escapeHtml(definition.nome)}" class="kit-flyer-img" loading="lazy">
+              <img src="${media.image}" alt="${escapeHtml(definition.nome)}" class="kit-flyer-img" loading="lazy" onerror="this.onerror=null; this.src='assets/logo_pesadelo.png'; this.className='kit-fallback-logo';">
               <button type="button" class="kit-zoom-btn" onclick="event.stopPropagation(); openFlyerPreview('${media.image}', '${escapeHtml(definition.nome)}')" title="Ampliar flyer oficial">
                 <i class="fa-solid fa-magnifying-glass-plus"></i>
               </button>

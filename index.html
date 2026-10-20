@@ -1525,6 +1525,326 @@
       color: #fff;
     }
 
+    /* SELETOR DE FORMA DE PAGAMENTO (PIX vs CHEERS) */
+    .payment-method-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .btn-payment-method {
+      background: #090b10;
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .btn-payment-method:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: #0d1017;
+    }
+
+    .btn-payment-method.active {
+      background: rgba(128, 0, 32, 0.18);
+      border-color: var(--pesadelo-pink);
+      color: #fff;
+      box-shadow: 0 0 0 1px var(--pesadelo-pink);
+    }
+
+    .btn-payment-method.active.is-cheers {
+      background: rgba(139, 92, 246, 0.16);
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 1px #8b5cf6;
+    }
+
+    .pay-method-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-payment-method.active .pay-method-icon {
+      background: var(--unb-vinho);
+      color: #fff;
+    }
+
+    .pay-method-icon.cheers-icon {
+      color: #a78bfa;
+    }
+
+    .btn-payment-method.active.is-cheers .pay-method-icon {
+      background: #7c3aed;
+      color: #fff;
+    }
+
+    .pay-method-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      flex-grow: 1;
+    }
+
+    .pay-method-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .pay-method-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .btn-payment-method.active .pay-method-sub {
+      color: var(--text-secondary);
+    }
+
+    .pay-method-check {
+      color: transparent;
+      font-size: 1.05rem;
+      transition: color 0.15s ease;
+    }
+
+    .btn-payment-method.active .pay-method-check {
+      color: var(--pesadelo-pink);
+    }
+
+    .btn-payment-method.active.is-cheers .pay-method-check {
+      color: #a78bfa;
+    }
+
+    /* CARD BANNER CHEERS */
+    .cheers-banner-card {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(15, 17, 24, 0.95) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 10px;
+      padding: 1.25rem 1.4rem;
+    }
+
+    .cheers-banner-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .cheers-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #c4b5fd;
+      background: rgba(139, 92, 246, 0.22);
+      border: 1px solid rgba(139, 92, 246, 0.45);
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .cheers-verified {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #34d399;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .cheers-banner-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .cheers-banner-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 0.85rem;
+    }
+
+    .cheers-input-wrap {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem 0.95rem;
+    }
+
+    .cheers-input-label {
+      font-size: 0.8rem;
+      color: #ddd6fe;
+      margin-bottom: 0.35rem;
+      display: block;
+      font-weight: 600;
+    }
+
+    .cheers-input {
+      width: 100%;
+      background: #050608;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.65rem 0.85rem;
+      color: #fff;
+      font-size: 0.88rem;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    .cheers-input:focus {
+      outline: none;
+      border-color: #8b5cf6;
+    }
+
+    /* BADGES TABELA CHEERS / PIX */
+    .badge-cheers-pill {
+      background: rgba(139, 92, 246, 0.18);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .badge-pix-pill {
+      background: rgba(30, 41, 59, 0.6);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 0.18rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+    }
+
+    .cheers-receipt-tag {
+      background: rgba(139, 92, 246, 0.14);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    /* CHEERS NO MODAL DE COMPROVANTE */
+    .cheers-modal-info-box {
+      text-align: center;
+      padding: 2.2rem 1.4rem;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .cheers-modal-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: #c4b5fd;
+      font-size: 1.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.2rem;
+    }
+
+    .cheers-modal-info-box h4 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+    }
+
+    .cheers-modal-info-box p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .cheers-modal-id-badge {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px dashed rgba(139, 92, 246, 0.45);
+      color: #e2e8f0;
+      font-size: 0.85rem;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .cheers-modal-sync-badge {
+      font-size: 0.78rem;
+      color: #34d399;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* REVISÃO CHEERS */
+    .confirm-cheers-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 8px;
+      padding: 0.85rem 1.1rem;
+    }
+
+    .confirm-cheers-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: #7c3aed;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
     /* SEÇÃO PIX */
     .pix-box {
       background: #090b10;
@@ -3306,6 +3626,11 @@
         justify-content: center;
       }
 
+      .payment-method-selector {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+      }
+
       .pix-box {
         padding: 1rem 0.85rem;
       }
@@ -4236,8 +4561,33 @@
                 </div>
               </div>
 
-              <!-- ÁREA PIX -->
+              <!-- SELETOR DE FORMA DE PAGAMENTO -->
               <div class="form-group full">
+                <label style="font-weight: 700; color: #fff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fa-solid fa-credit-card" style="color: var(--pesadelo-pink);"></i> Forma de Pagamento <span class="req">*</span>
+                </label>
+                <div class="payment-method-selector">
+                  <button type="button" class="btn-payment-method active" id="btnPayMethodPix" onclick="setPaymentMethod('pix')">
+                    <div class="pay-method-icon"><i class="fa-brands fa-pix"></i></div>
+                    <div class="pay-method-info">
+                      <span class="pay-method-title">Pix Oficial</span>
+                      <span class="pay-method-sub">Chave Pix da Atlética Pesadelo</span>
+                    </div>
+                    <div class="pay-method-check"><i class="fa-solid fa-circle-check"></i></div>
+                  </button>
+                  <button type="button" class="btn-payment-method" id="btnPayMethodCheers" onclick="setPaymentMethod('cheers')">
+                    <div class="pay-method-icon cheers-icon"><i class="fa-solid fa-ticket"></i></div>
+                    <div class="pay-method-info">
+                      <span class="pay-method-title">Pago pelo Cheers</span>
+                      <span class="pay-method-sub">Plataforma / App Cheers</span>
+                    </div>
+                    <div class="pay-method-check"><i class="fa-solid fa-circle-check"></i></div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- ÁREA PIX -->
+              <div class="form-group full" id="pixPaymentSection">
                 <div class="pix-box">
                   <div class="pix-total-banner" id="pixTotalBanner">
                     <div class="pix-total-label">
@@ -4261,9 +4611,29 @@
                 </div>
               </div>
 
+              <!-- ÁREA CHEERS -->
+              <div class="form-group full" id="cheersPaymentSection" style="display: none;">
+                <div class="cheers-banner-card">
+                  <div class="cheers-banner-header">
+                    <div class="cheers-badge"><i class="fa-solid fa-ticket"></i> Plataforma Cheers</div>
+                    <span class="cheers-verified"><i class="fa-solid fa-circle-check"></i> Pagamento Registrado</span>
+                  </div>
+                  <div class="cheers-banner-title">Pedido Pago pelo Cheers</div>
+                  <p class="cheers-banner-desc">
+                    Selecione esta opção para pedidos realizados pela plataforma <strong>Cheers</strong>. O pedido será registrado com status confirmado no banco de dados e sincronizado na planilha.
+                  </p>
+                  <div class="cheers-input-wrap">
+                    <label for="f_cheers_id" class="cheers-input-label">
+                      Código / ID do Pedido ou Ingresso Cheers <small style="color: var(--text-muted); font-weight: normal;">(Opcional)</small>:
+                    </label>
+                    <input type="text" id="f_cheers_id" placeholder="Ex: #CH-89241 ou Nome no Cheers" class="cheers-input">
+                  </div>
+                </div>
+              </div>
+
               <!-- COMPROVANTE -->
               <div class="form-group full">
-                <label>Comprovante de Pagamento <span class="req">*</span></label>
+                <label id="lblComprovanteTitle">Comprovante de Pagamento <span class="req" id="lblComprovanteReq">*</span></label>
                 <div class="upload-area" onclick="document.getElementById('f_comprovante_file').click()">
                   <div class="upload-text" id="uploadText">
                     <strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)
@@ -4385,7 +4755,7 @@
                 <div class="confirm-total-box">
                   <div class="confirm-total-label">
                     <span>Valor Total do Pedido</span>
-                    <small
+                    <small id="revPaymentMethodDesc"
                       style="display: block; color: var(--text-muted); font-size: 0.75rem; text-transform: none;">Pagamento
                       via Pix Oficial da Atlética</small>
                   </div>
@@ -5013,6 +5383,50 @@
         }
         if (secAvulso) secAvulso.style.display = "block";
         if (secKit) secKit.style.display = "none";
+      }
+      updateOrderTotals();
+    }
+
+    let currentPaymentMethod = "pix";
+
+    function setPaymentMethod(method) {
+      currentPaymentMethod = method;
+      const btnPix = document.getElementById("btnPayMethodPix");
+      const btnCheers = document.getElementById("btnPayMethodCheers");
+      const secPix = document.getElementById("pixPaymentSection");
+      const secCheers = document.getElementById("cheersPaymentSection");
+      const lblReq = document.getElementById("lblComprovanteReq");
+      const lblTitle = document.getElementById("lblComprovanteTitle");
+
+      if (method === "cheers") {
+        if (btnPix) {
+          btnPix.classList.remove("active");
+          btnPix.classList.remove("is-cheers");
+        }
+        if (btnCheers) {
+          btnCheers.classList.add("active");
+          btnCheers.classList.add("is-cheers");
+        }
+        if (secPix) secPix.style.display = "none";
+        if (secCheers) secCheers.style.display = "block";
+        if (lblReq) lblReq.style.display = "none";
+        if (lblTitle) {
+          lblTitle.innerHTML = `Comprovante Cheers <small style="color: var(--text-muted); font-weight: normal; font-size: 0.82rem;">(Opcional - anexe caso tenha print do app)</small>`;
+        }
+      } else {
+        if (btnCheers) {
+          btnCheers.classList.remove("active");
+          btnCheers.classList.remove("is-cheers");
+        }
+        if (btnPix) {
+          btnPix.classList.add("active");
+        }
+        if (secPix) secPix.style.display = "block";
+        if (secCheers) secCheers.style.display = "none";
+        if (lblReq) lblReq.style.display = "inline";
+        if (lblTitle) {
+          lblTitle.innerHTML = `Comprovante de Pagamento <span class="req" id="lblComprovanteReq">*</span>`;
+        }
       }
       updateOrderTotals();
     }
@@ -6277,15 +6691,26 @@
         filtered = filtered.filter(o => o.statusEntrega === "Entregue");
       }
 
-      // Filtro por Nome ou CPF (busca em tempo real)
+      // Filtro por Nome, CPF, Comissário, Produto ou Cheers (busca em tempo real)
       if (searchFilterTerm) {
         const cleanTerm = searchFilterTerm.replace(/\D/g, "");
         filtered = filtered.filter(o => {
           const nomeMatch = (o.nome || "").toLowerCase().includes(searchFilterTerm);
+          const comissarioMatch = (o.comissario || "").toLowerCase().includes(searchFilterTerm);
+          const prodMatch = (o.produto || "").toLowerCase().includes(searchFilterTerm);
+          const payMatch = (o.formaPagamento || "").toLowerCase().includes(searchFilterTerm);
+          const cheersIdMatch = (o.cheersId || "").toLowerCase().includes(searchFilterTerm);
+          const isCheersSearch = searchFilterTerm.includes("cheer");
+          const cheersMatch = isCheersSearch && (
+            o.formaPagamento === "Cheers" ||
+            String(o.statusPagamento || "").toLowerCase().includes("cheers") ||
+            String(o.comprovante || "").toLowerCase().includes("cheers") ||
+            String(o.comprovanteUrl || "").toLowerCase().includes("cheers")
+          );
           const cpfRaw = o.cpf || "";
           const cpfMatch = cpfRaw.toLowerCase().includes(searchFilterTerm) ||
             (cleanTerm.length > 0 && cpfRaw.replace(/\D/g, "").includes(cleanTerm));
-          return nomeMatch || cpfMatch;
+          return nomeMatch || cpfMatch || comissarioMatch || prodMatch || payMatch || cheersIdMatch || cheersMatch;
         });
       }
 
@@ -6305,6 +6730,11 @@
         const tamExibido = getOrderSizeForTab(o, currentTab);
         const isEntregue = o.statusEntrega === "Entregue";
 
+        const isCheersOrder = o.formaPagamento === "Cheers" ||
+          String(o.statusPagamento || "").toLowerCase().includes("cheers") ||
+          String(o.comprovante || "").toLowerCase().includes("cheers") ||
+          String(o.comprovanteUrl || "").toLowerCase().includes("cheers");
+
         const clienteNome = (o.nome || "Cliente").toString().trim();
         const primeiroNome = clienteNome.split(/\s+/)[0] || "Cliente";
         const persoTexto = getOrderPersonalization(o);
@@ -6313,12 +6743,21 @@
         const zapUrl = `https://wa.me/55${rawPhone}?text=${zapMsg}`;
 
         const compVal = o.comprovanteUrl || o.comprovanteBase64 || o.comprovante;
+        const orderIdx = orders.indexOf(o);
+        const hasRealFile = (o.comprovanteBase64 && o.comprovanteBase64.toString().startsWith("data:")) ||
+          (compVal && String(compVal).trim().startsWith("http"));
+
         let compHtml = `<span style="color: var(--text-muted); font-size: 0.75rem;">Sem anexo</span>`;
-        if (compVal && String(compVal).trim() !== "" && String(compVal).trim() !== "-") {
-          const orderIdx = orders.indexOf(o);
+        if (hasRealFile) {
           compHtml = `
             <button type="button" class="btn-receipt-badge" onclick="openReceiptModal('${escapeHtml(String(o.id || ''))}', ${orderIdx})" title="Visualizar comprovante no aplicativo">
               <i class="fa-solid fa-receipt"></i> Ver Anexo
+            </button>
+          `;
+        } else if (isCheersOrder) {
+          compHtml = `
+            <button type="button" class="cheers-receipt-tag" onclick="openReceiptModal('${escapeHtml(String(o.id || ''))}', ${orderIdx})" title="Pago no Cheers - Ver detalhes">
+              <i class="fa-solid fa-ticket"></i> Pago Cheers
             </button>
           `;
         }
@@ -6339,6 +6778,10 @@
           statusIcon = '<i class="fa-solid fa-circle-xmark"></i>';
         }
 
+        const payBadgeHtml = isCheersOrder
+          ? `<span class="badge-cheers-pill" title="Pago no aplicativo/plataforma Cheers"><i class="fa-solid fa-ticket"></i> Cheers</span>`
+          : `<span class="badge-pix-pill" title="Pago via Pix Oficial"><i class="fa-brands fa-pix"></i> Pix</span>`;
+
         const tr = document.createElement("tr");
         tr.className = isEntregue ? "row-entregue" : "row-pendente";
         tr.innerHTML = `
@@ -6358,9 +6801,12 @@
           <td><span class="size-badge-display">${escapeHtml(tamExibido)}</span></td>
           <td><span class="val-total-badge">${valExibido}</span></td>
           <td>
-            <span class="status-badge ${statusCls}" onclick="togglePagamento('${escapeHtml(String(o.id || ''))}')" title="Clique para alternar: Pendente ➔ Confirmado ➔ Reprovado">
-              ${statusIcon} ${escapeHtml(o.statusPagamento || 'Pendente')}
-            </span>
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start;">
+              <span class="status-badge ${statusCls}" onclick="togglePagamento('${escapeHtml(String(o.id || ''))}')" title="Clique para alternar: Pendente ➔ Confirmado ➔ Reprovado">
+                ${statusIcon} ${escapeHtml(o.statusPagamento || 'Pendente')}
+              </span>
+              ${payBadgeHtml}
+            </div>
           </td>
           <td>
             ${compHtml}
@@ -6839,7 +7285,30 @@
             </div>
           `;
         }
-        // 5. Sem anexo
+        // 5. Cheers sem anexo de imagem
+        else if (o.formaPagamento === "Cheers" || String(o.statusPagamento || "").toLowerCase().includes("cheers") || String(o.comprovante || "").toLowerCase().includes("cheers") || String(o.comprovanteUrl || "").toLowerCase().includes("cheers")) {
+          const cheersIdText = o.cheersId || "";
+          preview.innerHTML = `
+            <div class="cheers-modal-info-box">
+              <div class="cheers-modal-icon">
+                <i class="fa-solid fa-ticket"></i>
+              </div>
+              <h3 style="color: #fff; margin: 0; font-size: 1.3rem; font-weight: 800;">Pedido Pago pelo Cheers</h3>
+              <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.55; margin: 0; max-width: 440px;">
+                Este pedido foi realizado e pago através da plataforma <strong>Cheers</strong>. Não requer comprovante bancário Pix por já estar confirmado no aplicativo.
+              </p>
+              ${cheersIdText ? `
+                <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 8px; padding: 0.65rem 1.1rem; color: #ddd6fe; font-size: 0.9rem;">
+                  <i class="fa-solid fa-hashtag" style="color: #a78bfa;"></i> ID / Código Cheers: <strong style="color: #fff;">${escapeHtml(cheersIdText)}</strong>
+                </div>
+              ` : ''}
+              <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; padding: 0.45rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
+                <i class="fa-solid fa-circle-check"></i> Pagamento Registrado no Cheers
+              </div>
+            </div>
+          `;
+        }
+        // 6. Sem anexo
         else {
           preview.innerHTML = `
             <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
@@ -7031,8 +7500,11 @@
         return;
       }
 
-      if (!currentUploadedFile) {
-        showToast("Por favor, anexe o comprovante de pagamento antes de prosseguir.");
+      const isCheers = currentPaymentMethod === "cheers";
+      const cheersId = isCheers ? (document.getElementById("f_cheers_id") ? document.getElementById("f_cheers_id").value.trim() : "") : "";
+
+      if (!isCheers && !currentUploadedFile) {
+        showToast("Por favor, anexe o comprovante de pagamento Pix antes de prosseguir.");
         const uploadBox = document.querySelector(".upload-area");
         if (uploadBox) uploadBox.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
@@ -7121,11 +7593,13 @@
         valorTotal: totalValor,
         valorFormatado: valorFormatado,
         itens: allItems,
-        comprovanteNome: currentUploadedFile ? currentUploadedFile.nome : "",
+        formaPagamento: isCheers ? "Cheers" : "Pix",
+        cheersId: cheersId,
+        comprovanteNome: currentUploadedFile ? currentUploadedFile.nome : (isCheers ? "Pago no Cheers" : ""),
         comprovanteType: currentUploadedFile ? currentUploadedFile.type : "",
         comprovanteBase64: currentUploadedFile ? currentUploadedFile.base64 : "",
-        comprovanteUrl: "",
-        statusPagamento: "Pendente",
+        comprovanteUrl: isCheers && !currentUploadedFile ? "Pago via Cheers" : "",
+        statusPagamento: isCheers ? "Confirmado" : "Pendente",
         statusEntrega: "Pendente"
       };
 
@@ -7136,6 +7610,15 @@
       document.getElementById("revComissario").innerText = pendingOrderData.comissario;
       document.getElementById("revItemsCount").innerText = totalQtd;
       document.getElementById("revTotalAmount").innerText = valorFormatado;
+
+      const revPayDesc = document.getElementById("revPaymentMethodDesc");
+      if (revPayDesc) {
+        if (isCheers) {
+          revPayDesc.innerHTML = `<span style="color: #c4b5fd; font-weight: 700;"><i class="fa-solid fa-ticket"></i> Pagamento Registrado via Plataforma Cheers</span>`;
+        } else {
+          revPayDesc.innerText = "Pagamento via Pix Oficial da Atlética";
+        }
+      }
 
       // Renderiza itens
       const listEl = document.getElementById("revItemsList");
@@ -7172,9 +7655,22 @@
             ? `<img src="${currentUploadedFile.base64}" alt="Comprovante" class="confirm-receipt-thumb">`
             : `<div class="confirm-receipt-thumb" style="display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: #ef4444;"><i class="fa-solid fa-file-pdf"></i></div>`}
             <div class="confirm-receipt-info">
-              <span class="confirm-receipt-name">${currentUploadedFile.nome || "Comprovante"}</span>
-              <span class="confirm-receipt-status"><i class="fa-solid fa-circle-check"></i> Comprovante pronto para registro</span>
+              <span class="confirm-receipt-name">${escapeHtml(currentUploadedFile.nome || "Comprovante")}</span>
+              <span class="confirm-receipt-status"><i class="fa-solid fa-circle-check"></i> ${isCheers ? "Comprovante Cheers anexado" : "Comprovante pronto para registro"}</span>
+              ${isCheers && cheersId ? `<span style="font-size: 0.78rem; color: #a78bfa;"><i class="fa-solid fa-hashtag"></i> ID: <strong>${escapeHtml(cheersId)}</strong></span>` : ""}
             </div>
+          </div>
+        `;
+      } else if (isCheers) {
+        receiptEl.innerHTML = `
+          <div class="cheers-banner-card" style="padding: 1rem 1.25rem;">
+            <div class="cheers-banner-header" style="margin-bottom: 0.35rem;">
+              <div class="cheers-badge"><i class="fa-solid fa-ticket"></i> Plataforma Cheers</div>
+              <span class="cheers-verified"><i class="fa-solid fa-circle-check"></i> Pagamento Confirmado</span>
+            </div>
+            <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">Pedido realizado e pago no aplicativo Cheers</div>
+            ${cheersId ? `<div style="font-size: 0.85rem; color: #c4b5fd; margin-top: 0.35rem;"><i class="fa-solid fa-hashtag"></i> ID / Código do Pedido: <strong style="color: #fff;">${escapeHtml(cheersId)}</strong></div>` : ''}
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem;">Sem anexo bancário necessário. Status registrado como Confirmado.</div>
           </div>
         `;
       } else {
@@ -7338,8 +7834,12 @@
       document.getElementById("kitJerseyNumber").value = "";
       document.getElementById("kitJerseyName").disabled = true;
       document.getElementById("kitJerseyNumber").disabled = true;
-      document.getElementById("kitQuantity").value = 1;
       document.getElementById("kitError").hidden = true;
+
+      // Restaura forma de pagamento para Pix e limpa campo Cheers
+      setPaymentMethod("pix");
+      const fCheers = document.getElementById("f_cheers_id");
+      if (fCheers) fCheers.value = "";
 
       // Limpa dados de upload, carrinho e pedido pendente
       currentUploadedFile = null;
@@ -7407,10 +7907,11 @@
       const wb = XLSX.utils.book_new();
 
       const wsGeralData = [
-        ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Personalização", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
+        ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Personalização", "Valor Total", "Forma de Pagamento", "Status Pagamento", "Comprovante", "Status Entrega"]
       ];
       orders.forEach(o => {
         const tam = getOrderSizeForTab(o, "todas");
+        const forma = o.formaPagamento || (String(o.statusPagamento || "").toLowerCase().includes("cheers") ? "Cheers" : "Pix");
         wsGeralData.push([
           formatOrderDate(o.data),
           o.nome,
@@ -7420,8 +7921,9 @@
           tam,
           getOrderPersonalization(o),
           getOrderRowPrice(o, "todas"),
+          forma + (o.cheersId ? " (" + o.cheersId + ")" : ""),
           o.statusPagamento,
-          o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
+          o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : (forma === "Cheers" ? "Pago no Cheers" : "Sem anexo")),
           o.statusEntrega
         ]);
       });
@@ -7431,11 +7933,12 @@
       const prods = Object.keys(PRECOS_PRODUTOS);
       prods.forEach(p => {
         const prodData = [
-          ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Personalização", "Valor Total", "Status Pagamento", "Comprovante", "Status Entrega"]
+          ["Data", "Nome", "CPF", "Comissário", "Produto", "Tamanho", "Personalização", "Valor Total", "Forma de Pagamento", "Status Pagamento", "Comprovante", "Status Entrega"]
         ];
         orders.filter(o => orderHasProduct(o, p)).forEach(o => {
           const tam = getOrderSizeForTab(o, p);
           const prodDesc = getOrderProductForTab(o, p);
+          const forma = o.formaPagamento || (String(o.statusPagamento || "").toLowerCase().includes("cheers") ? "Cheers" : "Pix");
           prodData.push([
             formatOrderDate(o.data),
             o.nome,
@@ -7445,8 +7948,9 @@
             tam,
             getOrderPersonalization(o),
             getOrderRowPrice(o, p),
+            forma + (o.cheersId ? " (" + o.cheersId + ")" : ""),
             o.statusPagamento,
-            o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : "Sem anexo"),
+            o.comprovanteUrl || (o.comprovanteBase64 ? "Anexo disponível no App" : (forma === "Cheers" ? "Pago no Cheers" : "Sem anexo")),
             o.statusEntrega
           ]);
         });

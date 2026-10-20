@@ -30,12 +30,12 @@ function setupDatabase() {
     sheetPedidos.appendRow([
       "ID", "Data", "Nome", "Telefone", "CPF",
       "Comissário", "Produto", "Tamanho", "Quantidade",
-      "Status Pagamento", "Status Entrega", "Comprovante", "Valor Total", "Personalização"
+      "Status Pagamento", "Status Entrega", "Comprovante", "Valor Total", "Personalização", "Forma de Pagamento"
     ]);
-    sheetPedidos.getRange(1, 1, 1, 14).setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
+    sheetPedidos.getRange(1, 1, 1, 15).setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
     sheetPedidos.setFrozenRows(1);
   } else {
-    // Se a aba ja existir com 11, 12 ou 13 colunas, adiciona as colunas faltantes
+    // Se a aba ja existir com menos de 15 colunas, adiciona as colunas faltantes
     if (sheetPedidos.getLastColumn() < 12) {
       sheetPedidos.getRange(1, 12).setValue("Comprovante")
         .setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
@@ -46,6 +46,10 @@ function setupDatabase() {
     }
     if (sheetPedidos.getLastColumn() < 14) {
       sheetPedidos.getRange(1, 14).setValue("Personalização")
+        .setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
+    }
+    if (sheetPedidos.getLastColumn() < 15) {
+      sheetPedidos.getRange(1, 15).setValue("Forma de Pagamento")
         .setFontWeight("bold").setBackground("#800020").setFontColor("#ffffff");
     }
   }
@@ -171,6 +175,17 @@ function doGet(e) {
         personalizacaoFinal = personalizacaoFinal.replace(/^Jersey(?:\s*\([^)]*\))?:\s*(Nome:\s*)/i, "$1");
       }
 
+      // Forma de Pagamento (coluna 15)
+      let formaPagamentoFinal = (row[14] !== undefined && row[14] !== null && row[14].toString().trim() !== "") ? row[14].toString().trim() : "";
+      if (!formaPagamentoFinal || formaPagamentoFinal === "") {
+        if ((row[9] && row[9].toString().toLowerCase().indexOf("cheers") > -1) ||
+            (row[11] && row[11].toString().toLowerCase().indexOf("cheers") > -1)) {
+          formaPagamentoFinal = "Cheers";
+        } else {
+          formaPagamentoFinal = "Pix";
+        }
+      }
+
       orders.push({
         id: row[0],
         data: dataFormatada,
@@ -185,7 +200,8 @@ function doGet(e) {
         statusEntrega: row[10] || "Pendente",
         comprovanteUrl: row[11] || "",
         valorTotal: valorFinal,
-        personalizacao: personalizacaoFinal
+        personalizacao: personalizacaoFinal,
+        formaPagamento: formaPagamentoFinal
       });
     }
   }
@@ -248,6 +264,8 @@ function doPost(e) {
         );
       } else if (o.comprovanteUrl) {
         comprovanteLink = o.comprovanteUrl;
+      } else if (o.formaPagamento === "Cheers") {
+        comprovanteLink = "Pago via Cheers";
       }
 
       let valorGravado = o.valorFormatado || (o.valorTotal ? "R$ " + Number(o.valorTotal).toFixed(2).replace(".", ",") : "");
@@ -286,6 +304,12 @@ function doPost(e) {
         personalizacaoGravada = personalizacaoGravada.replace(/^Jersey(?:\s*\([^)]*\))?:\s*(Nome:\s*)/i, "$1");
       }
 
+      // Forma de Pagamento
+      let formaGravada = (o.formaPagamento || "Pix").toString().trim();
+      if (o.cheersId && o.cheersId.toString().trim() !== "") {
+        formaGravada += " (" + o.cheersId.toString().trim() + ")";
+      }
+
       sheet.appendRow([
         o.id,
         o.data,
@@ -300,7 +324,8 @@ function doPost(e) {
         o.statusEntrega || "Pendente",
         comprovanteLink,
         valorGravado,
-        personalizacaoGravada
+        personalizacaoGravada,
+        formaGravada
       ]);
 
       return ContentService.createTextOutput(JSON.stringify({

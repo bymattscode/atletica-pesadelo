@@ -5397,6 +5397,7 @@
       const secCheers = document.getElementById("cheersPaymentSection");
       const lblReq = document.getElementById("lblComprovanteReq");
       const lblTitle = document.getElementById("lblComprovanteTitle");
+      const uploadTxt = document.getElementById("uploadText");
 
       if (method === "cheers") {
         if (btnPix) {
@@ -5409,9 +5410,12 @@
         }
         if (secPix) secPix.style.display = "none";
         if (secCheers) secCheers.style.display = "block";
-        if (lblReq) lblReq.style.display = "none";
+        if (lblReq) lblReq.style.display = "inline";
         if (lblTitle) {
-          lblTitle.innerHTML = `Comprovante Cheers <small style="color: var(--text-muted); font-weight: normal; font-size: 0.82rem;">(Opcional - anexe caso tenha print do app)</small>`;
+          lblTitle.innerHTML = `Print do Pedido / Pagamento no Cheers <span class="req" id="lblComprovanteReq">*</span>`;
+        }
+        if (uploadTxt && !currentUploadedFile) {
+          uploadTxt.innerHTML = `<strong>Clique para selecionar o print</strong> ou arraste o comprovante do app Cheers (JPG, PNG ou PDF)`;
         }
       } else {
         if (btnCheers) {
@@ -5425,7 +5429,10 @@
         if (secCheers) secCheers.style.display = "none";
         if (lblReq) lblReq.style.display = "inline";
         if (lblTitle) {
-          lblTitle.innerHTML = `Comprovante de Pagamento <span class="req" id="lblComprovanteReq">*</span>`;
+          lblTitle.innerHTML = `Comprovante de Pagamento (Pix) <span class="req" id="lblComprovanteReq">*</span>`;
+        }
+        if (uploadTxt && !currentUploadedFile) {
+          uploadTxt.innerHTML = `<strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante Pix (JPG, PNG ou PDF)`;
         }
       }
       updateOrderTotals();
@@ -7503,8 +7510,10 @@
       const isCheers = currentPaymentMethod === "cheers";
       const cheersId = isCheers ? (document.getElementById("f_cheers_id") ? document.getElementById("f_cheers_id").value.trim() : "") : "";
 
-      if (!isCheers && !currentUploadedFile) {
-        showToast("Por favor, anexe o comprovante de pagamento Pix antes de prosseguir.");
+      if (!currentUploadedFile) {
+        showToast(isCheers
+          ? "Por favor, anexe o print do pagamento/pedido no app Cheers antes de prosseguir."
+          : "Por favor, anexe o comprovante de pagamento Pix antes de prosseguir.");
         const uploadBox = document.querySelector(".upload-area");
         if (uploadBox) uploadBox.scrollIntoView({ behavior: "smooth", block: "center" });
         return;

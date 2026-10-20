@@ -415,7 +415,7 @@
       display: inline;
     }
 
-    .kits-section > summary {
+    .kits-section>summary {
       cursor: pointer;
       color: #f69cb9;
       margin-bottom: 0.75rem;
@@ -1262,6 +1262,7 @@
     }
 
     @media (max-width: 600px) {
+
       .kit-catalog,
       .kit-fields {
         grid-template-columns: minmax(0, 1fr);
@@ -1313,7 +1314,7 @@
         min-width: 0;
       }
 
-      .order-item-row > :last-child {
+      .order-item-row> :last-child {
         margin-left: auto;
       }
     }
@@ -2252,6 +2253,7 @@
       color: var(--success);
       border: 1px solid rgba(16, 185, 129, 0.35);
     }
+
     .status-pago:hover {
       background: rgba(16, 185, 129, 0.25);
       transform: translateY(-1px);
@@ -2262,6 +2264,7 @@
       color: var(--warning);
       border: 1px solid rgba(245, 158, 11, 0.35);
     }
+
     .status-pendente:hover {
       background: rgba(245, 158, 11, 0.25);
       transform: translateY(-1px);
@@ -2272,6 +2275,7 @@
       color: #ef4444;
       border: 1px solid rgba(239, 68, 68, 0.35);
     }
+
     .status-reprovado:hover {
       background: rgba(239, 68, 68, 0.25);
       transform: translateY(-1px);
@@ -3626,6 +3630,26 @@
         justify-content: center;
       }
 
+      .product-tiles-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+        width: 100%;
+      }
+
+      .product-tile {
+        padding: 0.65rem 0.35rem;
+        min-height: 48px;
+      }
+
+      .product-tile .product-name {
+        font-size: 0.8rem;
+        line-height: 1.15;
+      }
+
+      .product-tile .product-price {
+        font-size: 0.74rem;
+      }
+
       .payment-method-selector {
         grid-template-columns: 1fr;
         gap: 0.65rem;
@@ -4205,7 +4229,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      transition: 0.15s;
+      transno on: 0.15s;
       font-family: inherit;
     }
 
@@ -4337,10 +4361,12 @@
                   <div class="sale-mode-header">
                     <span class="sale-mode-badge"><i class="fa-solid fa-layer-group"></i> MODALIDADE DE PEDIDO</span>
                     <h3 class="sale-mode-heading">Como deseja realizar a venda?</h3>
-                    <p class="sale-mode-sub">Selecione entre compras avulsas de peças individuais ou escolha nossos kits promocionais oficiais com desconto.</p>
+                    <p class="sale-mode-sub">Selecione entre compras avulsas de peças individuais ou escolha nossos kits
+                      promocionais oficiais com desconto.</p>
                   </div>
                   <div class="sale-type-pills-grid" role="tablist" aria-label="Modalidade de Venda">
-                    <button type="button" class="sale-type-pill active" id="pillSaleAvulso" onclick="switchSaleMode('avulso')" role="tab" aria-selected="true">
+                    <button type="button" class="sale-type-pill active" id="pillSaleAvulso"
+                      onclick="switchSaleMode('avulso')" role="tab" aria-selected="true">
                       <div class="pill-left-icon">
                         <i class="fa-solid fa-shirt"></i>
                       </div>
@@ -4349,12 +4375,14 @@
                           <span class="pill-main-title">1. Vendas Avulsas</span>
                           <span class="pill-tag-neutral">Peças Individuais</span>
                         </div>
-                        <span class="pill-description">Compre qualquer produto individualmente: Oversize, Jersey, Corta Vento, Caneca, Tirante, etc.</span>
+                        <span class="pill-description">Compre qualquer produto individualmente: Oversize, Jersey, Corta
+                          Vento, Caneca, Tirante, etc.</span>
                       </div>
                       <div class="pill-check-indicator"><i class="fa-solid fa-circle-check"></i></div>
                     </button>
 
-                    <button type="button" class="sale-type-pill" id="pillSaleKit" onclick="switchSaleMode('kit')" role="tab" aria-selected="false">
+                    <button type="button" class="sale-type-pill" id="pillSaleKit" onclick="switchSaleMode('kit')"
+                      role="tab" aria-selected="false">
                       <div class="pill-left-icon fire-pill-icon">
                         <i class="fa-solid fa-fire-flame-curved"></i>
                       </div>
@@ -4363,7 +4391,8 @@
                           <span class="pill-main-title">2. Kits Promocionais</span>
                           <span class="pill-tag-discount"><i class="fa-solid fa-bolt"></i> Super Descontos</span>
                         </div>
-                        <span class="pill-description">Combos oficiais com fotos reais e até R$ 25 de economia: Kit Campus, Campus Completo, Look Tube...</span>
+                        <span class="pill-description">Combos oficiais com fotos reais e até R$ 25 de economia: Kit
+                          Campus, Campus Completo, Look Tube...</span>
                       </div>
                       <div class="pill-check-indicator"><i class="fa-solid fa-circle-check"></i></div>
                     </button>
@@ -4378,7 +4407,8 @@
                   <div class="form-group full">
                     <label>Produto Selecionado <span class="req">*</span></label>
                     <div class="product-tiles-grid">
-                      <div class="product-tile selected" data-product="Oversize" onclick="selectProduct('Oversize', this)">
+                      <div class="product-tile selected" data-product="Oversize"
+                        onclick="selectProduct('Oversize', this)">
                         <span class="product-name">Oversize</span>
                         <span class="product-price">R$ 65,00</span>
                       </div>
@@ -4394,11 +4424,13 @@
                         <span class="product-name">Caneca + Tirante</span>
                         <span class="product-price">R$ 45,00</span>
                       </div>
-                      <div class="product-tile" data-product="Caneca individual" onclick="selectProduct('Caneca individual', this)">
+                      <div class="product-tile" data-product="Caneca individual"
+                        onclick="selectProduct('Caneca individual', this)">
                         <span class="product-name">Caneca individual</span>
                         <span class="product-price">R$ 35,00</span>
                       </div>
-                      <div class="product-tile" data-product="Tirante individual" onclick="selectProduct('Tirante individual', this)">
+                      <div class="product-tile" data-product="Tirante individual"
+                        onclick="selectProduct('Tirante individual', this)">
                         <span class="product-name">Tirante individual</span>
                         <span class="product-price">R$ 15,00</span>
                       </div>
@@ -4445,25 +4477,31 @@
                       <div class="form-group">
                         <label for="f_jersey_nome">Nome na camisa</label>
                         <input type="text" id="f_jersey_nome" maxlength="30" placeholder="Ex: ALESSANDRO"
-                          autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                          autocomplete="off" aria-describedby="jerseyHint jerseyError"
+                          oninput="handleJerseyCustomizationChange()" disabled>
                       </div>
                       <div class="form-group">
                         <label for="f_jersey_numero">Número na camisa</label>
                         <input type="text" id="f_jersey_numero" inputmode="numeric" maxlength="2" placeholder="Ex: 07"
-                          autocomplete="off" aria-describedby="jerseyHint jerseyError" oninput="handleJerseyCustomizationChange()" disabled>
+                          autocomplete="off" aria-describedby="jerseyHint jerseyError"
+                          oninput="handleJerseyCustomizationChange()" disabled>
                       </div>
                     </div>
-                    <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros à esquerda são mantidos.</p>
+                    <p class="customization-hint" id="jerseyHint">Personalização opcional, sem custo adicional. Preencha
+                      nome e número juntos. Nome: até 30 letras, espaços, apóstrofos ou hífens. Número: de 0 a 99; zeros
+                      à esquerda são mantidos.</p>
                     <p class="customization-hint" id="jerseyPreview" aria-live="polite"></p>
                     <p class="customization-error" id="jerseyError" role="alert" hidden></p>
                   </div>
 
                   <!-- BOTÃO ADICIONAR PRODUTO AO CARRINHO -->
-                  <div class="form-group full" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
+                  <div class="form-group full"
+                    style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem;">
                     <div
                       style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                       <button type="button" class="btn-add-item" id="btnAddCartBtn" onclick="addItemToOrder()">
-                        <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao carrinho</span>
+                        <i class="fa-solid fa-cart-plus"></i> <span id="btnAddCartText">Adicionar produto ao
+                          carrinho</span>
                       </button>
                       <span style="font-size: 0.78rem; color: var(--text-muted);" id="cartHelperText">
                         Adicione os produtos ao carrinho para somar o pedido
@@ -4476,11 +4514,15 @@
               <!-- CONTAINER 2: KITS PROMOCIONAIS -->
               <div id="kitsSelectionSection" class="sale-section-container" style="display: none;">
                 <details class="kits-section" id="kitsSection" aria-labelledby="kitsTitle" open>
-                  <summary style="display: none;"><h2 id="kitsTitle">Kits promocionais · ver opções</h2></summary>
+                  <summary style="display: none;">
+                    <h2 id="kitsTitle">Kits promocionais · ver opções</h2>
+                  </summary>
                   <div class="kits-section-header">
-                    <div class="kits-section-tag"><i class="fa-solid fa-fire-flame-curved"></i> COMBOS PROMOCIONAIS OFICIAIS</div>
+                    <div class="kits-section-tag"><i class="fa-solid fa-fire-flame-curved"></i> COMBOS PROMOCIONAIS
+                      OFICIAIS</div>
                     <h3>Escolha o seu Kit da Atlética Pesadelo</h3>
-                    <p class="customization-hint" style="margin-top: 0.25rem;">Clique no flyer para ampliar a imagem. Selecione <strong>Configurar</strong> para escolher os tamanhos e personalizar sua peça!</p>
+                    <p class="customization-hint" style="margin-top: 0.25rem;">Clique no flyer para ampliar a imagem.
+                      Selecione <strong>Configurar</strong> para escolher os tamanhos e personalizar sua peça!</p>
                   </div>
                   <div class="kit-catalog" id="kitCatalog"></div>
                   <div class="kit-configurator" id="kitConfigurator" hidden>
@@ -4492,39 +4534,50 @@
                           <h3 id="kitConfigTitle">Kit</h3>
                         </div>
                       </div>
-                      <button type="button" class="btn-close-config" onclick="closeKitConfigurator()" title="Fechar configurador">
+                      <button type="button" class="btn-close-config" onclick="closeKitConfigurator()"
+                        title="Fechar configurador">
                         <i class="fa-solid fa-xmark"></i> Fechar
                       </button>
                     </div>
                     <div class="kit-config-layout">
                       <div class="kit-config-controls">
                         <div class="form-group" id="kitAccessoryGroup">
-                          <label for="kitAccessorySelect"><i class="fa-solid fa-bag-shopping" style="color: var(--pesadelo-pink); margin-right: 0.35rem;"></i> Escolha seu Acessório <span class="req">*</span></label>
-                          <select class="kit-accessory-select" id="kitAccessorySelect" onchange="handleKitConfigChange()"></select>
+                          <label for="kitAccessorySelect"><i class="fa-solid fa-bag-shopping"
+                              style="color: var(--pesadelo-pink); margin-right: 0.35rem;"></i> Escolha seu Acessório
+                            <span class="req">*</span></label>
+                          <select class="kit-accessory-select" id="kitAccessorySelect"
+                            onchange="handleKitConfigChange()"></select>
                         </div>
                         <div id="kitSizeFields"></div>
                         <div class="kit-fields" id="kitJerseyFields" hidden>
                           <div class="form-group">
                             <label for="kitJerseyName">Nome na Jersey do kit</label>
-                            <input type="text" id="kitJerseyName" maxlength="30" autocomplete="off" placeholder="Ex: ALESSANDRO"
-                              aria-describedby="kitJerseyHint kitError" oninput="handleKitConfigChange()" disabled>
+                            <input type="text" id="kitJerseyName" maxlength="30" autocomplete="off"
+                              placeholder="Ex: ALESSANDRO" aria-describedby="kitJerseyHint kitError"
+                              oninput="handleKitConfigChange()" disabled>
                           </div>
                           <div class="form-group">
                             <label for="kitJerseyNumber">Número na Jersey do kit</label>
-                            <input type="text" id="kitJerseyNumber" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="Ex: 07"
-                              aria-describedby="kitJerseyHint kitError" oninput="handleKitConfigChange()" disabled>
+                            <input type="text" id="kitJerseyNumber" inputmode="numeric" maxlength="2" autocomplete="off"
+                              placeholder="Ex: 07" aria-describedby="kitJerseyHint kitError"
+                              oninput="handleKitConfigChange()" disabled>
                           </div>
-                          <p class="customization-hint" id="kitJerseyHint" style="grid-column: span 2;">Personalização opcional. Preencha nome e número juntos; zeros à esquerda são mantidos.</p>
+                          <p class="customization-hint" id="kitJerseyHint" style="grid-column: span 2;">Personalização
+                            opcional. Preencha nome e número juntos; zeros à esquerda são mantidos.</p>
                         </div>
                         <div class="form-group" style="max-width: 220px;">
-                          <label for="kitQuantity" style="font-weight: 700; color: #fff; margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.4rem;">
+                          <label for="kitQuantity"
+                            style="font-weight: 700; color: #fff; margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.4rem;">
                             <i class="fa-solid fa-calculator" style="color: var(--pesadelo-pink);"></i>
                             Quantidade de kits <span class="req">*</span>
                           </label>
                           <div class="kit-qty-stepper">
-                            <button type="button" class="btn-qty-step" onclick="stepKitQuantity(-1)" title="Diminuir quantidade">-</button>
-                            <input type="number" id="kitQuantity" min="1" max="50" value="1" oninput="handleKitConfigChange()">
-                            <button type="button" class="btn-qty-step" onclick="stepKitQuantity(1)" title="Aumentar quantidade">+</button>
+                            <button type="button" class="btn-qty-step" onclick="stepKitQuantity(-1)"
+                              title="Diminuir quantidade">-</button>
+                            <input type="number" id="kitQuantity" min="1" max="50" value="1"
+                              oninput="handleKitConfigChange()">
+                            <button type="button" class="btn-qty-step" onclick="stepKitQuantity(1)"
+                              title="Aumentar quantidade">+</button>
                           </div>
                         </div>
                       </div>
@@ -4563,11 +4616,14 @@
 
               <!-- SELETOR DE FORMA DE PAGAMENTO -->
               <div class="form-group full">
-                <label style="font-weight: 700; color: #fff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                  <i class="fa-solid fa-credit-card" style="color: var(--pesadelo-pink);"></i> Forma de Pagamento <span class="req">*</span>
+                <label
+                  style="font-weight: 700; color: #fff; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fa-solid fa-credit-card" style="color: var(--pesadelo-pink);"></i> Forma de Pagamento <span
+                    class="req">*</span>
                 </label>
                 <div class="payment-method-selector">
-                  <button type="button" class="btn-payment-method active" id="btnPayMethodPix" onclick="setPaymentMethod('pix')">
+                  <button type="button" class="btn-payment-method active" id="btnPayMethodPix"
+                    onclick="setPaymentMethod('pix')">
                     <div class="pay-method-icon"><i class="fa-brands fa-pix"></i></div>
                     <div class="pay-method-info">
                       <span class="pay-method-title">Pix Oficial</span>
@@ -4575,7 +4631,8 @@
                     </div>
                     <div class="pay-method-check"><i class="fa-solid fa-circle-check"></i></div>
                   </button>
-                  <button type="button" class="btn-payment-method" id="btnPayMethodCheers" onclick="setPaymentMethod('cheers')">
+                  <button type="button" class="btn-payment-method" id="btnPayMethodCheers"
+                    onclick="setPaymentMethod('cheers')">
                     <div class="pay-method-icon cheers-icon"><i class="fa-solid fa-ticket"></i></div>
                     <div class="pay-method-info">
                       <span class="pay-method-title">Pago pelo Cheers</span>
@@ -4620,20 +4677,24 @@
                   </div>
                   <div class="cheers-banner-title">Pedido Pago pelo Cheers</div>
                   <p class="cheers-banner-desc">
-                    Selecione esta opção para pedidos realizados pela plataforma <strong>Cheers</strong>. O pedido será registrado com status confirmado no banco de dados e sincronizado na planilha.
+                    Selecione esta opção para pedidos realizados pela plataforma <strong>Cheers</strong>. O pedido será
+                    registrado com status confirmado no banco de dados e sincronizado na planilha.
                   </p>
                   <div class="cheers-input-wrap">
                     <label for="f_cheers_id" class="cheers-input-label">
-                      Código / ID do Pedido ou Ingresso Cheers <small style="color: var(--text-muted); font-weight: normal;">(Opcional)</small>:
+                      Código / ID do Pedido ou Ingresso Cheers <small
+                        style="color: var(--text-muted); font-weight: normal;">(Opcional)</small>:
                     </label>
-                    <input type="text" id="f_cheers_id" placeholder="Ex: #CH-89241 ou Nome no Cheers" class="cheers-input">
+                    <input type="text" id="f_cheers_id" placeholder="Ex: #CH-89241 ou Nome no Cheers"
+                      class="cheers-input">
                   </div>
                 </div>
               </div>
 
               <!-- COMPROVANTE -->
               <div class="form-group full">
-                <label id="lblComprovanteTitle">Comprovante de Pagamento <span class="req" id="lblComprovanteReq">*</span></label>
+                <label id="lblComprovanteTitle">Comprovante de Pagamento <span class="req"
+                    id="lblComprovanteReq">*</span></label>
                 <div class="upload-area" onclick="document.getElementById('f_comprovante_file').click()">
                   <div class="upload-text" id="uploadText">
                     <strong>Clique para selecionar o arquivo</strong> ou arraste o comprovante (JPG, PNG ou PDF)
@@ -4880,7 +4941,8 @@
           Ecobag <span class="sub-tab-count" id="count-Eco Bag">0</span>
         </button>
         <button class="sub-tab-btn" onclick="switchSubTab('kits', this)">
-          <i class="fa-solid fa-fire-flame-curved" style="color: #ff3366; margin-right: 0.25rem;"></i> Kits <span class="sub-tab-count" id="count-kits">0</span>
+          <i class="fa-solid fa-fire-flame-curved" style="color: #ff3366; margin-right: 0.25rem;"></i> Kits <span
+            class="sub-tab-count" id="count-kits">0</span>
         </button>
         <button class="sub-tab-btn" id="btnTabComissarios" onclick="switchSubTab('ranking', this)">
           Comissários <span class="sub-tab-count" id="count-comissarios">0</span>
@@ -4922,10 +4984,12 @@
           <span>Arraste para o lado ou use os botões rápidos para ver todas as colunas</span>
         </div>
         <div class="table-scroll-nav-btns">
-          <button type="button" class="btn-scroll-step" onclick="scrollTableBy(-350)" title="Rolar tabela para a esquerda">
+          <button type="button" class="btn-scroll-step" onclick="scrollTableBy(-350)"
+            title="Rolar tabela para a esquerda">
             <i class="fa-solid fa-chevron-left"></i> Esquerda
           </button>
-          <button type="button" class="btn-scroll-step" onclick="scrollTableBy(350)" title="Rolar tabela para a direita">
+          <button type="button" class="btn-scroll-step" onclick="scrollTableBy(350)"
+            title="Rolar tabela para a direita">
             Direita <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
@@ -5073,16 +5137,20 @@
       <div class="flyer-preview-header">
         <div style="display: flex; align-items: center; gap: 0.6rem;">
           <i class="fa-solid fa-fire-flame-curved" style="color: var(--pesadelo-pink); font-size: 1.15rem;"></i>
-          <h3 id="flyerModalTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0;">Flyer Oficial do Kit</h3>
+          <h3 id="flyerModalTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0;">Flyer Oficial
+            do Kit</h3>
         </div>
-        <button type="button" class="login-close-btn" onclick="closeFlyerModal()" title="Fechar flyer" style="position: static; margin-left: auto;">&times;</button>
+        <button type="button" class="login-close-btn" onclick="closeFlyerModal()" title="Fechar flyer"
+          style="position: static; margin-left: auto;">&times;</button>
       </div>
       <div class="flyer-preview-body">
         <img id="flyerModalImage" src="" alt="Flyer do Kit" class="flyer-full-img">
       </div>
-      <div style="margin-top: 0.75rem; width: 100%; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: var(--text-muted); padding-top: 0.5rem; border-top: 1px solid var(--border);">
+      <div
+        style="margin-top: 0.75rem; width: 100%; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: var(--text-muted); padding-top: 0.5rem; border-top: 1px solid var(--border);">
         <span><i class="fa-solid fa-circle-info"></i> Flyer oficial da Atlética Pesadelo (AAAEFGA)</span>
-        <button type="button" class="btn-confirm-cancel" onclick="closeFlyerModal()" style="padding: 0.4rem 0.9rem; font-size: 0.82rem;">Fechar</button>
+        <button type="button" class="btn-confirm-cancel" onclick="closeFlyerModal()"
+          style="padding: 0.4rem 0.9rem; font-size: 0.82rem;">Fechar</button>
       </div>
     </div>
   </div>
@@ -5092,10 +5160,13 @@
     <div class="receipt-modal-box">
       <div class="receipt-modal-header">
         <div>
-          <h3 id="receiptModalTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Comprovante de Pagamento</h3>
-          <p id="receiptModalSub" style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Detalhes do anexo</p>
+          <h3 id="receiptModalTitle" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">
+            Comprovante de Pagamento</h3>
+          <p id="receiptModalSub"
+            style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Detalhes do anexo</p>
         </div>
-        <button type="button" class="login-close-btn" onclick="closeReceiptModal()" title="Fechar" style="position: static; margin-left: auto;">&times;</button>
+        <button type="button" class="login-close-btn" onclick="closeReceiptModal()" title="Fechar"
+          style="position: static; margin-left: auto;">&times;</button>
       </div>
 
       <div class="receipt-preview-body" id="receiptPreviewContent">
@@ -5107,13 +5178,16 @@
           <span id="receiptModalStatusBadge" class="status-badge status-pendente">Pendente</span>
         </div>
         <div class="receipt-actions">
-          <button type="button" id="btnReceiptApprove" class="receipt-btn receipt-btn-approve" onclick="setPaymentStatusFromModal('Confirmado')">
+          <button type="button" id="btnReceiptApprove" class="receipt-btn receipt-btn-approve"
+            onclick="setPaymentStatusFromModal('Confirmado')">
             <i class="fa-solid fa-circle-check"></i> Aprovar Pagamento
           </button>
-          <button type="button" id="btnReceiptReject" class="receipt-btn receipt-btn-reject" onclick="setPaymentStatusFromModal('Reprovado')">
+          <button type="button" id="btnReceiptReject" class="receipt-btn receipt-btn-reject"
+            onclick="setPaymentStatusFromModal('Reprovado')">
             <i class="fa-solid fa-circle-xmark"></i> Reprovar
           </button>
-          <a id="btnReceiptExternal" href="#" target="_blank" class="receipt-btn receipt-btn-external" style="display: none;">
+          <a id="btnReceiptExternal" href="#" target="_blank" class="receipt-btn receipt-btn-external"
+            style="display: none;">
             <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir em Nova Guia
           </a>
           <button type="button" class="receipt-btn receipt-btn-close" onclick="closeReceiptModal()">
@@ -5555,7 +5629,7 @@
             </button>
           </div>
         </article>`;
-      }).join("");
+        }).join("");
     }
 
     function readKitOptions() {
